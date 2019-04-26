@@ -1,3 +1,136 @@
-html, body{
+$gray: #7a7a7a;
+$light_gray: #f2f2f2;
+$red: #ea141e;
+$green: #10c600;
+$blue: #4cbdff;
+
+$font_size: 14px;
+$font_size_small: 10px;
+$font_family: sans-serif;
+
+html, body {
+	margin: 0;
+	padding: 0;
+	font-size: $font_size;
+	font-family: $font_family;
+	line-height: 1;
+}
+
+.main {
+	max-width: 600px;
+	margin: 40px auto 40px auto;
+	padding: 10px;
+	box-shadow: 0 0 5px 5px $light_gray;
+	border-radius: 1px;
+
+	.title {
+		display: flex;
+		justify-content: space-between;
+		margin: 0 0 20px 0;
+	}
+
+	.server {
+		display: flex;
+		justify-content: space-between;
+		margin: 6px 0 6px 0;
+		padding: 10px;
+		border: 1px solid $light_gray;
+		border-radius: 1px;
+
+		.name {
+			font-weight: bold;
+			margin: 0 0 6px 0;
+
+			.fas {
+				margin: 0 4px 0 4px;
+			}
+
+			.fas:hover {
+				cursor: pointer;
+			}
+		}
+
+		.info {
+			color: $gray;
+		}
+
+		.start {
+			background: $green;
+		}
+
+		.stop {
+			background: $red;
+		}
+	}
+}
+
+.main-small {
+	max-width: 300px;
+}
+
+.end {
+	font-size: $font_size_small;
+	text-align: center;
+	margin: 20px 0 0 0;
+}
+
+h1 {
 	font-size: 20px;
+	font-weight: normal;
+	margin: 6px 0 6px 0;
+}
+
+button, input[type~="submit"] {
+	width: auto;
+	border-width: 0;
+	font-size: $font_size;
+	font-family: $font_family;
+	background: $gray;
+	color: #ffffff;
+	border-radius: 1px;
+	padding: 6px 10px 6px 10px;
+	margin: 4px 0 4px 0;
+
+	.fas {
+		margin-right: 6px;
+	}
+}
+
+button:hover, input[type~="submit"]:hover {
+	cursor: pointer;
+}
+
+input {
+	width: 100%;
+	box-sizing: border-box;
+	font-size: $font_size;
+	font-family: $font_family;
+	border: 1px solid $light_gray;
+	border-radius: 1px;
+	padding: 6px;
+	margin: 4px 0 4px 0;
+}
+
+label {
+	width: 100%;
+	box-sizing: border-box;
+	font-size: $font_size_small;
+}
+
+.error {
+	color: $red;
+	width: 100%;
+	box-sizing: border-box;
+	font-size: $font_size_small;
+}
+
+a {
+	color: $blue;
+	text-decoration: none;
+}
+
+@media (max-device-width: 700px) {
+	#main {
+		margin: 0 auto 0 auto;
+	}
 }
