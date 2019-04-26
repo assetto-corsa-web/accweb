@@ -5,8 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack --mode=production",
-    "dev": "webpack --watch"
+    "build": "webpack --mode=production && npm run style",
+    "dev": "webpack --watch",
+    "style": "node-sass -w static/ -o dist/"
   },
   "author": "Author",
   "license": "ISC",
