@@ -1,32 +1,42 @@
+$shadow: #243447;
 $gray: #7a7a7a;
 $light_gray: #f2f2f2;
-$red: #ea141e;
+$red: #cc241d;
 $green: #10c600;
-$blue: #4cbdff;
+$background: #1d2021;
 
 $font_size: 14px;
 $font_size_small: 10px;
 $font_family: sans-serif;
+$font_color: #ffffff;
 
 html, body {
 	margin: 0;
 	padding: 0;
 	font-size: $font_size;
 	font-family: $font_family;
+	color: $font_color;
 	line-height: 1;
+	background: $background;
 }
 
 .main {
 	max-width: 600px;
 	margin: 40px auto 40px auto;
-	padding: 10px;
-	box-shadow: 0 0 5px 5px $light_gray;
-	border-radius: 1px;
+	padding: 20px;
+	box-shadow: 0 0 5px 5px $shadow;
+	border-radius: 3px;
 
 	.title {
 		display: flex;
 		justify-content: space-between;
 		margin: 0 0 20px 0;
+
+		.new-server{
+			.fas {
+				margin-right: 6px;
+			}
+		}
 	}
 
 	.server {
@@ -34,7 +44,7 @@ html, body {
 		justify-content: space-between;
 		margin: 6px 0 6px 0;
 		padding: 10px;
-		border: 1px solid $light_gray;
+		border: 1px solid $shadow;
 		border-radius: 1px;
 
 		.name {
@@ -85,19 +95,16 @@ button, input[type~="submit"] {
 	border-width: 0;
 	font-size: $font_size;
 	font-family: $font_family;
-	background: $gray;
+	background: $red;
 	color: #ffffff;
 	border-radius: 1px;
 	padding: 6px 10px 6px 10px;
 	margin: 4px 0 4px 0;
-
-	.fas {
-		margin-right: 6px;
-	}
 }
 
 button:hover, input[type~="submit"]:hover {
 	cursor: pointer;
+	box-shadow: 0 0 2px 2px $shadow;
 }
 
 input {
@@ -125,7 +132,7 @@ label {
 }
 
 a {
-	color: $blue;
+	color: $red;
 	text-decoration: none;
 }
 

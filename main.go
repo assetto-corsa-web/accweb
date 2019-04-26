@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/assetto-corsa-web/accweb/api"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
@@ -68,6 +69,12 @@ func loadBuildJs() {
 
 func setupRouter() *mux.Router {
 	router := mux.NewRouter()
+
+	// REST endpoints
+	router.Handle("/api/token", api.AuthMiddleware(api.TokenHandler)).Methods("GET")
+	router.HandleFunc("/api/login", api.LoginHandler).Methods("POST")
+
+	// static content
 	router.PathPrefix(staticDirPrefix).Handler(http.StripPrefix(staticDirPrefix, http.FileServer(http.Dir(staticDir))))
 	router.PathPrefix(buildJsPrefix).Handler(http.StripPrefix(buildJsPrefix, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if watchBuildJs {
@@ -83,6 +90,7 @@ func setupRouter() *mux.Router {
 	router.PathPrefix(rootDirPrefix).Handler(http.StripPrefix(rootDirPrefix, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, indexFile)
 	})))
+
 	return router
 }
 

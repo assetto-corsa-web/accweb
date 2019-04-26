@@ -2,36 +2,32 @@
 
 
 [[projects]]
-  digest = "1:d5f97fc268267ec1b61c3453058c738246fc3e746f14b1ae25161513b7367b0c"
+  name = "github.com/dgrijalva/jwt-go"
+  packages = ["."]
+  revision = "06ea1031745cb8b3dab3f6a236daf2b0aa468b7e"
+  version = "v3.2.0"
+
+[[projects]]
   name = "github.com/gorilla/mux"
   packages = ["."]
-  pruneopts = "UT"
   revision = "c5c6c98bc25355028a63748a498942a6398ccd22"
   version = "v1.7.1"
 
 [[projects]]
-  digest = "1:b0c25f00bad20d783d259af2af8666969e2fc343fa0dc9efe52936bbd67fb758"
   name = "github.com/rs/cors"
   packages = ["."]
-  pruneopts = "UT"
   revision = "9a47f48565a795472d43519dd49aac781f3034fb"
   version = "v1.6.0"
 
 [[projects]]
-  digest = "1:36a75ab002c1cfb43bcc5d2ec10fbdc2a1136e9246a65e535f1d827435f28f17"
   name = "github.com/sirupsen/logrus"
   packages = ["."]
-  pruneopts = "UT"
   revision = "418b41d23a1bf978c06faea5313ba194650ac088"
   version = "v0.8.7"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = [
-    "github.com/gorilla/mux",
-    "github.com/rs/cors",
-    "github.com/sirupsen/logrus",
-  ]
+  inputs-digest = "9649cf96b08b1884e47e252dec5523f96b37e0a040e5702402913512fb90d69f"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -6,25 +6,34 @@
 		<form v-on:submit.prevent="login">
 			<label for="password">{{$t("password_label")}}</label>
 			<input type="password" id="password" :placeholder="$t('password_placeholder')" v-model="password" />
-			<div class="error">{{$t("password_error")}}</div>
+			<div class="error" v-show="error">{{$t("password_error")}}</div>
 			<input type="submit" :value="$t('submit_value')" />
 		</form>
 	</layout>
 </template>
 
 <script>
+import axios from "axios";
 import {layout, server, end} from "../components";
 
 export default {
 	components: {layout},
 	data() {
 		return {
-			password: ""
+			password: "",
+			error: false
 		};
 	},
 	methods: {
 		login() {
-			console.log(this.password);
+			axios.post("/api/login", {password: this.password})
+			.then(r => {
+				this.$store.commit("login", r.data.token);
+				this.$router.push("/");
+			})
+			.catch(() => {
+				this.error = true;
+			});
 		}
 	}
 }

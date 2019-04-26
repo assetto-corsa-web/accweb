@@ -38,7 +38,7 @@ axios.interceptors.request.use((config) => {
 
 // router
 const routes = [
-	{path: "/", component: pages.Overview/*, meta: {protected: true}*/},
+	{path: "/", component: pages.Overview, meta: {protected: true}},
 	{path: "/login", component: pages.Login},
 	{path: "*", component: pages.Error404}
 ];
@@ -48,11 +48,11 @@ let router = new VueRouter({routes, mode: "history"});
 // router interceptor to check token for protected pages
 router.beforeEach((to, from, next) => {
 	if(to.meta.protected){
-		axios.get("http://localhost/auth/token")
-		.then((r) => {
+		axios.get("/api/token")
+		.then(() => {
 			next();
 		})
-		.catch((e) => {
+		.catch(() => {
 			next("/login");
 		});
 	}
