@@ -4,6 +4,7 @@ $light_gray: #f2f2f2;
 $red: #cc241d;
 $green: #10c600;
 $background: #1d2021;
+$background_light: #232728;
 
 $font_size: 14px;
 $font_size_small: 10px;
@@ -17,7 +18,12 @@ html, body {
 	font-family: $font_family;
 	color: $font_color;
 	line-height: 1;
-	background: $background;
+	background: $background_light;
+}
+
+.logo {
+	float: left;
+	margin: 0 6px 0 0;
 }
 
 .main {
@@ -26,6 +32,7 @@ html, body {
 	padding: 20px;
 	box-shadow: 0 0 5px 5px $shadow;
 	border-radius: 3px;
+	background: $background;
 
 	.title {
 		display: flex;
