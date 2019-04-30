@@ -96,6 +96,49 @@ html, body {
 	margin: 20px 0 0 0;
 }
 
+.tabs {
+	display: flex;
+	margin: 0 0 20px 0;
+	border-style: solid;
+	border-color: $gray;
+	border-width: 0 0 1px 0;
+
+	.tab {
+		padding: 6px;
+		margin: 0 2px 0 0;
+		border-radius: 3px 3px 0 0;
+	}
+
+	.tab:hover {
+		cursor: pointer;
+	}
+
+	.tab-active {
+		background: $gray;
+	}
+}
+
+.collapsible {
+	margin: 10px 0 10px 0;
+
+	.collapsible-title {
+		display: flex;
+		justify-content: space-between;
+		border-style: dotted;
+		border-color: $gray;
+		border-width: 0 0 1px 0;
+		padding: 6px;
+	}
+
+	.collapsible-title:hover {
+		cursor: pointer;
+	}
+
+	.collapsible-content {
+		padding: 20px 6px 6px 6px;
+	}
+}
+
 h1 {
 	display: flex;
 	justify-content: center;
@@ -161,7 +204,7 @@ a {
 }
 
 @media (max-device-width: 700px) {
-	#main {
+	.main {
 		margin: 0 auto 0 auto;
 	}
 }

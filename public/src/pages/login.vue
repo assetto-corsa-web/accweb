@@ -4,9 +4,7 @@
 			<h1>{{$t("title")}}</h1>
 		</div>
 		<form v-on:submit.prevent="login">
-			<label for="password">{{$t("password_label")}}</label>
-			<input type="password" id="password" :placeholder="$t('password_placeholder')" v-model="password" />
-			<div class="error" v-show="error">{{$t("password_error")}}</div>
+			<field type="password" :label="$t('password_label')" :placeholder="$t('password_placeholder')" :error="error" v-model="password"></field>
 			<input class="primary" type="submit" :value="$t('submit_value')" />
 		</form>
 	</layout>
@@ -14,14 +12,14 @@
 
 <script>
 import axios from "axios";
-import {layout, server, end} from "../components";
+import {layout, field} from "../components";
 
 export default {
-	components: {layout},
+	components: {layout, field},
 	data() {
 		return {
 			password: "",
-			error: false
+			error: ""
 		};
 	},
 	methods: {
@@ -37,7 +35,7 @@ export default {
 				this.$router.push("/");
 			})
 			.catch(() => {
-				this.error = true;
+				this.error = this.$t("password_error");
 			});
 		}
 	}
