@@ -17,10 +17,9 @@ const (
 
 func AuthMiddleware(next http.HandlerFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		logrus.Debug("TEST")
-
 		if !isValidToken(r) {
 			w.WriteHeader(http.StatusUnauthorized)
+			writeResponse(w, nil)
 			return
 		}
 
@@ -28,7 +27,9 @@ func AuthMiddleware(next http.HandlerFunc) http.Handler {
 	})
 }
 
-func TokenHandler(w http.ResponseWriter, r *http.Request) {}
+func TokenHandler(w http.ResponseWriter, r *http.Request) {
+	writeResponse(w, nil)
+}
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	req := struct {

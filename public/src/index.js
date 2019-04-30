@@ -40,6 +40,8 @@ axios.interceptors.request.use((config) => {
 const routes = [
 	{path: "/", component: pages.Overview, meta: {protected: true}},
 	{path: "/login", component: pages.Login},
+	{path: "/server", component: pages.Server, meta: {protected: true}},
+	{path: "/logs", component: pages.Logs, meta: {protected: true}},
 	{path: "*", component: pages.Error404}
 ];
 

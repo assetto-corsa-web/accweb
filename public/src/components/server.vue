@@ -3,17 +3,34 @@
         <div>
             <div class="name">
                 Servername
-                <i class="fas fa-cog"></i>
-                <i class="fas fa-terminal"></i>
+                <i class="fas fa-cog" v-on:click="edit"></i>
+                <i class="fas fa-terminal" v-on:click="logs"></i>
             </div>
             <div class="info">PID TCP/UDP Track...</div>
         </div>
-        <button class="start">{{$t("start_server")}}</button>
+        <button class="start" v-on:click="start">{{$t("start_server")}}</button>
     </div>
 </template>
 
 <script>
-export default {}
+export default {
+    methods: {
+        edit() {
+            // TODO
+            //this.$router.push(`/server?name=${this.server.name}`);
+        },
+        logs() {
+            // TODO
+            //this.$router.push(`/logs?name=${this.server.name}`);
+        },
+        start() {
+            // TODO
+        },
+        stop() {
+            // TODO
+        }
+    }
+}
 </script>
 
 <i18n>

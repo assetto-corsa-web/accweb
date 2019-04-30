@@ -20,6 +20,11 @@ func decodeJSON(r *http.Request, req interface{}) error {
 }
 
 func writeResponse(w http.ResponseWriter, resp interface{}) {
+	// send an empty response by default
+	if resp == nil {
+		resp = struct{}{}
+	}
+
 	if err := json.NewEncoder(w).Encode(resp); err != nil {
 		logrus.WithFields(logrus.Fields{"err": err, "response": resp}).Error("Error marshalling response")
 		w.WriteHeader(http.StatusInternalServerError)

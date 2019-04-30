@@ -7,7 +7,7 @@
 			<label for="password">{{$t("password_label")}}</label>
 			<input type="password" id="password" :placeholder="$t('password_placeholder')" v-model="password" />
 			<div class="error" v-show="error">{{$t("password_error")}}</div>
-			<input type="submit" :value="$t('submit_value')" />
+			<input class="primary" type="submit" :value="$t('submit_value')" />
 		</form>
 	</layout>
 </template>

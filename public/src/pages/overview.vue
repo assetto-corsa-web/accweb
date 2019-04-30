@@ -2,9 +2,9 @@
 	<layout>
 		<div class="title">
 			<h1>{{$t("title")}}</h1>
-			<div>
-				<button class="new-server"><i class="fas fa-plus"></i> {{$t("add_new")}}</button>
-				<button v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
+			<div class="menu">
+				<button class="primary" v-on:click="$router.push('/server')"><i class="fas fa-plus"></i> {{$t("add_new")}}</button>
+				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
 		</div>
 		<server></server>
@@ -24,6 +24,12 @@ export default {
 	}
 }
 </script>
+
+<style scoped>
+.logout-btn .fas {
+	margin: 0;
+}
+</style>
 
 <i18n>
 {

@@ -39,9 +39,14 @@ html, body {
 		justify-content: space-between;
 		margin: 0 0 20px 0;
 
-		.new-server{
-			.fas {
-				margin-right: 6px;
+		.menu {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			height: 40px;
+
+			button {
+				margin: 0 2px 0 2px;
 			}
 		}
 	}
@@ -92,9 +97,13 @@ html, body {
 }
 
 h1 {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 40px;
 	font-size: 20px;
 	font-weight: normal;
-	margin: 6px 0 6px 0;
+	margin: 0 0 0 6px;
 }
 
 button, input[type~="submit"] {
@@ -102,11 +111,15 @@ button, input[type~="submit"] {
 	border-width: 0;
 	font-size: $font_size;
 	font-family: $font_family;
-	background: $red;
+	background: $gray;
 	color: #ffffff;
 	border-radius: 1px;
 	padding: 6px 10px 6px 10px;
 	margin: 4px 0 4px 0;
+
+	.fas {
+		margin-right: 6px;
+	}
 }
 
 button:hover, input[type~="submit"]:hover {
@@ -129,6 +142,10 @@ label {
 	width: 100%;
 	box-sizing: border-box;
 	font-size: $font_size_small;
+}
+
+.primary {
+	background: $red !important;
 }
 
 .error {
