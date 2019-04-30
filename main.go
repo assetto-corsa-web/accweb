@@ -71,7 +71,7 @@ func setupRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	// REST endpoints
-	router.Handle("/api/token", api.AuthMiddleware(api.TokenHandler)).Methods("GET")
+	router.Handle("/api/token", api.AuthMiddleware(api.TokenHandler, false, false)).Methods("GET")
 	router.HandleFunc("/api/login", api.LoginHandler).Methods("POST")
 
 	// static content

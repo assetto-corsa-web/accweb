@@ -23,9 +23,9 @@ type TokenClaims struct {
 	IsRO    bool
 }
 
-func AuthMiddleware(next http.HandlerFunc) http.Handler {
+func AuthMiddleware(next http.HandlerFunc, requiresAdmin, requiresMod bool) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !isValidToken(r) {
+		if !isValidToken(r, requiresAdmin, requiresMod) {
 			w.WriteHeader(http.StatusUnauthorized)
 			writeResponse(w, nil)
 			return
@@ -98,20 +98,33 @@ func newToken(isAdmin, isMod, isRO bool) (string, time.Time, error) {
 	return tokenString, exp, nil
 }
 
-func isValidToken(r *http.Request) bool {
+func isValidToken(r *http.Request, requiresAdmin, requiresMod bool) bool {
 	bearer := strings.Split(r.Header.Get(headerAuth), " ")
 
 	if len(bearer) != 2 || bearer[0] != headerBearer {
 		return false
 	}
 
-	token := bearer[1]
-	_, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+	tokenString := bearer[1]
+	token, err := jwt.ParseWithClaims(tokenString, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			return nil, fmt.Errorf("Unexpected token signing method: %v", token.Header["alg"])
 		}
 
 		return verifyKey, nil
 	})
-	return err == nil
+
+	if err != nil {
+		return false
+	}
+
+	if claims, ok := token.Claims.(*TokenClaims); ok && token.Valid {
+		if requiresAdmin && !claims.IsAdmin || requiresMod && !claims.IsMod {
+			return false
+		}
+	} else {
+		return false
+	}
+
+	return true
 }
