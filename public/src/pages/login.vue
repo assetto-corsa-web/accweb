@@ -28,7 +28,12 @@ export default {
 		login() {
 			axios.post("/api/login", {password: this.password})
 			.then(r => {
-				this.$store.commit("login", r.data.token);
+				this.$store.commit("login", {
+					token: r.data.token,
+					admin: r.data.admin,
+					mod: r.data.mod,
+					read_only: r.data.read_only
+			});
 				this.$router.push("/");
 			})
 			.catch(() => {

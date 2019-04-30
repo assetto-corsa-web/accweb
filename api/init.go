@@ -9,9 +9,11 @@ import (
 )
 
 var (
-	verifyKey *rsa.PublicKey
-	signKey   *rsa.PrivateKey
-	password  string
+	verifyKey     *rsa.PublicKey
+	signKey       *rsa.PrivateKey
+	adminPassword string
+	modPassword   string
+	roPassword    string // read only
 )
 
 func init() {
@@ -41,9 +43,11 @@ func init() {
 
 	verifyKey = verify
 	signKey = sign
-	password = os.Getenv("ACCWEB_PASSWORD")
+	adminPassword = os.Getenv("ACCWEB_ADMIN_PASSWORD")
+	modPassword = os.Getenv("ACCWEB_MOD_PASSWORD")
+	roPassword = os.Getenv("ACCWEB_RO_PASSWORD")
 
-	if password == "" {
-		logrus.Fatal("ACCWEB_PASSWORD must be set")
+	if adminPassword == "" {
+		logrus.Fatal("ACCWEB_ADMIN_PASSWORD must be set")
 	}
 }

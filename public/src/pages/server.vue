@@ -3,12 +3,13 @@
         <div class="title">
             <h1>TODO Servername</h1>
             <div class="menu">
-                <button class="primary" v-on:click="save"><i class="fas fa-save"></i> {{$t("save")}}</button>
-                <button v-on:click="$router.push('/')"><i class="fas fa-ban"></i> {{$t("cancel")}}</button>
-                <button v-on:click="deleteServer"><i class="fas fa-trash"></i> {{$t("delete")}}</button>
+                <button class="primary" v-on:click="save" v-if="is_admin"><i class="fas fa-save"></i> {{$t("save")}}</button>
+                <button v-on:click="$router.push('/')" v-if="is_admin"><i class="fas fa-ban"></i> {{$t("cancel")}}</button>
+                <button v-on:click="deleteServer" v-if="is_admin"><i class="fas fa-trash"></i> {{$t("delete")}}</button>
+                <button class="primary" v-on:click="$router.push('/')" v-if="!is_admin"><i class="fas fa-arrow-left"></i> {{$t("back")}}</button>
             </div>
         </div>
-        TODO Form
+        TODO Form or Import
     </layout>
 </template>
 
@@ -33,7 +34,8 @@ export default {
     "en": {
         "save": "Save",
         "cancel": "Cancel",
-        "delete": "Delete"
+        "delete": "Delete",
+        "back": "Back"
     }
 }
 </i18n>

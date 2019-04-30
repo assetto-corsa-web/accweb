@@ -69,6 +69,20 @@ const i18n = new VueI18n({
 	fallbackLocale: "en"
 });
 
+Vue.mixin({
+	computed: {
+		is_admin() {
+			return this.$store.state.auth.admin;
+		},
+		is_mod() {
+			return this.$store.state.auth.mod;
+		},
+		is_ro() {
+			return this.$store.state.auth.read_only;
+		}
+	}
+});
+
 // main component
 new Vue({
 	el: "#app",

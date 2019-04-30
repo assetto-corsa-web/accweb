@@ -8,7 +8,7 @@
             </div>
             <div class="info">PID TCP/UDP Track...</div>
         </div>
-        <button class="start" v-on:click="start">{{$t("start_server")}}</button>
+        <button class="start" v-on:click="start" v-if="is_mod">{{$t("start_server")}}</button>
     </div>
 </template>
 

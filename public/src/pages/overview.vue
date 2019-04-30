@@ -3,7 +3,7 @@
 		<div class="title">
 			<h1>{{$t("title")}}</h1>
 			<div class="menu">
-				<button class="primary" v-on:click="$router.push('/server')"><i class="fas fa-plus"></i> {{$t("add_new")}}</button>
+				<button class="primary" v-on:click="$router.push('/server')" v-if="is_admin"><i class="fas fa-plus"></i> {{$t("add_new")}}</button>
 				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
 		</div>

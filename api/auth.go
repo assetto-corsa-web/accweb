@@ -15,6 +15,14 @@ const (
 	tokenExpirey = time.Hour * 6
 )
 
+type TokenClaims struct {
+	jwt.StandardClaims
+
+	IsAdmin bool
+	IsMod   bool
+	IsRO    bool
+}
+
 func AuthMiddleware(next http.HandlerFunc) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if !isValidToken(r) {
@@ -41,12 +49,16 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if req.Password != password {
+	isAdmin := req.Password == adminPassword
+	isMod := req.Password == modPassword || isAdmin
+	isRO := req.Password == roPassword || isMod
+
+	if !isAdmin && !isMod && !isRO {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	token, expires, err := newToken()
+	token, expires, err := newToken(isAdmin, isMod, isRO)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -54,19 +66,26 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	resp := struct {
-		Token   string    `json:"token"`
-		Expires time.Time `json:"expires"`
-	}{token, expires}
+		Token    string    `json:"token"`
+		Expires  time.Time `json:"expires"`
+		Admin    bool      `json:"admin"`
+		Mod      bool      `json:"mod"`
+		ReadOnly bool      `json:"read_only"`
+	}{token, expires, isAdmin, isMod, isRO}
 	writeResponse(w, &resp)
 }
 
-func newToken() (string, time.Time, error) {
+func newToken(isAdmin, isMod, isRO bool) (string, time.Time, error) {
 	exp := time.Now().Add(tokenExpirey)
 	now := time.Now()
-	claims := jwt.StandardClaims{
+	claims := TokenClaims{jwt.StandardClaims{
 		ExpiresAt: exp.Unix(),
 		IssuedAt:  now.Unix(),
 		NotBefore: now.Unix(),
+	},
+		isAdmin,
+		isMod,
+		isRO,
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
 	tokenString, err := token.SignedString(signKey)
