@@ -1,5 +1,5 @@
 <template>
-	<layout>
+	<layout small="true">
 		<div class="title">
 			<h1>{{$t("title")}}</h1>
 		</div>

@@ -7,6 +7,7 @@ import axios from "axios";
 import "../static/main.scss";
 import NewStore from "./store/store.js";
 import * as pages from "./pages";
+import {getLocale} from "./util/locale.js";
 
 Vue.use(VueRouter);
 Vue.use(Vuex);
@@ -42,6 +43,7 @@ const routes = [
 	{path: "/login", component: pages.Login},
 	{path: "/server", component: pages.Server, meta: {protected: true}},
 	{path: "/logs", component: pages.Logs, meta: {protected: true}},
+	{path: "/status", component: pages.Status},
 	{path: "*", component: pages.Error404}
 ];
 
@@ -65,7 +67,7 @@ router.beforeEach((to, from, next) => {
 
 // i18n
 const i18n = new VueI18n({
-	locale: "en",
+	locale: getLocale(),
 	fallbackLocale: "en"
 });
 

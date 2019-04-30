@@ -18,6 +18,8 @@ const (
 	staticDirPrefix = "/static/"
 	buildJsFile     = "public/dist/build.js"
 	buildJsPrefix   = "/dist/build.js"
+	cssFile         = "public/dist/main.css"
+	cssFilePrefix   = "/dist/main.css"
 	indexFile       = "public/index.html"
 	rootDirPrefix   = "/"
 
@@ -72,6 +74,7 @@ func setupRouter() *mux.Router {
 
 	// REST endpoints
 	router.Handle("/api/token", api.AuthMiddleware(api.TokenHandler, false, false)).Methods("GET")
+	router.Handle("/api/server", api.AuthMiddleware(api.SaveServerSetttingsHandler, true, false)).Methods("POST")
 	router.HandleFunc("/api/login", api.LoginHandler).Methods("POST")
 
 	// static content
@@ -86,6 +89,10 @@ func setupRouter() *mux.Router {
 		if _, err := w.Write(buildJs); err != nil {
 			w.WriteHeader(http.StatusNotFound)
 		}
+	})))
+	router.PathPrefix(cssFilePrefix).Handler(http.StripPrefix(cssFilePrefix, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Add("Content-Type", "text/css")
+		http.ServeFile(w, r, cssFile)
 	})))
 	router.PathPrefix(rootDirPrefix).Handler(http.StripPrefix(rootDirPrefix, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		http.ServeFile(w, r, indexFile)

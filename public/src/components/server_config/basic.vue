@@ -18,6 +18,15 @@ export default {
             tcpPort: 9600,
             maxClients: 30
         };
+    },
+    methods: {
+        getData() {
+            return {
+                udpPort: this.udpPort,
+                tcpPort: this.tcpPort,
+                maxClients: this.maxClients
+            };
+        }
     }
 }
 </script>

@@ -4,7 +4,8 @@
         <input :type="type"
             :placeholder="placeholder"
             v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)" />
+            v-on:input="$emit('input', $event.target.value)"
+            :step="step" />
         <div class="error" v-show="error">{{error}}</div>
     </div>
 </template>
@@ -16,6 +17,7 @@ export default {
         type: {default: "text"},
         label: null,
         placeholder: null,
+        step: null,
         error: null
     }
 }

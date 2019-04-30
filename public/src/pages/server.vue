@@ -14,9 +14,9 @@
             <div v-bind:class="{tab: true, 'tab-active': activeTab === 1}" v-on:click="activeTab = 1">{{$t("import_server")}}</div>
         </div>
         <div v-show="activeTab === 0">
-            <basic></basic>
-            <settings></settings>
-            <event></event>
+            <basic ref="basic"></basic>
+            <settings ref="settings"></settings>
+            <event ref="event"></event>
         </div>
         <div v-show="activeTab === 1">
             <p>{{$t("upload_hint")}}</p>
@@ -43,7 +43,22 @@ export default {
     },
     methods: {
         save() {
+            let basic = this.$refs.basic.getData();
+            let settings = this.$refs.settings.getData();
+            let event = this.$refs.event.getData();
+            let data = {
+                basic,
+                settings,
+                event
+            };
 
+            axios.post("/api/server", data)
+            .then(() => {
+                // TODO
+            })
+            .catch(e => {
+                // TODO
+            });
         },
         deleteServer() {
 

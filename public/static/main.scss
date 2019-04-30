@@ -83,6 +83,22 @@ html, body {
 		.stop {
 			background: $red;
 		}
+
+		.online {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 6px 10px 6px 10px;
+			background: $green;
+		}
+
+		.offline {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			padding: 6px 10px 6px 10px;
+			background: $red;
+		}
 	}
 }
 
@@ -170,7 +186,7 @@ button:hover, input[type~="submit"]:hover {
 	box-shadow: 0 0 2px 2px $shadow;
 }
 
-input {
+input, select {
 	width: 100%;
 	box-sizing: border-box;
 	font-size: $font_size;
@@ -179,6 +195,10 @@ input {
 	border-radius: 1px;
 	padding: 6px;
 	margin: 4px 0 4px 0;
+}
+
+select {
+	width: auto;
 }
 
 label {

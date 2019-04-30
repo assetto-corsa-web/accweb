@@ -3,17 +3,20 @@
         <div>
             <div class="name">
                 Servername
-                <i class="fas fa-cog" v-on:click="edit"></i>
-                <i class="fas fa-terminal" v-on:click="logs"></i>
+                <i class="fas fa-cog" v-on:click="edit" v-if="!ro"></i>
+                <i class="fas fa-terminal" v-on:click="logs" v-if="!ro"></i>
             </div>
             <div class="info">PID TCP/UDP Track...</div>
         </div>
-        <button class="start" v-on:click="start" v-if="is_mod">{{$t("start_server")}}</button>
+        <button class="start" v-on:click="start" v-if="is_mod && !ro">{{$t("start_server")}}</button>
+        <div class="online" v-if="ro">Running</div>
+        <div class="offline" v-if="ro">Offline</div>
     </div>
 </template>
 
 <script>
 export default {
+    props: ["ro"],
     methods: {
         edit() {
             // TODO

@@ -22,6 +22,17 @@ export default {
             trackMedalsRequirement: 3,
             safetyRatingRequirement: -1
         };
+    },
+    methods: {
+        getData() {
+            return {
+                serverName: this.serverName,
+                password: this.password,
+                adminPassword: this.adminPassword,
+                trackMedalsRequirement: this.trackMedalsRequirement,
+                safetyRatingRequirement: this.safetyRatingRequirement
+            };
+        }
     }
 }
 </script>
