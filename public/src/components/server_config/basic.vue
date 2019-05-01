@@ -22,9 +22,9 @@ export default {
     methods: {
         getData() {
             return {
-                udpPort: this.udpPort,
-                tcpPort: this.tcpPort,
-                maxClients: this.maxClients
+                udpPort: parseInt(this.udpPort),
+                tcpPort: parseInt(this.tcpPort),
+                maxClients: parseInt(this.maxClients)
             };
         }
     }

@@ -5,6 +5,7 @@
                 Servername
                 <i class="fas fa-cog" v-on:click="edit" v-if="!ro"></i>
                 <i class="fas fa-terminal" v-on:click="logs" v-if="!ro"></i>
+                <i class="fas fa-trash" v-on:click="$emit('delete')" v-if="is_admin && !ro"></i>
             </div>
             <div class="info">PID TCP/UDP Track...</div>
         </div>

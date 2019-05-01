@@ -12,5 +12,6 @@ export ACCWEB_MOD_PASSWORD=mod
 export ACCWEB_RO_PASSWORD=ro
 export ACCWEB_TOKEN_PUBLIC_KEY=secrets/token.public
 export ACCWEB_TOKEN_PRIVATE_KEY=secrets/token.private
+export ACCWEB_CONFIG_PATH=config/
 
 go run main.go

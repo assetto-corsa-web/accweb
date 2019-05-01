@@ -9,6 +9,10 @@
         <field type="number" :label="$t('cloudlevel_label')" :step="0.01" v-model="cloudLevel"></field>
         <field type="number" :label="$t('rain_label')" :step="0.01" v-model="rain"></field>
         <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
+        <session v-for="session in sessions"
+            :session="session"
+            v-on:remove="removeSession"></session>
+        <button v-on:click="addSession">{{$t("add_session_button")}}</button>
     </collapsible>
 </template>
 
@@ -16,9 +20,10 @@
 import collapsible from "../collapsible.vue";
 import field from "../field.vue";
 import selection from "../selection.vue";
+import session from "./session.vue";
 
 export default {
-    components: {collapsible, field, selection},
+    components: {collapsible, field, selection, session},
     data() {
     	return {
     		tracks: [
@@ -37,7 +42,10 @@ export default {
 			trackTemp: 30,
 			cloudLevel: 0.3,
 			rain: 0.0,
-			weatherRandomness: 1
+			weatherRandomness: 1,
+            
+            sessionIndex: 0,
+            sessions: []
     	};
     },
     methods: {
@@ -45,15 +53,59 @@ export default {
     		return {
 				track: this.track,
 				eventType: this.eventType,
-				preRaceWaitingTimeSeconds: this.preRaceWaitingTimeSeconds,
-				sessionOverTimeSeconds: this.sessionOverTimeSeconds,
-				ambientTemp: this.ambientTemp,
-				trackTemp: this.trackTemp,
-				cloudLevel: this.cloudLevel,
-				rain: this.rain,
-				weatherRandomness: this.weatherRandomness
+				preRaceWaitingTimeSeconds: parseInt(this.preRaceWaitingTimeSeconds),
+				sessionOverTimeSeconds: parseInt(this.sessionOverTimeSeconds),
+				ambientTemp: parseInt(this.ambientTemp),
+				trackTemp: parseInt(this.trackTemp),
+				cloudLevel: this.toFloat(this.cloudLevel),
+				rain: this.toFloat(this.rain),
+				weatherRandomness: parseInt(this.weatherRandomness),
+                sessions: this.getSessionData()
     		};
-    	}
+    	},
+        getSessionData() {
+            let sessions = [];
+
+            for(let i = 0; i < this.sessions.length; i++) {
+                sessions.push({
+                    hourOfDay: parseInt(this.sessions[i].hourOfDay),
+                    dayOfWeekend: parseInt(this.sessions[i].dayOfWeekend),
+                    timeMultiplier: parseInt(this.sessions[i].timeMultiplier),
+                    sessionType: this.sessions[i].sessionType,
+                    sessionDurationMinutes: parseInt(this.sessions[i].sessionDurationMinutes)
+                });
+            }
+
+            return sessions;
+        },
+        addSession() {
+            this.sessions.push({
+                index: this.sessionIndex,
+                hourOfDay: 9,
+                dayOfWeekend: 1,
+                timeMultiplier: 1,
+                sessionType: "P",
+                sessionDurationMinutes: 7
+            });
+            this.sessionIndex++;
+        },
+        removeSession(index) {
+            index = parseInt(index);
+
+            for(let i = 0; i < this.sessions.length; i++) {
+                if(this.sessions[i].index === index) {
+                    this.sessions.splice(i, 1);
+                    break;
+                }
+            }
+        },
+        toFloat(value) {
+            if(typeof value === "string") {
+                return parseFloat(value.replace(",", "."));
+            }
+
+            return value;
+        }
     }
 }
 </script>
@@ -70,7 +122,8 @@ export default {
         "tracktemp_label": "Track temp",
         "cloudlevel_label": "Cloud level",
         "rain_label": "Rain",
-        "weatherrandomness_label": "Weather randomness"
+        "weatherrandomness_label": "Weather randomness",
+        "add_session_button": "Add session"
     }
 }
 </i18n>

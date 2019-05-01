@@ -29,8 +29,8 @@ export default {
                 serverName: this.serverName,
                 password: this.password,
                 adminPassword: this.adminPassword,
-                trackMedalsRequirement: this.trackMedalsRequirement,
-                safetyRatingRequirement: this.safetyRatingRequirement
+                trackMedalsRequirement: parseInt(this.trackMedalsRequirement),
+                safetyRatingRequirement: parseInt(this.safetyRatingRequirement)
             };
         }
     }

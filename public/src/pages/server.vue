@@ -32,6 +32,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import {layout, end, basic, settings, event} from "../components";
 
 export default {
@@ -54,10 +55,11 @@ export default {
 
             axios.post("/api/server", data)
             .then(() => {
-                // TODO
+                this.$router.push("/");
             })
             .catch(e => {
                 // TODO
+                console.log(e);
             });
         },
         deleteServer() {
