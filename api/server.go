@@ -7,6 +7,10 @@ import (
 	"strconv"
 )
 
+const (
+	maxMemory = 10000000 // 10 MB
+)
+
 func SaveServerSetttingsHandler(w http.ResponseWriter, r *http.Request) {
 	req := &server.ServerSettings{}
 
@@ -72,6 +76,62 @@ func DeleteServerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if err := server.DeleteServer(id); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	writeResponse(w, nil)
+}
+
+func ImportServerHandler(w http.ResponseWriter, r *http.Request) {
+	if err := r.ParseMultipartForm(maxMemory); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	configuration, configurationHeader, err := r.FormFile("configuration")
+
+	if err != nil || configurationHeader.Size == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	defer func() {
+		if err := configuration.Close(); err != nil {
+			logrus.WithError(err).Error("Error closing file on import")
+		}
+	}()
+	settings, settingsHeader, err := r.FormFile("settings")
+
+	if err != nil || settingsHeader.Size == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	defer func() {
+		if err := settings.Close(); err != nil {
+			logrus.WithError(err).Error("Error closing file on import")
+		}
+	}()
+	event, eventHeader, err := r.FormFile("event")
+
+	if err != nil || eventHeader.Size == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	defer func() {
+		if err := event.Close(); err != nil {
+			logrus.WithError(err).Error("Error closing file on import")
+		}
+	}()
+
+	if err := server.ImportServer(configuration, settings, event); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return

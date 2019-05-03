@@ -19,13 +19,15 @@
         </div>
         <div v-show="activeTab === 1 && is_admin">
             <p>{{$t("upload_hint")}}</p>
-            <label>configuration.json</label>
-            <input type="file" name="configuration.json" />
-            <label>settings.json</label>
-            <input type="file" name="settings.json" />
-            <label>event.json</label>
-            <input type="file" name="event.json" />
-            <input class="primary" type="submit" :value="$t('import_button')" />
+            <form v-on:submit.prevent="importServer">
+                <label>configuration.json</label>
+                <input type="file" name="configuration.json" v-on:change="configurationJsonListener" />
+                <label>settings.json</label>
+                <input type="file" name="settings.json" v-on:change="settingsJsonListener" />
+                <label>event.json</label>
+                <input type="file" name="event.json" v-on:change="eventJsonListener" />
+                <input class="primary" type="submit" :value="$t('import_button')" />
+            </form>
         </div>
     </layout>
 </template>
@@ -40,7 +42,10 @@ export default {
         return {
             activeTab: 0,
             id: 0,
-            servername: "New Server"
+            servername: "New Server",
+            configurationJson: null,
+            settingsJson: null,
+            eventJson: null
         };
     },
     mounted() {
@@ -72,6 +77,28 @@ export default {
             };
 
             axios.post("/api/server", data)
+            .then(() => {
+                this.$router.push("/");
+            });
+        },
+        configurationJsonListener(e) {
+            this.configurationJson = e.target.files[0];
+        },
+        settingsJsonListener(e) {
+            this.settingsJson = e.target.files[0];
+        },
+        eventJsonListener(e) {
+            this.eventJson = e.target.files[0];
+        },
+        importServer() {
+            let data = new FormData();
+            data.append("configuration", this.configurationJson);
+            data.append("settings", this.settingsJson);
+            data.append("event", this.eventJson);
+
+            let headers = {headers: {"Content-Type": "multipart/form-data"}};
+
+            axios.post("/api/server/import", data, headers)
             .then(() => {
                 this.$router.push("/");
             });

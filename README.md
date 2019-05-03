@@ -6,7 +6,7 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 
 * start/stop server
 * view logs
-* import configuration files
+* show errors
 
 ## Features
 
