@@ -4,10 +4,12 @@
 			<h1>{{$t("title")}}</h1>
 			<div class="menu">
 				<button class="primary" v-on:click="$router.push('/server')" v-if="is_admin"><i class="fas fa-plus"></i> {{$t("add_new")}}</button>
+				<button v-on:click="loadServer(true)"><i class="fas fa-sync"></i> {{$t("refresh")}}</button>
 				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
 		</div>
-		<server v-for="s in server" :server="s"></server>
+		<server v-for="s in server" :server="s" v-on:deleted="loadServer"></server>
+		<p v-if="!server || !server.length">No servers found.</p>
 	</layout>
 </template>
 
@@ -30,11 +32,20 @@ export default {
 			this.$store.commit("logout");
 			this.$router.push("/login");
 		},
-		loadServer() {
-			axios.get("/api/server")
-			.then(r => {
-				this.server = r.data;
-			});
+		loadServer(refresh) {
+			let timeout = 0;
+
+			if(refresh) {
+				this.server = [];
+				timeout = 100;
+			}
+
+			setTimeout(() => {
+				axios.get("/api/server")
+				.then(r => {
+					this.server = r.data;
+				});
+			}, timeout);
 		}
 	}
 }
@@ -50,7 +61,8 @@ export default {
 {
 	"en": {
 		"title": "Servers",
-		"add_new": "Add Server"
+		"add_new": "Add Server",
+		"refresh": "Refresh"
 	}
 }
 </i18n>

@@ -4,6 +4,11 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 
 **WORK IN PROGRESS**
 
+* start/stop server
+* view logs
+* import configuration files
+* export configuration files
+
 ## Features
 
 ## Installation and configuration

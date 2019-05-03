@@ -5,7 +5,7 @@
                 {{server.settings.serverName}}
                 <i class="fas fa-cog" v-on:click="edit" v-if="!ro"></i>
                 <i class="fas fa-terminal" v-on:click="logs" v-if="!ro"></i>
-                <i class="fas fa-trash" v-on:click="$emit('delete')" v-if="is_admin && !ro"></i>
+                <i class="fas fa-trash" v-on:click="deleteServer" v-if="is_admin && !ro"></i>
             </div>
             <div class="info">
                 <span v-if="server.pid">PID: {{server.pid}}</span>
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import axios from "axios";
+
 export default {
     props: ["server", "ro"],
     methods: {
@@ -30,6 +32,12 @@ export default {
         },
         logs() {
             this.$router.push(`/logs?id=${this.server.id}`);
+        },
+        deleteServer() {
+            axios.delete("/api/server", {params: {id: this.server.id}})
+            .then(() => {
+                this.$emit("deleted");
+            });
         },
         start() {
             // TODO

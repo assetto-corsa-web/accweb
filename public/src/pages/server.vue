@@ -5,7 +5,6 @@
             <div class="menu">
                 <button class="primary" v-on:click="save" v-if="is_admin"><i class="fas fa-save"></i> {{$t("save")}}</button>
                 <button v-on:click="$router.push('/')" v-if="is_admin"><i class="fas fa-ban"></i> {{$t("cancel")}}</button>
-                <button v-on:click="deleteServer" v-if="is_admin"><i class="fas fa-trash"></i> {{$t("delete")}}</button>
                 <button class="primary" v-on:click="$router.push('/')" v-if="!is_admin"><i class="fas fa-arrow-left"></i> {{$t("back")}}</button>
             </div>
         </div>
@@ -75,14 +74,7 @@ export default {
             axios.post("/api/server", data)
             .then(() => {
                 this.$router.push("/");
-            })
-            .catch(e => {
-                // TODO
-                console.log(e);
             });
-        },
-        deleteServer() {
-
         }
     }
 }
@@ -93,7 +85,6 @@ export default {
     "en": {
         "save": "Save",
         "cancel": "Cancel",
-        "delete": "Delete",
         "back": "Back",
         "create_server": "Create server",
         "import_server": "Import server",

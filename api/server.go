@@ -38,3 +38,19 @@ func GetServerListHandler(w http.ResponseWriter, r *http.Request) {
 		writeResponse(w, server.GetServerById(idInt))
 	}
 }
+
+func DeleteServerHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	if err := server.DeleteServer(id); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	writeResponse(w, nil)
+}
