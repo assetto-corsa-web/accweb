@@ -3,9 +3,10 @@
         <div>
             <div class="name">
                 {{server.settings.serverName}}
-                <i class="fas fa-cog" v-on:click="edit" v-if="!ro"></i>
-                <i class="fas fa-terminal" v-on:click="logs" v-if="!ro"></i>
-                <i class="fas fa-trash" v-on:click="deleteServer" v-if="is_admin && !ro"></i>
+                <i class="fas fa-cog" v-on:click="edit" v-if="!ro" :title="$t('change_config')"></i>
+                <i class="fas fa-terminal" v-on:click="logs" v-if="!ro" :title="$t('view_logs')"></i>
+                <i class="fas fa-file-download" v-on:click="exportConfig" v-if="!ro" :title="$t('export_config')"></i>
+                <i class="fas fa-trash" v-on:click="deleteServer" v-if="is_admin && !ro" :title="$t('delete_server')"></i>
             </div>
             <div class="info">
                 <span v-if="server.pid">PID: {{server.pid}}</span>
@@ -33,6 +34,11 @@ export default {
         logs() {
             this.$router.push(`/logs?id=${this.server.id}`);
         },
+        exportConfig() {
+            let link = document.createElement("a");
+            link.href = `/api/server/export/${this.server.id}_${this.server.settings.serverName}.zip?id=${this.server.id}&token=${this.$store.state.auth.token}`;
+            link.click();
+        },
         deleteServer() {
             axios.delete("/api/server", {params: {id: this.server.id}})
             .then(() => {
@@ -53,7 +59,11 @@ export default {
 {
     "en": {
         "start_server": "Start",
-        "stop_server": "Stop"
+        "stop_server": "Stop",
+        "change_config": "Change config",
+        "view_logs": "View logs",
+        "export_config": "Export config",
+        "delete_server": "Delete server"
     }
 }
 </i18n>

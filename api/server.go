@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/assetto-corsa-web/accweb/server"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 )
@@ -11,18 +12,20 @@ func SaveServerSetttingsHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err := decodeJSON(r, req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
 		return
 	}
 
 	if err := server.SaveServerSettings(req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
 		return
 	}
 
 	writeResponse(w, nil)
 }
 
-func GetServerListHandler(w http.ResponseWriter, r *http.Request) {
+func GetServerHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
@@ -44,13 +47,45 @@ func DeleteServerHandler(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
 		return
 	}
 
 	if err := server.DeleteServer(id); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
 		return
 	}
 
 	writeResponse(w, nil)
+}
+
+func ExportServerHandler(w http.ResponseWriter, r *http.Request) {
+	token := r.URL.Query().Get("token")
+
+	if !isValidToken(token, false, false) {
+		w.WriteHeader(http.StatusUnauthorized)
+		writeResponse(w, nil)
+		return
+	}
+
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	data, err := server.ExportServer(id)
+
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		writeResponse(w, nil)
+		return
+	}
+
+	if _, err := w.Write(data); err != nil {
+		logrus.WithError(err).Error("Error writing zip response")
+	}
 }

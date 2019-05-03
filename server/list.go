@@ -35,15 +35,15 @@ func LoadServerList() {
 func loadServerSettings(name string) error {
 	server := &ServerSettings{Id: parseServerId(name)}
 
-	if err := loadConfigFromFile(&server.Configuration, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, configurationJson)); err != nil {
+	if err := loadConfigFromFile(&server.Configuration, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, configurationJsonName)); err != nil {
 		return err
 	}
 
-	if err := loadConfigFromFile(&server.Settings, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, settingsJson)); err != nil {
+	if err := loadConfigFromFile(&server.Settings, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, settingsJsonName)); err != nil {
 		return err
 	}
 
-	if err := loadConfigFromFile(&server.Event, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, eventJson)); err != nil {
+	if err := loadConfigFromFile(&server.Event, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, eventJsonName)); err != nil {
 		return err
 	}
 

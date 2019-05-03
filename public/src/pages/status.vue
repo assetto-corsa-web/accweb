@@ -2,6 +2,9 @@
 	<layout>
 		<div class="title">
 			<h1>{{$t("title")}}</h1>
+			<div class="menu">
+				<button v-on:click="loadServer(true)"><i class="fas fa-sync"></i> {{$t("refresh")}}</button>
+			</div>
 		</div>
 		<server v-for="s in server" :server="s" ro="true"></server>
 	</layout>
@@ -22,11 +25,20 @@ export default {
 		this.loadServer();
 	},
 	methods: {
-		loadServer() {
-			axios.get("/api/server")
-			.then(r => {
-				this.server = r.data;
-			});
+		loadServer(refresh) {
+			let timeout = 0;
+
+			if(refresh) {
+				this.server = [];
+				timeout = 100;
+			}
+
+			setTimeout(() => {
+				axios.get("/api/server")
+				.then(r => {
+					this.server = r.data;
+				});
+			}, timeout);
 		}
 	}
 }
@@ -35,7 +47,8 @@ export default {
 <i18n>
 {
 	"en": {
-		"title": "Server Status"
+		"title": "Server Status",
+		"refresh": "Refresh"
 	}
 }
 </i18n>

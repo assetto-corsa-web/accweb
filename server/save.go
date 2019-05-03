@@ -11,59 +11,11 @@ import (
 )
 
 const (
-	configurationJson = "configuration.json"
-	settingsJson      = "settings.json"
-	eventJson         = "event.json"
-	configVersion     = 1
+	configurationJsonName = "configuration.json"
+	settingsJsonName      = "settings.json"
+	eventJsonName         = "event.json"
+	configVersion         = 1
 )
-
-type ServerSettings struct {
-	Id  int `json:"id"`
-	PID int `json:"pid"` // 0 = stopped, else running
-
-	// ACC server configuration files
-	Configuration ConfigurationJson `json:"basic"`
-	Settings      SettingsJson      `json:"settings"`
-	Event         EventJson         `json:"event"`
-}
-
-type ConfigurationJson struct {
-	UdpPort       int `json:"udpPort"`
-	TcpPort       int `json:"tcpPort"`
-	MaxClients    int `json:"maxClients"`
-	ConfigVersion int `json:"configVersion"`
-}
-
-type SettingsJson struct {
-	ServerName              string `json:"serverName"`
-	Password                string `json:"password"`
-	AdminPassword           string `json:"adminPassword"`
-	TrackMedalsRequirement  int    `json:"trackMedalsRequirement"`
-	SafetyRatingRequirement int    `json:"safetyRatingRequirement"`
-	ConfigVersion           int    `json:"configVersion"`
-}
-
-type EventJson struct {
-	Track                     string            `json:"track"`
-	EventType                 string            `json:"eventType"`
-	PreRaceWaitingTimeSeconds int               `json:"preRaceWaitingTimeSeconds"`
-	SessionOverTimeSeconds    int               `json:"sessionOverTimeSeconds"`
-	AmbientTemp               int               `json:"ambientTemp"`
-	TrackTemp                 int               `json:"trackTemp"`
-	CloudLevel                float64           `json:"cloudLevel"`
-	Rain                      float64           `json:"rain"`
-	WeatherRandomness         int               `json:"weatherRandomness"`
-	ConfigVersion             int               `json:"configVersion"`
-	Sessions                  []SessionSettings `json:"sessions"`
-}
-
-type SessionSettings struct {
-	HourOfDay              int    `json:"hourOfDay"`
-	DayOfWeekend           int    `json:"dayOfWeekend"`
-	TimeMultiplier         int    `json:"timeMultiplier"`
-	SessionType            string `json:"sessionType"`
-	SessionDurationMinutes int    `json:"sessionDurationMinutes"`
-}
 
 func SaveServerSettings(settings *ServerSettings) error {
 	setConfigVersion(settings)
@@ -73,15 +25,15 @@ func SaveServerSettings(settings *ServerSettings) error {
 		return err
 	}
 
-	if err := saveConfigToFile(settings.Configuration, dir, configurationJson); err != nil {
+	if err := saveConfigToFile(settings.Configuration, dir, configurationJsonName); err != nil {
 		return err
 	}
 
-	if err := saveConfigToFile(settings.Settings, dir, settingsJson); err != nil {
+	if err := saveConfigToFile(settings.Settings, dir, settingsJsonName); err != nil {
 		return err
 	}
 
-	if err := saveConfigToFile(settings.Event, dir, eventJson); err != nil {
+	if err := saveConfigToFile(settings.Event, dir, eventJsonName); err != nil {
 		return err
 	}
 

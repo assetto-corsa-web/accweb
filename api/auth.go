@@ -25,7 +25,9 @@ type TokenClaims struct {
 
 func AuthMiddleware(next http.HandlerFunc, requiresAdmin, requiresMod bool) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		if !isValidToken(r, requiresAdmin, requiresMod) {
+		token := getTokenFromHeader(r)
+
+		if !isValidToken(token, requiresAdmin, requiresMod) {
 			w.WriteHeader(http.StatusUnauthorized)
 			writeResponse(w, nil)
 			return
@@ -98,14 +100,17 @@ func newToken(isAdmin, isMod, isRO bool) (string, time.Time, error) {
 	return tokenString, exp, nil
 }
 
-func isValidToken(r *http.Request, requiresAdmin, requiresMod bool) bool {
+func getTokenFromHeader(r *http.Request) string {
 	bearer := strings.Split(r.Header.Get(headerAuth), " ")
 
 	if len(bearer) != 2 || bearer[0] != headerBearer {
-		return false
+		return ""
 	}
 
-	tokenString := bearer[1]
+	return bearer[1]
+}
+
+func isValidToken(tokenString string, requiresAdmin, requiresMod bool) bool {
 	token, err := jwt.ParseWithClaims(tokenString, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			return nil, fmt.Errorf("Unexpected token signing method: %v", token.Header["alg"])
