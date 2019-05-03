@@ -24,6 +24,13 @@ export default {
         };
     },
     methods: {
+        setData(data) {
+            this.serverName = data.serverName;
+            this.password = data.password;
+            this.adminPassword = data.adminPassword;
+            this.trackMedalsRequirement = data.trackMedalsRequirement;
+            this.safetyRatingRequirement = data.safetyRatingRequirement;
+        },
         getData() {
             return {
                 serverName: this.serverName,

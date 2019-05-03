@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/assetto-corsa-web/accweb/api"
+	serverList "github.com/assetto-corsa-web/accweb/server"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
 	"github.com/sirupsen/logrus"
@@ -75,6 +76,7 @@ func setupRouter() *mux.Router {
 	// REST endpoints
 	router.Handle("/api/token", api.AuthMiddleware(api.TokenHandler, false, false)).Methods("GET")
 	router.Handle("/api/server", api.AuthMiddleware(api.SaveServerSetttingsHandler, true, false)).Methods("POST")
+	router.Handle("/api/server", api.AuthMiddleware(api.GetServerListHandler, false, false)).Methods("GET")
 	router.HandleFunc("/api/login", api.LoginHandler).Methods("POST")
 
 	// static content
@@ -159,6 +161,7 @@ func main() {
 	configureLog()
 	logEnvConfig()
 	loadBuildJs()
+	serverList.LoadServerList()
 	router := setupRouter()
 	corsConfig := configureCors(router)
 	start(corsConfig)

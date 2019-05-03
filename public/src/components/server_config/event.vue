@@ -49,6 +49,31 @@ export default {
     	};
     },
     methods: {
+        setData(data) {
+            this.track = data.track;
+            this.eventType = data.eventType;
+            this.preRaceWaitingTimeSeconds = data.preRaceWaitingTimeSeconds;
+            this.sessionOverTimeSeconds = data.sessionOverTimeSeconds;
+            this.ambientTemp = data.ambientTemp;
+            this.trackTemp = data.trackTemp;
+            this.cloudLevel = data.cloudLevel;
+            this.rain = data.rain;
+            this.weatherRandomness = data.weatherRandomness;
+            this.setSessionData(data.sessions);
+        },
+        setSessionData(data) {
+            for(let i = 0; i < data.length; i++) {
+                this.sessions.push({
+                    index: this.sessionIndex,
+                    hourOfDay: data[i].hourOfDay,
+                    dayOfWeekend: data[i].dayOfWeekend,
+                    timeMultiplier: data[i].timeMultiplier,
+                    sessionType: data[i].sessionType,
+                    sessionDurationMinutes: data[i].sessionDurationMinutes
+                });
+                this.sessionIndex++;
+            }
+        },
     	getData() {
     		return {
 				track: this.track,

@@ -20,6 +20,11 @@ export default {
         };
     },
     methods: {
+        setData(data) {
+            this.udpPort = data.udpPort;
+            this.tcpPort = data.tcpPort;
+            this.maxClients = data.maxClients;
+        },
         getData() {
             return {
                 udpPort: parseInt(this.udpPort),

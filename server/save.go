@@ -18,7 +18,10 @@ const (
 )
 
 type ServerSettings struct {
-	Id            int               `json:"id"`
+	Id  int `json:"id"`
+	PID int `json:"pid"` // 0 = stopped, else running
+
+	// ACC server configuration files
 	Configuration ConfigurationJson `json:"basic"`
 	Settings      SettingsJson      `json:"settings"`
 	Event         EventJson         `json:"event"`
@@ -64,7 +67,7 @@ type SessionSettings struct {
 
 func SaveServerSettings(settings *ServerSettings) error {
 	setConfigVersion(settings)
-	dir, err := getConfigDirectory()
+	dir, id, err := getConfigDirectoryAndID(settings.Id)
 
 	if err != nil {
 		return err
@@ -82,6 +85,18 @@ func SaveServerSettings(settings *ServerSettings) error {
 		return err
 	}
 
+	if settings.Id == 0 {
+		settings.Id = id
+		serverList = append(serverList, *settings)
+	} else {
+		for i, server := range serverList {
+			if server.Id == settings.Id {
+				serverList[i] = *settings
+				break
+			}
+		}
+	}
+
 	return nil
 }
 
@@ -91,15 +106,20 @@ func setConfigVersion(settings *ServerSettings) {
 	settings.Event.ConfigVersion = configVersion
 }
 
-func getConfigDirectory() (string, error) {
-	dir := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(int(time.Now().Unix())))
+func getConfigDirectoryAndID(id int) (string, int, error) {
+	// create new ID for new server or use existing one
+	if id == 0 {
+		id = int(time.Now().Unix())
+	}
+
+	dir := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id))
 	err := os.MkdirAll(dir, 0777)
 
 	if err != nil {
 		logrus.WithField("err", err).Error("Error creating configuration directory")
 	}
 
-	return dir, err
+	return dir, id, err
 }
 
 func saveConfigToFile(config interface{}, dir, name string) error {

@@ -1,7 +1,7 @@
 <template>
     <layout>
         <div class="title">
-            <h1>TODO Servername</h1>
+            <h1>{{servername}}</h1>
             <div class="menu">
                 <button class="primary" v-on:click="save" v-if="is_admin"><i class="fas fa-save"></i> {{$t("save")}}</button>
                 <button v-on:click="$router.push('/')" v-if="is_admin"><i class="fas fa-ban"></i> {{$t("cancel")}}</button>
@@ -39,15 +39,34 @@ export default {
     components: {layout, end, basic, settings, event},
     data() {
         return {
-            activeTab: 0
+            activeTab: 0,
+            id: 0,
+            servername: "New Server"
         };
     },
+    mounted() {
+        this.id = this.$route.query.id;
+
+        if(this.id) {
+            this.loadServer();
+        }
+    },
     methods: {
+        loadServer() {
+            axios.get("/api/server", {params: {id: this.id}})
+            .then(r => {
+                this.servername = r.data.settings.serverName;
+                this.$refs.basic.setData(r.data.basic);
+                this.$refs.settings.setData(r.data.settings);
+                this.$refs.event.setData(r.data.event);
+            });
+        },
         save() {
             let basic = this.$refs.basic.getData();
             let settings = this.$refs.settings.getData();
             let event = this.$refs.event.getData();
             let data = {
+                id: parseInt(this.id),
                 basic,
                 settings,
                 event

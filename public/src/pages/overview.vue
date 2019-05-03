@@ -7,19 +7,34 @@
 				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
 		</div>
-		<server></server>
+		<server v-for="s in server" :server="s"></server>
 	</layout>
 </template>
 
 <script>
+import axios from "axios";
 import {layout, server, end} from "../components";
 
 export default {
 	components: {layout, server, end},
+	data() {
+		return {
+			server: []
+		};
+	},
+	mounted() {
+		this.loadServer();
+	},
 	methods: {
 		logout() {
 			this.$store.commit("logout");
 			this.$router.push("/login");
+		},
+		loadServer() {
+			axios.get("/api/server")
+			.then(r => {
+				this.server = r.data;
+			});
 		}
 	}
 }
