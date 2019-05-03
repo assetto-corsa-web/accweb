@@ -5,6 +5,7 @@
                 {{server.settings.serverName}}
                 <i class="fas fa-cog" v-on:click="edit" v-if="!ro" :title="$t('change_config')"></i>
                 <i class="fas fa-terminal" v-on:click="logs" v-if="!ro" :title="$t('view_logs')"></i>
+                <i class="fas fa-copy" v-on:click="copyConfig" v-if="is_admin && !ro" :title="$t('copy_config')"></i>
                 <i class="fas fa-file-download" v-on:click="exportConfig" v-if="!ro" :title="$t('export_config')"></i>
                 <i class="fas fa-trash" v-on:click="deleteServer" v-if="is_admin && !ro" :title="$t('delete_server')"></i>
             </div>
@@ -34,6 +35,12 @@ export default {
         logs() {
             this.$router.push(`/logs?id=${this.server.id}`);
         },
+        copyConfig() {
+            axios.put("/api/server", {id: this.server.id})
+            .then(() => {
+                this.$emit("copied");
+            });
+        },
         exportConfig() {
             let link = document.createElement("a");
             link.href = `/api/server/export/${this.server.id}_${this.server.settings.serverName}.zip?id=${this.server.id}&token=${this.$store.state.auth.token}`;
@@ -62,6 +69,7 @@ export default {
         "stop_server": "Stop",
         "change_config": "Change config",
         "view_logs": "View logs",
+        "copy_config": "Copy config",
         "export_config": "Export config",
         "delete_server": "Delete server"
     }

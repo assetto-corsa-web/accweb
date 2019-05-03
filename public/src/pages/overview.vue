@@ -8,7 +8,7 @@
 				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
 		</div>
-		<server v-for="s in server" :server="s" v-on:deleted="loadServer"></server>
+		<server v-for="s in server" :server="s" v-on:copied="loadServer" v-on:deleted="loadServer"></server>
 		<p v-if="!server || !server.length">No servers found.</p>
 	</layout>
 </template>

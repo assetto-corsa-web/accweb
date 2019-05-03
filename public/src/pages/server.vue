@@ -10,14 +10,14 @@
         </div>
         <div class="tabs">
             <div v-bind:class="{tab: true, 'tab-active': activeTab === 0}" v-on:click="activeTab = 0">{{$t("create_server")}}</div>
-            <div v-bind:class="{tab: true, 'tab-active': activeTab === 1}" v-on:click="activeTab = 1">{{$t("import_server")}}</div>
+            <div v-bind:class="{tab: true, 'tab-active': activeTab === 1}" v-on:click="activeTab = 1" v-if="is_admin">{{$t("import_server")}}</div>
         </div>
         <div v-show="activeTab === 0">
             <basic ref="basic"></basic>
             <settings ref="settings"></settings>
             <event ref="event"></event>
         </div>
-        <div v-show="activeTab === 1">
+        <div v-show="activeTab === 1 && is_admin">
             <p>{{$t("upload_hint")}}</p>
             <label>configuration.json</label>
             <input type="file" name="configuration.json" />

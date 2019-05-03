@@ -25,6 +25,26 @@ func SaveServerSetttingsHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, nil)
 }
 
+func CopyServerSetttingsHandler(w http.ResponseWriter, r *http.Request) {
+	req := struct {
+		Id int `json:"id"`
+	}{}
+
+	if err := decodeJSON(r, &req); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	if err := server.CopyServerSettings(req.Id); err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	writeResponse(w, nil)
+}
+
 func GetServerHandler(w http.ResponseWriter, r *http.Request) {
 	id := r.URL.Query().Get("id")
 
