@@ -39,6 +39,9 @@ export default {
             axios.put("/api/server", {id: this.server.id})
             .then(() => {
                 this.$emit("copied");
+            })
+            .catch(e => {
+                this.$store.commit("toast", this.$t("copy_server_error"))
             });
         },
         exportConfig() {
@@ -50,6 +53,9 @@ export default {
             axios.delete("/api/server", {params: {id: this.server.id}})
             .then(() => {
                 this.$emit("deleted");
+            })
+            .catch(e => {
+                this.$store.commit("toast", this.$t("delete_server_error"))
             });
         },
         start() {
@@ -71,7 +77,9 @@ export default {
         "view_logs": "View logs",
         "copy_config": "Copy config",
         "export_config": "Export config",
-        "delete_server": "Delete server"
+        "delete_server": "Delete server",
+        "copy_server_error": "Error copying server configuration.",
+        "delete_server_error": "Error deleting server configuration."
     }
 }
 </i18n>

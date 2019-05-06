@@ -44,6 +44,9 @@ export default {
 				axios.get("/api/server")
 				.then(r => {
 					this.server = r.data;
+				})
+				.catch(e => {
+					this.$store.commit("toast", this.$t("receive_server_list_error"))
 				});
 			}, timeout);
 		}
@@ -62,7 +65,8 @@ export default {
 	"en": {
 		"title": "Servers",
 		"add_new": "Add Server",
-		"refresh": "Refresh"
+		"refresh": "Refresh",
+		"receive_server_list_error": "Error receiving server list."
 	}
 }
 </i18n>

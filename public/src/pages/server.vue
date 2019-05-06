@@ -79,6 +79,9 @@ export default {
             axios.post("/api/server", data)
             .then(() => {
                 this.$router.push("/");
+            })
+            .catch(e => {
+                this.$store.commit("toast", this.$t("save_error"))
             });
         },
         configurationJsonListener(e) {
@@ -101,6 +104,9 @@ export default {
             axios.post("/api/server/import", data, headers)
             .then(() => {
                 this.$router.push("/");
+            })
+            .catch(e => {
+                this.$store.commit("toast", this.$t("import_error"))
             });
         }
     }
@@ -116,7 +122,9 @@ export default {
         "create_server": "Create server",
         "import_server": "Import server",
         "upload_hint": "You can import an existing server by uploading its configuration files. Select the files of your server configuration and press import.",
-        "import_button": "Import"
+        "import_button": "Import",
+        "save_error": "Error saving configuration, please check your input.",
+        "import_error": "Error importing configuration files, please check your input."
     }
 }
 </i18n>
