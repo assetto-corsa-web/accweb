@@ -162,6 +162,21 @@ html, body {
 	margin: 10px 0 10px 0;
 }
 
+.error-toast {
+	position: absolute;
+	left: 50%;
+	bottom: 20px;
+
+	.error-content {
+		position: relative;
+		left: -50%;
+		border-radius: 1px;
+		background: $red;
+		color: #ffffff;
+		padding: 10px;
+	}
+}
+
 h1 {
 	display: flex;
 	justify-content: center;
