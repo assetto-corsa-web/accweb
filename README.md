@@ -17,8 +17,8 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 5. [License](#license)
 6. [Screenshots](#screenshots)
 
-<a name="features" />
 ## Features
+<a name="features" />
 
 * create and manage as many server instances as you like
 * configure your instances in browser
@@ -33,27 +33,27 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
     * no database required
     * simple configuration using environment variables
 
-<a name="installation" />
 ## Installation and configuration
+<a name="installation" />
 
-<a name="support" />
 ## Contribute and support
+<a name="support" />
 
 If you like to contribute, have questions or suggestions you can open tickets and pull requests on GitHub.
 
 All Go code must be run through go fmt. The frontend and backend changes must be (manually) tested on your system. If you have issues running it locally open a ticket. You can use the `dev.sh` and `gen_rsa_keys.sh` scripts to start accweb on your computer (on Linux).
 
-<a name="links" />
 ## Links
+<a name="links" />
 
 * [Assetto Corsa Forums](https://www.assettocorsa.net/forum/index.php?threads/accweb-assetto-corsa-competizione-server-management-tool-via-web-interface.56710/)
 
-<a name="license" />
 ## License
+<a name="license" />
 
 MIT
 
-<a name="screenshots" />
 ## Screenshots
+<a name="screenshots" />
 
 WIP
