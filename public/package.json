@@ -1,16 +1,16 @@
 {
-  "name": "project-name",
+  "name": "accweb",
   "version": "1.0.0",
   "description": "Project description",
   "main": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack --mode=production && npm run style",
+    "build": "webpack --mode=production && node-sass static/ -o dist/",
     "dev": "webpack --watch",
     "style": "node-sass -w static/ -o dist/"
   },
-  "author": "Author",
-  "license": "ISC",
+  "author": "Marvin Blum",
+  "license": "MIT",
   "dependencies": {
     "axios": "^0.18.0",
     "vue": "^2.6.10",

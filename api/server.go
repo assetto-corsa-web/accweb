@@ -167,5 +167,8 @@ func ExportServerHandler(w http.ResponseWriter, r *http.Request) {
 
 	if _, err := w.Write(data); err != nil {
 		logrus.WithError(err).Error("Error writing zip response")
+		w.WriteHeader(http.StatusInternalServerError)
+		writeResponse(w, nil)
+		return
 	}
 }
