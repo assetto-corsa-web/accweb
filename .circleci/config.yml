@@ -23,7 +23,6 @@ jobs:
     working_directory: /go/src/github.com/assetto-corsa-web/accweb
     steps:
       - checkout
-      - setup_remove_docker
       - run: docker build .
 workflows:
   version: 2
