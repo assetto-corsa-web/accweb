@@ -17,9 +17,18 @@ jobs:
       - run: cd public && ls
       - run: cd public && npm i
       - run: cd public && npm run build
+  docker:
+    docker:
+      - image: docker
+    working_directory: /go/src/github.com/assetto-corsa-web/accweb
+    steps:
+      - checkout
+      - setup_remove_docker
+      - run: docker build .
 workflows:
   version: 2
   build_and_test:
     jobs:
       - backend
       - frontend
+      - docker
