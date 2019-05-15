@@ -9,15 +9,15 @@
             </div>
         </div>
         <div class="tabs">
-            <div v-bind:class="{tab: true, 'tab-active': activeTab === 0}" v-on:click="activeTab = 0">{{$t("create_server")}}</div>
-            <div v-bind:class="{tab: true, 'tab-active': activeTab === 1}" v-on:click="activeTab = 1" v-if="is_admin">{{$t("import_server")}}</div>
+            <div v-bind:class="{tab: true, 'tab-active': activeTab === 0}" v-on:click="activeTab = 0">{{$t("server_config")}}</div>
+            <div v-bind:class="{tab: true, 'tab-active': activeTab === 1}" v-on:click="activeTab = 1" v-if="is_admin && !id">{{$t("import_server")}}</div>
         </div>
         <div v-show="activeTab === 0">
             <basic ref="basic"></basic>
             <settings ref="settings"></settings>
             <event ref="event"></event>
         </div>
-        <div v-show="activeTab === 1 && is_admin">
+        <div v-show="activeTab === 1">
             <p>{{$t("upload_hint")}}</p>
             <form v-on:submit.prevent="importServer">
                 <label>configuration.json</label>
@@ -119,7 +119,7 @@ export default {
         "save": "Save",
         "cancel": "Cancel",
         "back": "Back",
-        "create_server": "Create server",
+        "server_config": "Configure server",
         "import_server": "Import server",
         "upload_hint": "You can import an existing server by uploading its configuration files. Select the files of your server configuration and press import.",
         "import_button": "Import",

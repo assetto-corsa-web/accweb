@@ -3,11 +3,13 @@
         <div>
             <div class="name">
                 {{server.settings.serverName}}
-                <i class="fas fa-cog" v-on:click="edit" v-if="!ro" :title="$t('change_config')"></i>
-                <i class="fas fa-terminal" v-on:click="logs" v-if="!ro" :title="$t('view_logs')"></i>
-                <i class="fas fa-copy" v-on:click="copyConfig" v-if="is_admin && !ro" :title="$t('copy_config')"></i>
-                <i class="fas fa-file-download" v-on:click="exportConfig" v-if="!ro" :title="$t('export_config')"></i>
-                <i class="fas fa-trash" v-on:click="deleteServer" v-if="is_admin && !ro" :title="$t('delete_server')"></i>
+                <span v-if="!ro">
+                    <i class="fas fa-cog" v-on:click="edit" :title="$t('change_config')"></i>
+                    <i class="fas fa-terminal" v-on:click="logs" :title="$t('view_logs')"></i>
+                    <i class="fas fa-copy" v-on:click="copyConfig" v-if="is_admin" :title="$t('copy_config')"></i>
+                    <i class="fas fa-file-download" v-on:click="exportConfig" :title="$t('export_config')"></i>
+                    <i class="fas fa-trash" v-on:click="deleteServer" v-if="is_admin" :title="$t('delete_server')"></i>
+                </span>
             </div>
             <div class="info">
                 <span v-if="server.pid">PID: {{server.pid}}</span>
@@ -46,8 +48,11 @@ export default {
         },
         exportConfig() {
             let link = document.createElement("a");
+            link.setAttribute("type", "hidden");
             link.href = `/api/server/export/${this.server.id}_${this.server.settings.serverName}.zip?id=${this.server.id}&token=${this.$store.state.auth.token}`;
+            document.body.appendChild(link);
             link.click();
+            link.remove();
         },
         deleteServer() {
             axios.delete("/api/server", {params: {id: this.server.id}})
