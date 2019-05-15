@@ -39,14 +39,9 @@ func SaveServerSettings(settings *ServerSettings) error {
 
 	if settings.Id == 0 {
 		settings.Id = id
-		serverList = append(serverList, *settings)
+		addServer(settings)
 	} else {
-		for i, server := range serverList {
-			if server.Id == settings.Id {
-				serverList[i] = *settings
-				break
-			}
-		}
+		setServer(settings)
 	}
 
 	return nil
@@ -65,13 +60,13 @@ func getConfigDirectoryAndID(id int) (string, int, error) {
 	}
 
 	dir := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id))
-	err := os.MkdirAll(dir, 0777)
 
-	if err != nil {
+	if err := os.MkdirAll(dir, 0770); err != nil {
 		logrus.WithField("err", err).Error("Error creating configuration directory")
+		return "", 0, err
 	}
 
-	return dir, id, err
+	return dir, id, nil
 }
 
 func saveConfigToFile(config interface{}, dir, name string) error {

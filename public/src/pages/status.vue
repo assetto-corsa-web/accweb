@@ -22,7 +22,7 @@ export default {
 		};
 	},
 	mounted() {
-		this.loadServer();
+		this.refreshList();
 	},
 	methods: {
 		loadServer(refresh) {
@@ -42,6 +42,12 @@ export default {
 					this.$store.commit("toast", this.$t("receive_server_list_error"))
 				});
 			}, timeout);
+		},
+		refreshList() {
+			this.loadServer();
+			setTimeout(() => {
+				this.refreshList();
+			}, 5000);
 		}
 	}
 }

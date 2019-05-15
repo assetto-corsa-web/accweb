@@ -1,8 +1,11 @@
 package server
 
+import "os/exec"
+
 type ServerSettings struct {
 	Id  int `json:"id"`
 	PID int `json:"pid"` // 0 = stopped, else running
+	Cmd *exec.Cmd
 
 	// ACC server configuration files
 	Configuration ConfigurationJson `json:"basic"`
@@ -46,4 +49,14 @@ type SessionSettings struct {
 	TimeMultiplier         int    `json:"timeMultiplier"`
 	SessionType            string `json:"sessionType"`
 	SessionDurationMinutes int    `json:"sessionDurationMinutes"`
+}
+
+func (server *ServerSettings) start(cmd *exec.Cmd) {
+	server.PID = cmd.Process.Pid
+	server.Cmd = cmd
+}
+
+func (server *ServerSettings) stop() {
+	server.PID = 0
+	server.Cmd = nil
 }

@@ -8,7 +8,12 @@
 				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
 		</div>
-		<server v-for="s in server" :server="s" v-on:copied="loadServer" v-on:deleted="loadServer"></server>
+		<server v-for="s in server"
+			:server="s"
+			v-on:copied="loadServer"
+			v-on:deleted="loadServer"
+			v-on:started="loadServer"
+			v-on:stopped="loadServer"></server>
 		<p v-if="!server || !server.length">No servers found.</p>
 	</layout>
 </template>
@@ -25,7 +30,7 @@ export default {
 		};
 	},
 	mounted() {
-		this.loadServer();
+		this.refreshList();
 	},
 	methods: {
 		logout() {
@@ -49,6 +54,12 @@ export default {
 					this.$store.commit("toast", this.$t("receive_server_list_error"))
 				});
 			}, timeout);
+		},
+		refreshList() {
+			this.loadServer();
+			setTimeout(() => {
+				this.refreshList();
+			}, 5000);
 		}
 	}
 }

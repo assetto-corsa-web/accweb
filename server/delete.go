@@ -1,7 +1,7 @@
 package server
 
 import (
-	"errors"
+	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
 	"strconv"
@@ -15,19 +15,14 @@ func DeleteServer(id int) error {
 	server := GetServerById(id)
 
 	if server == nil {
-		return errors.New("Server not found")
+		return ServerNotFound
 	}
 
 	if err := os.RemoveAll(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(server.Id))); err != nil {
+		logrus.WithError(err).Error("Error deleting server directory")
 		return err
 	}
 
-	for i, s := range serverList {
-		if s.Id == id {
-			serverList = append(serverList[:i], serverList[i+1:]...)
-			break
-		}
-	}
-
+	removeServer(id)
 	return nil
 }

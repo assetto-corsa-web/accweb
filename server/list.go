@@ -7,10 +7,12 @@ import (
 	"os"
 	"path/filepath"
 	"strconv"
+	"sync"
 )
 
 var (
 	serverList []ServerSettings
+	m          sync.Mutex
 )
 
 func LoadServerList() {
@@ -47,7 +49,7 @@ func loadServerSettings(name string) error {
 		return err
 	}
 
-	serverList = append(serverList, *server)
+	addServer(server)
 	return nil
 }
 
@@ -80,6 +82,9 @@ func GetServerList() []ServerSettings {
 }
 
 func GetServerById(id int) *ServerSettings {
+	m.Lock()
+	defer m.Unlock()
+
 	for _, server := range serverList {
 		if server.Id == id {
 			return &server
@@ -87,4 +92,34 @@ func GetServerById(id int) *ServerSettings {
 	}
 
 	return nil
+}
+
+func setServer(server *ServerSettings) {
+	m.Lock()
+	defer m.Unlock()
+
+	for i, s := range serverList {
+		if s.Id == server.Id {
+			serverList[i] = *server
+			break
+		}
+	}
+}
+
+func addServer(server *ServerSettings) {
+	m.Lock()
+	defer m.Unlock()
+	serverList = append(serverList, *server)
+}
+
+func removeServer(id int) {
+	m.Lock()
+	defer m.Unlock()
+
+	for i, s := range serverList {
+		if s.Id == id {
+			serverList = append(serverList[:i], serverList[i+1:]...)
+			break
+		}
+	}
 }

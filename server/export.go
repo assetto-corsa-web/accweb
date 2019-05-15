@@ -9,6 +9,11 @@ import (
 
 func ExportServer(id int) ([]byte, error) {
 	server := GetServerById(id)
+
+	if server == nil {
+		return nil, ServerNotFound
+	}
+
 	buf := new(bytes.Buffer)
 	archive := zip.NewWriter(buf)
 
