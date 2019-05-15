@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/assetto-corsa-web/accweb/server"
+	"github.com/sirupsen/logrus"
 	"net/http"
 	"strconv"
 )
@@ -54,6 +55,8 @@ func GetInstanceLogsHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	logs, err := server.GetServerLogs(id)
+
+	logrus.Debug(err)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

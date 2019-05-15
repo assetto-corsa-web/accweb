@@ -57,4 +57,9 @@ MIT
 ## Screenshots
 <a name="screenshots" />
 
-WIP
+![Login](screenshots/login.png)
+![Overview](screenshots/overview.png)
+![Configuration](screenshots/configuration.png)
+![Import](screenshots/import.png)
+![Logs](screenshots/logs.png)
+![Status page](screenshots/statuspage.png)

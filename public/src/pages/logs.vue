@@ -25,14 +25,14 @@ export default {
             logs: ""
         };
     },
-    watch: {
+    /*watch: {
         logs() {
             // vue needs some time to render the textareas content
             setTimeout(() => {
                 this.$refs.output.scrollTop = this.$refs.output.scrollHeight;
             }, 200);
         }
-    },
+    },*/
     mounted() {
         this.id = parseInt(this.$route.query.id);
         this.loadServer();
