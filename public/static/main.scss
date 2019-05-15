@@ -208,7 +208,7 @@ button:hover, input[type~="submit"]:hover {
 	box-shadow: 0 0 2px 2px $shadow;
 }
 
-input, select {
+input, select, textarea {
 	width: 100%;
 	box-sizing: border-box;
 	font-size: $font_size;

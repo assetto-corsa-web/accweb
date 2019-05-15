@@ -14,6 +14,7 @@ const (
 	logDir        = "logs"
 	logFilename   = "logs_"
 	logTimeFormat = "20060102_150405"
+	logExt        = ".log"
 )
 
 // TODO pass config files to server on startup
@@ -67,7 +68,7 @@ func createLogFile(server *ServerSettings) (*os.File, error) {
 		return nil, err
 	}
 
-	filename := logFilename + time.Now().Format(logTimeFormat) + "_" + strconv.Itoa(server.Id) + "_" + server.Settings.ServerName + ".log"
+	filename := logFilename + time.Now().Format(logTimeFormat) + "_" + strconv.Itoa(server.Id) + "_" + server.Settings.ServerName + logExt
 	logfile, err := os.Create(filepath.Join(dir, logDir, filename))
 
 	return logfile, nil
@@ -99,6 +100,7 @@ func observeProcess(server *ServerSettings, logfile *os.File) {
 }
 
 func StopServer(id int) error {
+	logrus.WithField("id", id).Info("Stopping server instance...")
 	server := GetServerById(id)
 
 	if server == nil {

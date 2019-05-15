@@ -19,7 +19,7 @@
             </div>
         </div>
         <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>
-        <button class="stop" v-on:click="start" v-if="is_mod && !ro && server.pid">{{$t("stop_server")}}</button>
+        <button class="stop" v-on:click="stop" v-if="is_mod && !ro && server.pid">{{$t("stop_server")}}</button>
         <div class="online" v-if="ro && server.pid">Running</div>
         <div class="offline" v-if="ro && !server.pid">Offline</div>
     </div>
@@ -73,7 +73,7 @@ export default {
             });
         },
         stop() {
-            axios.delete("/api/instance", {id: this.server.id})
+            axios.delete("/api/instance", {params: {id: this.server.id}})
             .then(() => {
                 this.$emit("stopped");
             })

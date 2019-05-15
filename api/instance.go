@@ -27,17 +27,15 @@ func StartInstanceHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func StopInstanceHandler(w http.ResponseWriter, r *http.Request) {
-	req := struct {
-		Id int `json:"id"`
-	}{}
+	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 
-	if err := decodeJSON(r, &req); err != nil {
+	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
 	}
 
-	if err := server.StopServer(req.Id); err != nil {
+	if err := server.StopServer(id); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return

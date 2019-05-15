@@ -7,9 +7,6 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 
 **WORK IN PROGRESS**
 
-* start/stop server
-* view logs
-
 ## Table of contents
 
 1. [Features](#features)
@@ -38,12 +35,14 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Installation and configuration
 <a name="installation" />
 
+WIP
+
 ## Contribute and support
 <a name="support" />
 
 If you like to contribute, have questions or suggestions you can open tickets and pull requests on GitHub.
 
-All Go code must be run through go fmt. The frontend and backend changes must be (manually) tested on your system. If you have issues running it locally open a ticket. You can use the `dev.sh` and `gen_rsa_keys.sh` scripts to start accweb on your computer (on Linux).
+All Go code must have been run through go fmt. The frontend and backend changes must be (manually) tested on your system. If you have issues running it locally open a ticket. You can use the `dev.sh` and `gen_rsa_keys.sh` scripts to start accweb on your computer (on Linux).
 
 ## Links
 <a name="links" />
