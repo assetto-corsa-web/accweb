@@ -7,6 +7,9 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 
 **WORK IN PROGRESS**
 
+* testing
+* provide start/gen_rsa_keys and docker-compose scripts
+
 ## Table of contents
 
 1. [Features](#features)
@@ -35,7 +38,53 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Installation and configuration
 <a name="installation" />
 
-WIP
+accweb can be installed manually or by using Docker. Both installation methods use environment variables for configuration. Here is a list with all configuration variables and possible values. The instructions below don't use all of them.
+
+```
+ACCWEB_LOGLEVEL=debug|info
+ACCWEB_ALLOWED_ORIGINS=*|<your domain or IP>
+ACCWEB_CORS_LOGLEVEL=debug|<empty>
+ACCWEB_HTTP_WRITE_TIMEOUT=<seconds>
+ACCWEB_HTTP_READ_TIMEOUT<seconds>
+ACCWEB_HOST=<ip>:<port>
+ACCWEB_TLS_ENABLE=true|false
+ACCWEB_TLS_CERT=<path to certificate>
+ACCWEB_TLS_PKEY=<path to private key>
+ACCWEB_CONFIG_PATH=<path server configurations are stored>
+ACCWEB_SERVER_DIR=<path to ACC server directory>
+ACCWEB_TOKEN_PUBLIC_KEY=<path to public key for token generation>
+ACCWEB_TOKEN_PRIVATE_KEY=<path to private key for token generation>
+ACCWEB_ADMIN_PASSWORD=<password>
+ACCWEB_MOD_PASSWORD=<password>
+ACCWEB_RO_PASSWORD=<password>
+```
+
+To set one of these, use `set NAME=value` on Windows and `export NAME=value` on Linux before you start the accweb executable. The `start.sh` and `start.cmd` as well as the `docker-compose.yml` use recommended default values, but you meight have to change a few of them.
+`ACCWEB_ADMIN_PASSWORD`, `ACCWEB_MOD_PASSWORD` and `ACCWEB_RO_PASSWORD` are used to configure the administrator, moderator and read only passwords. They must be set or accweb won't start. Make sure you use a unique strong pasword for each of those.
+
+### Manuall installation
+
+1. download the latest release from the release section on GitHub
+2. extract the zip file on your server
+3. edit the `start.sh` (Linux) or `start.cmd` (Windows) to your needs
+4. open a terminal
+5. change directory to the accweb installation location
+6. generate a new secret for user tokens (this is important for security!) by running `./gen_rsa_keys.sh` (Linux) or `gen_rsa_keys.cmd` (Windows)
+7. run the start script (`./start.sh` on Linux and `start.cmd` on Windows)
+8. leave the terminal open (or start in background using screens on Linux for example)
+9. visit the server IP/domain and port you've configured, for example: http://example.com:8080
+
+I recommend to setup an SSL certificate, but that's out of scope for this instructions. You can enable a certificate by using the environment variables above.
+
+### Docker installation
+
+To be able to run accweb through Docker, you have to install Docker and Compose on your server. Please refer to the Docker/Compose documentation on how to do that.
+
+1. copy the `docker-compose.yml` and place it on your server
+2. edit `docker-compose.yml` to your needs
+2. open a terminal
+3. change directory to the `docker-compose.yml` location
+4. start accweb with the command: `docker-compose up -d`
 
 ## Contribute and support
 <a name="support" />
