@@ -60,7 +60,7 @@ ACCWEB_RO_PASSWORD=<password>
 ```
 
 To set one of these, use `set NAME=value` on Windows and `export NAME=value` on Linux before you start the accweb executable. The `start.sh` and `start.cmd` as well as the `docker-compose.yml` use recommended default values, but you meight have to change a few of them.
-`ACCWEB_ADMIN_PASSWORD`, `ACCWEB_MOD_PASSWORD` and `ACCWEB_RO_PASSWORD` are used to configure the administrator, moderator and read only passwords. They must be set or accweb won't start. Make sure you use a unique strong pasword for each of those.
+`ACCWEB_ADMIN_PASSWORD`, `ACCWEB_MOD_PASSWORD` and `ACCWEB_RO_PASSWORD` are used to configure the administrator, moderator and read only passwords. They must be set or accweb won't start. Make sure you use a unique strong pasword for each of them.
 
 ### Manuall installation
 
