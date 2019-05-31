@@ -24,4 +24,4 @@ set ACCWEB_LOGLEVEL=info
 set ACCWEB_ALLOWED_ORIGINS=*
 set ACCWEB_SERVER_EXE=accServer.exe
 
-go run main.go
+accweb.exe
