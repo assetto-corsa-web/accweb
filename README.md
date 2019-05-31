@@ -5,11 +5,6 @@
 
 The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb lets you manage your Assetto Corsa Competizione servers via a nice and simple web interface. You can start, stop and configure server instances and monitor their status.
 
-**WORK IN PROGRESS**
-
-* testing
-* provide start/gen_rsa_keys and docker-compose scripts
-
 ## Table of contents
 
 1. [Features](#features)
