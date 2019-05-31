@@ -1,7 +1,7 @@
 {
   "name": "accweb",
   "version": "1.0.0",
-  "description": "Project description",
+  "description": "Assetto Corsa Competizione Server Management Tool via Web Interface.",
   "main": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server",

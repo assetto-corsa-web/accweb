@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"github.com/sirupsen/logrus"
+	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -15,9 +16,9 @@ const (
 	logFilename   = "logs_"
 	logTimeFormat = "20060102_150405"
 	logExt        = ".log"
+	cfgDir        = "cfg"
 )
 
-// TODO pass config files to server on startup
 func StartServer(id int) error {
 	logrus.WithField("id", id).Info("Starting server instance...")
 	server := GetServerById(id)
@@ -36,6 +37,11 @@ func StartServer(id int) error {
 
 	if err != nil {
 		logrus.WithError(err).Error("Error creating log file")
+		return err
+	}
+
+	if err := copyCfgFiles(server.Id); err != nil {
+		logrus.WithError(err).Error("Error copying configuration files")
 		return err
 	}
 
@@ -72,6 +78,52 @@ func createLogFile(server *ServerSettings) (*os.File, error) {
 	logfile, err := os.Create(filepath.Join(dir, logDir, filename))
 
 	return logfile, nil
+}
+
+func copyCfgFiles(id int) error {
+	sourceDir := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id))
+	targetDir := filepath.Join(os.Getenv("ACCWEB_SERVER_DIR"), cfgDir)
+
+	if err := copyFile(filepath.Join(sourceDir, configurationJsonName), filepath.Join(targetDir, configurationJsonName)); err != nil {
+		return err
+	}
+
+	if err := copyFile(filepath.Join(sourceDir, settingsJsonName), filepath.Join(targetDir, settingsJsonName)); err != nil {
+		return err
+	}
+
+	if err := copyFile(filepath.Join(sourceDir, eventJsonName), filepath.Join(targetDir, eventJsonName)); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func copyFile(source, target string) error {
+	logrus.WithFields(logrus.Fields{"source": source, "target": target}).Debug("Copying file")
+	sourceFile, err := os.OpenFile(source, os.O_RDWR|os.O_CREATE, 0755)
+
+	if err != nil {
+		logrus.WithFields(logrus.Fields{"err": err, "file": source}).Error("Error opening source file")
+		return err
+	}
+
+	defer sourceFile.Close()
+	targetFile, err := os.OpenFile(target, os.O_RDWR|os.O_CREATE, 0755)
+
+	if err != nil {
+		logrus.WithFields(logrus.Fields{"err": err, "file": target}).Error("Error opening target file")
+		return err
+	}
+
+	defer targetFile.Close()
+
+	if _, err := io.Copy(sourceFile, targetFile); err != nil {
+		logrus.WithFields(logrus.Fields{"err": err, "file": source, "target": target}).Error("Error copying file")
+		return err
+	}
+
+	return nil
 }
 
 func observeProcess(server *ServerSettings, logfile *os.File) {
