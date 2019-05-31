@@ -6,9 +6,9 @@ Rem in that case, change it to anything else, e.g. 8080
 set ACCWEB_HOST=0.0.0.0:80
 
 Rem IMPORTANT must be set, use strong different passwords for each
-set ACCWEB_ADMIN_PASSWORD=a
-set ACCWEB_MOD_PASSWORD=b
-set ACCWEB_RO_PASSWORD=c
+set ACCWEB_ADMIN_PASSWORD=
+set ACCWEB_MOD_PASSWORD=
+set ACCWEB_RO_PASSWORD=
 
 Rem these files must exist
 set ACCWEB_TOKEN_PUBLIC_KEY=secrets/token.public

@@ -48,7 +48,7 @@ func StartServer(id int) error {
 	cmd := exec.Command(filepath.Join(os.Getenv("ACCWEB_SERVER_DIR"), os.Getenv("ACCWEB_SERVER_EXE")))
 	cmd.Stdout = logfile
 	cmd.Stderr = logfile
-	//cmd.Dir = os.Getenv("ACCWEB_SERVER_DIR")
+	cmd.Dir = os.Getenv("ACCWEB_SERVER_DIR")
 
 	if err := cmd.Start(); err != nil {
 		logrus.WithError(err).Error("Error starting server")
