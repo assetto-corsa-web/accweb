@@ -11,7 +11,9 @@ set ACCWEB_RO_PASSWORD=ro
 set ACCWEB_TOKEN_PUBLIC_KEY=secrets/token.public
 set ACCWEB_TOKEN_PRIVATE_KEY=secrets/token.private
 set ACCWEB_CONFIG_PATH=config/
-set ACCWEB_SERVER_DIR=dev_server/
-set ACCWEB_SERVER_EXE=main.exe
+Rem set ACCWEB_SERVER_DIR=dev_server/
+Rem set ACCWEB_SERVER_EXE=main.exe
+set ACCWEB_SERVER_DIR=C:\Program Files (x86)\Steam\steamapps\common\Assetto Corsa Competizione\server
+set ACCWEB_SERVER_EXE=accServer.exe
 
 go run main.go

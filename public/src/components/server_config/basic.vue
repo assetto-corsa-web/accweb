@@ -16,7 +16,7 @@ export default {
         return {
             udpPort: 9600,
             tcpPort: 9600,
-            maxClients: 30
+            maxClients: 10
         };
     },
     methods: {

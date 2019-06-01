@@ -27,14 +27,23 @@ export default {
     data() {
     	return {
     		tracks: [
-    			"zolder",
-    			"idontknowyet"
+                {value: "misano", label: "Misano"},
+                {value: "paul_ricard", label: "Paul Ricard"},
+                {value: "nurburgring", label: "Nürburgring GP"},
+                {value: "hungaroring", label: "Hungaroring"},
+                {value: "zolder", label: "Zolder"},
+    			{value: "monza", label: "Monza"},
+                {value: "brands_hatch", label: "Brands Hatch"},
+                {value: "barcelona", label: "Barcelona"},
+                {value: "silverstone", label: "Silverstone"},
+                {value: "spa", label: "Spa"}
     		],
     		eventTypes: [
-    			"E_3h"
+    			{value: "E_3h", label: "Endurance - 3h"},
+                {value: "E_6h", label: "Endurance - 6h"},
     		],
 
-    		track: "zolder",
+    		track: "misano",
 			eventType: "E_3h",
 			preRaceWaitingTimeSeconds: 15,
 			sessionOverTimeSeconds: 120,

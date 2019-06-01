@@ -19,7 +19,7 @@ export default {
             serverName: "Servername",
             password: "",
             adminPassword: "",
-            trackMedalsRequirement: 3,
+            trackMedalsRequirement: 0,
             safetyRatingRequirement: -1
         };
     },

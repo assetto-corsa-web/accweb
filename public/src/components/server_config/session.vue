@@ -19,9 +19,9 @@ export default {
     data() {
     	return {
     		types: [
-    			"P",
-    			"Q",
-                "R"
+    			{value: "P", label: "Practice"},
+    			{value: "Q", label: "Qualify"},
+                {value: "R", label: "Race"}
     		]
     	};
     }

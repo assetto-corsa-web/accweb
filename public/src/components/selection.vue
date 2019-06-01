@@ -4,7 +4,7 @@
         <div>
             <select v-bind:value="value"
                 v-on:input="$emit('input', $event.target.value)">
-                <option v-for="o in options">{{o}}</option>
+                <option v-for="o in options" v-bind:value="o.value">{{o.label}}</option>
             </select>
         </div>
         <div class="error" v-show="error">{{error}}</div>
