@@ -49,6 +49,12 @@ func configureLog() {
 	}
 }
 
+func createConfigDir() {
+	if err := os.MkdirAll(os.Getenv("ACCWEB_CONFIG_PATH"), 770); err != nil {
+		logrus.WithError(err).Fatal("Error creating config directory")
+	}
+}
+
 func logEnvConfig() {
 	for _, e := range os.Environ() {
 		if strings.HasPrefix(e, envPrefix) && !strings.Contains(e, pwdString) {
@@ -166,6 +172,7 @@ func start(handler http.Handler) {
 
 func main() {
 	configureLog()
+	createConfigDir()
 	logEnvConfig()
 	loadBuildJs()
 	serverList.LoadServerList()
