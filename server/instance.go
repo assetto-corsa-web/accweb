@@ -3,7 +3,7 @@ package server
 import (
 	"errors"
 	"github.com/sirupsen/logrus"
-	"io"
+	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -12,11 +12,16 @@ import (
 )
 
 const (
-	logDir        = "logs"
-	logFilename   = "logs_"
-	logTimeFormat = "20060102_150405"
-	logExt        = ".log"
-	cfgDir        = "cfg"
+	logDir             = "logs"
+	logFilename        = "logs_"
+	logTimeFormat      = "20060102_150405"
+	logExt             = ".log"
+	cfgDir             = "cfg"
+	accServerFile      = "accServer.exe" // TODO Linux support once released
+	serverLogDir       = "log"
+	serverErrorLogDir  = "error"
+	serverLogFile      = "server.log"
+	serverErrorLogFile = "error.log"
 )
 
 func StartServer(id int) error {
@@ -40,15 +45,22 @@ func StartServer(id int) error {
 		return err
 	}
 
+	if err := copyServerFiles(server.Id); err != nil {
+		logrus.WithError(err).Error("Error copying server files")
+		return err
+	}
+
 	if err := copyCfgFiles(server.Id); err != nil {
 		logrus.WithError(err).Error("Error copying configuration files")
 		return err
 	}
 
-	cmd := exec.Command(filepath.Join(os.Getenv("ACCWEB_SERVER_DIR"), os.Getenv("ACCWEB_SERVER_EXE")))
+	serverExecutionPath := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(server.Id))
+	cmd := exec.Command("." + string(filepath.Separator) + os.Getenv("ACCWEB_SERVER_EXE"))
 	cmd.Stdout = logfile
 	cmd.Stderr = logfile
-	cmd.Dir = os.Getenv("ACCWEB_SERVER_DIR")
+	cmd.Dir = serverExecutionPath
+	logrus.Warn(serverExecutionPath)
 
 	if err := cmd.Start(); err != nil {
 		logrus.WithError(err).Error("Error starting server")
@@ -70,7 +82,7 @@ func createLogFile(server *ServerSettings) (*os.File, error) {
 		return nil, err
 	}
 
-	if err := os.MkdirAll(filepath.Join(dir, logDir), 0770); err != nil {
+	if err := os.MkdirAll(filepath.Join(dir, logDir), 0660); err != nil {
 		return nil, err
 	}
 
@@ -80,46 +92,67 @@ func createLogFile(server *ServerSettings) (*os.File, error) {
 	return logfile, nil
 }
 
-func copyCfgFiles(id int) error {
-	sourceDir := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id))
-	targetDir := filepath.Join(os.Getenv("ACCWEB_SERVER_DIR"), cfgDir)
+func copyServerFiles(id int) error {
+	accServerSource := filepath.Join(os.Getenv("ACCWEB_SERVER_DIR"), accServerFile)
+	accServerTarget := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), accServerFile)
 
-	if err := copyFile(filepath.Join(sourceDir, configurationJsonName), filepath.Join(targetDir, configurationJsonName)); err != nil {
+	if err := copyFile(accServerSource, accServerTarget, 0770); err != nil {
 		return err
 	}
 
-	if err := copyFile(filepath.Join(sourceDir, settingsJsonName), filepath.Join(targetDir, settingsJsonName)); err != nil {
+	if err := os.MkdirAll(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir), 0660); err != nil {
 		return err
 	}
 
-	if err := copyFile(filepath.Join(sourceDir, eventJsonName), filepath.Join(targetDir, eventJsonName)); err != nil {
+	if err := os.MkdirAll(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir, serverErrorLogDir), 0660); err != nil {
+		return err
+	}
+
+	if err := ioutil.WriteFile(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir, serverLogFile), nil, 0660); err != nil {
+		return err
+	}
+
+	if err := ioutil.WriteFile(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir, serverErrorLogDir, serverErrorLogFile), nil, 0660); err != nil {
 		return err
 	}
 
 	return nil
 }
 
-func copyFile(source, target string) error {
+func copyCfgFiles(id int) error {
+	sourceDir := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id))
+	targetDir := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), cfgDir)
+
+	if err := os.MkdirAll(targetDir, 0777); err != nil {
+		return err
+	}
+
+	if err := copyFile(filepath.Join(sourceDir, configurationJsonName), filepath.Join(targetDir, configurationJsonName), 0660); err != nil {
+		return err
+	}
+
+	if err := copyFile(filepath.Join(sourceDir, settingsJsonName), filepath.Join(targetDir, settingsJsonName), 0660); err != nil {
+		return err
+	}
+
+	if err := copyFile(filepath.Join(sourceDir, eventJsonName), filepath.Join(targetDir, eventJsonName), 0660); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func copyFile(source, target string, perm os.FileMode) error {
 	logrus.WithFields(logrus.Fields{"source": source, "target": target}).Debug("Copying file")
-	sourceFile, err := os.OpenFile(source, os.O_RDWR|os.O_CREATE, 0755)
+	sourceFile, err := ioutil.ReadFile(source)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{"err": err, "file": source}).Error("Error opening source file")
+		logrus.WithFields(logrus.Fields{"err": err, "file": source}).Error("Error reading source file")
 		return err
 	}
 
-	defer sourceFile.Close()
-	targetFile, err := os.OpenFile(target, os.O_RDWR|os.O_CREATE, 0755)
-
-	if err != nil {
-		logrus.WithFields(logrus.Fields{"err": err, "file": target}).Error("Error opening target file")
-		return err
-	}
-
-	defer targetFile.Close()
-
-	if _, err := io.Copy(sourceFile, targetFile); err != nil {
-		logrus.WithFields(logrus.Fields{"err": err, "file": source, "target": target}).Error("Error copying file")
+	if err := ioutil.WriteFile(target, sourceFile, perm); err != nil {
+		logrus.WithFields(logrus.Fields{"err": err, "file": target}).Error("Error writing target file")
 		return err
 	}
 
