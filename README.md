@@ -65,10 +65,9 @@ To set one of these, use `set NAME=value` on Windows and `export NAME=value` on 
 4. open a terminal
 5. change directory to the accweb installation location
 6. generate a new RSA key pair for user tokens (this is important for security!) and place them as `token.private` and `token.public` inside a new directory called `secrets`
-7. create an empty directory called `config` inside your installation directory
-8. run the start script (`./start.sh` on Linux and `start.cmd` on Windows)
-9. leave the terminal open (or start in background using screens on Linux for example)
-10. visit the server IP/domain and port you've configured, for example: http://example.com:8080
+7. run the start script (`./start.sh` on Linux and `start.cmd` on Windows)
+8. leave the terminal open (or start in background using screens on Linux for example)
+9. visit the server IP/domain and port you've configured, for example: http://example.com:8080
 
 I recommend to setup an SSL certificate, but that's out of scope for this instructions. You can enable a certificate by using the environment variables above.
 
@@ -81,8 +80,7 @@ To generate the RSA key pair, you can use the `gen_rsa_keys.sh` on Linux or inst
 
 To be able to run accweb through Docker, you have to install Docker and Compose on your server. Please refer to the Docker/Compose documentation on how to do that.
 
-1. copy the `docker-compose.yml` and place it on your server
-2. edit `docker-compose.yml` to your needs
+1. edit `docker-compose.yml` to your needs
 2. open a terminal
 3. change directory to the `docker-compose.yml` location
 4. start accweb with the command: `docker-compose up -d`
