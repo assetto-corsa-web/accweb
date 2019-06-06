@@ -14,7 +14,7 @@ const (
 )
 
 func GetServerLogs(id int) (string, error) {
-	server := GetServerById(id)
+	server := GetServerById(id, true)
 
 	if server == nil {
 		return "", ServerNotFound

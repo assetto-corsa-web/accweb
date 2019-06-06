@@ -11,7 +11,7 @@ const (
 	maxMemory = 10000000 // 10 MB
 )
 
-func SaveServerSetttingsHandler(w http.ResponseWriter, r *http.Request) {
+func SaveServerSetttingsHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	req := &server.ServerSettings{}
 
 	if err := decodeJSON(r, req); err != nil {
@@ -29,7 +29,7 @@ func SaveServerSetttingsHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, nil)
 }
 
-func CopyServerSetttingsHandler(w http.ResponseWriter, r *http.Request) {
+func CopyServerSetttingsHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	req := struct {
 		Id int `json:"id"`
 	}{}
@@ -49,11 +49,11 @@ func CopyServerSetttingsHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, nil)
 }
 
-func GetServerHandler(w http.ResponseWriter, r *http.Request) {
+func GetServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	id := r.URL.Query().Get("id")
 
 	if id == "" {
-		writeResponse(w, server.GetServerList())
+		writeResponse(w, server.GetServerList(claims.IsAdmin))
 	} else {
 		idInt, err := strconv.Atoi(id)
 
@@ -62,15 +62,15 @@ func GetServerHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		writeResponse(w, server.GetServerById(idInt))
+		writeResponse(w, server.GetServerById(idInt, claims.IsAdmin))
 	}
 }
 
 func GetServerStatusHandler(w http.ResponseWriter, r *http.Request) {
-	writeResponse(w, server.GetServerList())
+	writeResponse(w, server.GetServerList(false))
 }
 
-func DeleteServerHandler(w http.ResponseWriter, r *http.Request) {
+func DeleteServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 
 	if err != nil {
@@ -88,7 +88,7 @@ func DeleteServerHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, nil)
 }
 
-func ImportServerHandler(w http.ResponseWriter, r *http.Request) {
+func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	if err := r.ParseMultipartForm(maxMemory); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
@@ -147,11 +147,13 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request) {
 func ExportServerHandler(w http.ResponseWriter, r *http.Request) {
 	token := r.URL.Query().Get("token")
 
-	if !isValidToken(token, false, false) {
+	if isValidToken(token, false, false) == nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		writeResponse(w, nil)
 		return
 	}
+
+	claims := isValidToken(token, false, false)
 
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 
@@ -161,7 +163,7 @@ func ExportServerHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	data, err := server.ExportServer(id)
+	data, err := server.ExportServer(id, claims.IsAdmin)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)

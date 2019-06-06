@@ -77,16 +77,35 @@ func loadConfigFromFile(config interface{}, path string) error {
 	return nil
 }
 
-func GetServerList() []ServerSettings {
-	return serverList
+func GetServerList(withPasswords bool) []ServerSettings {
+	if withPasswords {
+		return serverList
+	}
+
+	list := make([]ServerSettings, 0, len(serverList))
+
+	for _, server := range serverList {
+		server.PID = 0
+		server.Settings.Password = ""
+		server.Settings.AdminPassword = ""
+		list = append(list, server)
+	}
+
+	return list
 }
 
-func GetServerById(id int) *ServerSettings {
+func GetServerById(id int, withPasswords bool) *ServerSettings {
 	m.Lock()
 	defer m.Unlock()
 
 	for _, server := range serverList {
 		if server.Id == id {
+			if !withPasswords {
+				server.PID = 0
+				server.Settings.Password = ""
+				server.Settings.AdminPassword = ""
+			}
+
 			return &server
 		}
 	}

@@ -7,7 +7,7 @@ import (
 	"strconv"
 )
 
-func StartInstanceHandler(w http.ResponseWriter, r *http.Request) {
+func StartInstanceHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	req := struct {
 		Id int `json:"id"`
 	}{}
@@ -27,7 +27,7 @@ func StartInstanceHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, nil)
 }
 
-func StopInstanceHandler(w http.ResponseWriter, r *http.Request) {
+func StopInstanceHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 
 	if err != nil {
@@ -45,7 +45,7 @@ func StopInstanceHandler(w http.ResponseWriter, r *http.Request) {
 	writeResponse(w, nil)
 }
 
-func GetInstanceLogsHandler(w http.ResponseWriter, r *http.Request) {
+func GetInstanceLogsHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 
 	if err != nil {

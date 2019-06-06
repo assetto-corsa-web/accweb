@@ -7,8 +7,8 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func ExportServer(id int) ([]byte, error) {
-	server := GetServerById(id)
+func ExportServer(id int, withPasswords bool) ([]byte, error) {
+	server := GetServerById(id, withPasswords)
 
 	if server == nil {
 		return nil, ServerNotFound

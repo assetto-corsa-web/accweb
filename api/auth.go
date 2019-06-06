@@ -23,21 +23,24 @@ type TokenClaims struct {
 	IsRO    bool
 }
 
-func AuthMiddleware(next http.HandlerFunc, requiresAdmin, requiresMod bool) http.Handler {
+type HttpHandler func(http.ResponseWriter, *http.Request, *TokenClaims)
+
+func AuthMiddleware(next HttpHandler, requiresAdmin, requiresMod bool) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		token := getTokenFromHeader(r)
+		claims := isValidToken(token, requiresAdmin, requiresMod)
 
-		if !isValidToken(token, requiresAdmin, requiresMod) {
+		if claims == nil {
 			w.WriteHeader(http.StatusUnauthorized)
 			writeResponse(w, nil)
 			return
 		}
 
-		next(w, r)
+		next(w, r, claims)
 	})
 }
 
-func TokenHandler(w http.ResponseWriter, r *http.Request) {
+func TokenHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	writeResponse(w, nil)
 }
 
@@ -110,7 +113,7 @@ func getTokenFromHeader(r *http.Request) string {
 	return bearer[1]
 }
 
-func isValidToken(tokenString string, requiresAdmin, requiresMod bool) bool {
+func isValidToken(tokenString string, requiresAdmin, requiresMod bool) *TokenClaims {
 	token, err := jwt.ParseWithClaims(tokenString, &TokenClaims{}, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodRSA); !ok {
 			return nil, fmt.Errorf("Unexpected token signing method: %v", token.Header["alg"])
@@ -120,16 +123,18 @@ func isValidToken(tokenString string, requiresAdmin, requiresMod bool) bool {
 	})
 
 	if err != nil {
-		return false
+		return nil
 	}
 
-	if claims, ok := token.Claims.(*TokenClaims); ok && token.Valid {
+	claims, ok := token.Claims.(*TokenClaims)
+
+	if ok && token.Valid {
 		if requiresAdmin && !claims.IsAdmin || requiresMod && !claims.IsMod {
-			return false
+			return nil
 		}
 	} else {
-		return false
+		return nil
 	}
 
-	return true
+	return claims
 }

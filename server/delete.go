@@ -12,7 +12,7 @@ func DeleteServer(id int) error {
 		return err
 	}
 
-	server := GetServerById(id)
+	server := GetServerById(id, true)
 
 	if server == nil {
 		return ServerNotFound

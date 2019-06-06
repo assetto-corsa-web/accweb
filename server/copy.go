@@ -1,7 +1,7 @@
 package server
 
 func CopyServerSettings(id int) error {
-	server := GetServerById(id)
+	server := GetServerById(id, true)
 
 	if server == nil {
 		return ServerNotFound

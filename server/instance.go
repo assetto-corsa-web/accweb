@@ -26,7 +26,7 @@ const (
 
 func StartServer(id int) error {
 	logrus.WithField("id", id).Info("Starting server instance...")
-	server := GetServerById(id)
+	server := GetServerById(id, true)
 
 	if server == nil {
 		logrus.Error("Server not found")
@@ -186,7 +186,7 @@ func observeProcess(server *ServerSettings, logfile *os.File) {
 
 func StopServer(id int) error {
 	logrus.WithField("id", id).Info("Stopping server instance...")
-	server := GetServerById(id)
+	server := GetServerById(id, true)
 
 	if server == nil {
 		return ServerNotFound

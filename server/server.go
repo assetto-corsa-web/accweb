@@ -3,9 +3,9 @@ package server
 import "os/exec"
 
 type ServerSettings struct {
-	Id  int `json:"id"`
-	PID int `json:"pid"` // 0 = stopped, else running
-	Cmd *exec.Cmd
+	Id  int       `json:"id"`
+	PID int       `json:"pid"` // 0 = stopped, else running
+	Cmd *exec.Cmd `json:"-"`
 
 	// ACC server configuration files
 	Configuration ConfigurationJson `json:"basic"`
