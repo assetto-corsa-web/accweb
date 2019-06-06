@@ -8,6 +8,8 @@ func CopyServerSettings(id int) error {
 	}
 
 	server.Id = 0
+	server.PID = 0
+	server.Cmd = nil
 	server.Settings.ServerName += " (copy)"
 
 	if err := SaveServerSettings(server); err != nil {
