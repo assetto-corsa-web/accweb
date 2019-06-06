@@ -34,11 +34,11 @@ export default {
 			}
 
 			setTimeout(() => {
-				axios.get("/api/server")
+				axios.get("/api/status")
 				.then(r => {
 					this.server = r.data;
 				})
-				.catch(e => {
+				.catch(() => {
 					this.$store.commit("toast", this.$t("receive_server_list_error"))
 				});
 			}, timeout);

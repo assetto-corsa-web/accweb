@@ -85,6 +85,7 @@ func setupRouter() *mux.Router {
 	router.Handle("/api/server", api.AuthMiddleware(api.CopyServerSetttingsHandler, true, false)).Methods("PUT")
 	router.Handle("/api/server", api.AuthMiddleware(api.DeleteServerHandler, true, false)).Methods("DELETE")
 	router.Handle("/api/server", api.AuthMiddleware(api.GetServerHandler, false, false)).Methods("GET")
+	router.HandleFunc("/api/status", api.GetServerStatusHandler).Methods("GET")
 	router.Handle("/api/server/import", api.AuthMiddleware(api.ImportServerHandler, true, false)).Methods("POST")
 	router.Handle("/api/instance", api.AuthMiddleware(api.StartInstanceHandler, false, true)).Methods("POST")
 	router.Handle("/api/instance", api.AuthMiddleware(api.StopInstanceHandler, false, true)).Methods("DELETE")

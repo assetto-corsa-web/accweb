@@ -66,6 +66,10 @@ func GetServerHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func GetServerStatusHandler(w http.ResponseWriter, r *http.Request) {
+	writeResponse(w, server.GetServerList())
+}
+
 func DeleteServerHandler(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(r.URL.Query().Get("id"))
 
