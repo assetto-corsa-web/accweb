@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strconv"
 	"time"
 )
@@ -55,8 +56,14 @@ func StartServer(id int) error {
 		return err
 	}
 
+	cmdBase := "." + string(filepath.Separator)
+
+	if runtime.GOOS == "linux" {
+		cmdBase = "wine"
+	}
+
 	serverExecutionPath := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(server.Id))
-	cmd := exec.Command("." + string(filepath.Separator) + os.Getenv("ACCWEB_SERVER_EXE"))
+	cmd := exec.Command(cmdBase + os.Getenv("ACCWEB_SERVER_EXE"))
 	cmd.Stdout = logfile
 	cmd.Stderr = logfile
 	cmd.Dir = serverExecutionPath
