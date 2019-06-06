@@ -9,6 +9,7 @@
 			</div>
 		</div>
 		<server v-for="s in server"
+			:key="s.id"
 			:server="s"
 			v-on:copied="loadServer"
 			v-on:deleted="loadServer"

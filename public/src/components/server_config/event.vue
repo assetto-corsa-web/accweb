@@ -10,6 +10,7 @@
         <field type="number" :label="$t('rain_label')" :step="0.01" v-model="rain"></field>
         <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
         <session v-for="session in sessions"
+            :key="session.index"
             :session="session"
             v-on:remove="removeSession"></session>
         <button v-on:click="addSession">{{$t("add_session_button")}}</button>
