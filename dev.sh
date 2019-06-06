@@ -15,5 +15,7 @@ export ACCWEB_TOKEN_PRIVATE_KEY=secrets/token.private
 export ACCWEB_CONFIG_PATH=config/
 export ACCWEB_SERVER_DIR=dev_server/
 export ACCWEB_SERVER_EXE=main.exe
+export ACCWEB_SERVER_DIR="/home/marvin/.steam/steam/steamapps/common/Assetto Corsa Competizione/server"
+export ACCWEB_SERVER_EXE=accServer.exe
 
 go run main.go

@@ -50,7 +50,7 @@ func configureLog() {
 }
 
 func createConfigDir() {
-	if err := os.MkdirAll(os.Getenv("ACCWEB_CONFIG_PATH"), 770); err != nil {
+	if err := os.MkdirAll(os.Getenv("ACCWEB_CONFIG_PATH"), 0755); err != nil {
 		logrus.WithError(err).Fatal("Error creating config directory")
 	}
 }

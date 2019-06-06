@@ -61,7 +61,7 @@ func getConfigDirectoryAndID(id int) (string, int, error) {
 
 	dir := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id))
 
-	if err := os.MkdirAll(dir, 0770); err != nil {
+	if err := os.MkdirAll(dir, 0755); err != nil {
 		logrus.WithField("err", err).Error("Error creating configuration directory")
 		return "", 0, err
 	}
@@ -80,7 +80,7 @@ func saveConfigToFile(config interface{}, dir, name string) error {
 	path := filepath.Join(dir, name)
 	logrus.WithField("path", path).Debug("Saving server configuration file")
 
-	if err := ioutil.WriteFile(path, data, 0666); err != nil {
+	if err := ioutil.WriteFile(path, data, 0655); err != nil {
 		logrus.WithField("err", err).Error("Error saving server configuration file")
 		return err
 	}

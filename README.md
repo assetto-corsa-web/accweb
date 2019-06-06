@@ -73,10 +73,11 @@ I recommend to setup an SSL certificate, but that's out of scope for this instru
 
 To generate the RSA key pair, you can use the `gen_rsa_keys.sh` on Linux or install one of the tools available for Windows. You can also use an online service which generates RSA key pairs (search for "generate rsa key pair online").
 
+**Note that you have to install [wine](https://www.winehq.org/) if you're on Linux.**
+
 ### Docker installation
 
-*NOT READY YET*
-*I'll add Docker when they have released an official Linux server binary.*
+**WORK IN PROGRESS, DO NOT USE YET**
 
 To be able to run accweb through Docker, you have to install Docker and Compose on your server. Please refer to the Docker/Compose documentation on how to do that.
 

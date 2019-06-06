@@ -56,14 +56,16 @@ func StartServer(id int) error {
 		return err
 	}
 
-	cmdBase := "." + string(filepath.Separator)
+	command := "." + string(filepath.Separator) + os.Getenv("ACCWEB_SERVER_EXE")
+	args := make([]string, 0)
 
 	if runtime.GOOS == "linux" {
-		cmdBase = "wine"
+		command = "wine"
+		args = append(args, os.Getenv("ACCWEB_SERVER_EXE"))
 	}
 
 	serverExecutionPath := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(server.Id))
-	cmd := exec.Command(cmdBase + os.Getenv("ACCWEB_SERVER_EXE"))
+	cmd := exec.Command(command, args...)
 	cmd.Stdout = logfile
 	cmd.Stderr = logfile
 	cmd.Dir = serverExecutionPath
@@ -89,7 +91,7 @@ func createLogFile(server *ServerSettings) (*os.File, error) {
 		return nil, err
 	}
 
-	if err := os.MkdirAll(filepath.Join(dir, logDir), 0660); err != nil {
+	if err := os.MkdirAll(filepath.Join(dir, logDir), 0755); err != nil {
 		return nil, err
 	}
 
@@ -103,23 +105,23 @@ func copyServerFiles(id int) error {
 	accServerSource := filepath.Join(os.Getenv("ACCWEB_SERVER_DIR"), accServerFile)
 	accServerTarget := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), accServerFile)
 
-	if err := copyFile(accServerSource, accServerTarget, 0770); err != nil {
+	if err := copyFile(accServerSource, accServerTarget, 0755); err != nil {
 		return err
 	}
 
-	if err := os.MkdirAll(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir), 0660); err != nil {
+	if err := os.MkdirAll(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir), 0755); err != nil {
 		return err
 	}
 
-	if err := os.MkdirAll(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir, serverErrorLogDir), 0660); err != nil {
+	if err := os.MkdirAll(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir, serverErrorLogDir), 0755); err != nil {
 		return err
 	}
 
-	if err := ioutil.WriteFile(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir, serverLogFile), nil, 0660); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir, serverLogFile), nil, 0755); err != nil {
 		return err
 	}
 
-	if err := ioutil.WriteFile(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir, serverErrorLogDir, serverErrorLogFile), nil, 0660); err != nil {
+	if err := ioutil.WriteFile(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id), serverLogDir, serverErrorLogDir, serverErrorLogFile), nil, 0755); err != nil {
 		return err
 	}
 
@@ -134,15 +136,15 @@ func copyCfgFiles(id int) error {
 		return err
 	}
 
-	if err := copyFile(filepath.Join(sourceDir, configurationJsonName), filepath.Join(targetDir, configurationJsonName), 0660); err != nil {
+	if err := copyFile(filepath.Join(sourceDir, configurationJsonName), filepath.Join(targetDir, configurationJsonName), 0755); err != nil {
 		return err
 	}
 
-	if err := copyFile(filepath.Join(sourceDir, settingsJsonName), filepath.Join(targetDir, settingsJsonName), 0660); err != nil {
+	if err := copyFile(filepath.Join(sourceDir, settingsJsonName), filepath.Join(targetDir, settingsJsonName), 0755); err != nil {
 		return err
 	}
 
-	if err := copyFile(filepath.Join(sourceDir, eventJsonName), filepath.Join(targetDir, eventJsonName), 0660); err != nil {
+	if err := copyFile(filepath.Join(sourceDir, eventJsonName), filepath.Join(targetDir, eventJsonName), 0755); err != nil {
 		return err
 	}
 
