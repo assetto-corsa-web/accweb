@@ -11,6 +11,7 @@
 		<server v-for="s in server"
 			:key="s.id"
 			:server="s"
+			:ro="!is_mod && !is_admin"
 			v-on:copied="loadServer"
 			v-on:deleted="loadServer"
 			v-on:started="loadServer"
