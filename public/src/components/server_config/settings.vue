@@ -5,6 +5,12 @@
         <field type="password" :label="$t('adminpassword_label')" v-model="adminPassword"></field>
         <field type="number" :label="$t('trackmedalsrequirement_label')" v-model="trackMedalsRequirement"></field>
         <field type="number" :label="$t('safetyratingrequirement_label')" v-model="safetyRatingRequirement"></field>
+
+        <field type="number" :label="$t('racecraftratingrequirement_label')" v-model="racecraftRatingRequirement"></field>
+        <field type="number" :label="$t('spectatorslots_label')" v-model="spectatorSlots"></field>
+        <field type="password" :label="$t('spectatorpassword_label')" v-model="spectatorPassword"></field>
+        <field type="number" :label="$t('dumpleaderboards_label')" v-model="dumpLeaderboards"></field>
+        <field type="number" :label="$t('isracelocked_label')" v-model="isRaceLocked"></field>
     </collapsible>
 </template>
 
@@ -20,7 +26,12 @@ export default {
             password: "",
             adminPassword: "",
             trackMedalsRequirement: 0,
-            safetyRatingRequirement: -1
+            safetyRatingRequirement: -1,
+            racecraftRatingRequirement: 0,
+            spectatorSlots: 0,
+            spectatorPassword: "",
+            dumpLeaderboards: 0,
+            isRaceLocked: 0
         };
     },
     methods: {
@@ -30,6 +41,11 @@ export default {
             this.adminPassword = data.adminPassword;
             this.trackMedalsRequirement = data.trackMedalsRequirement;
             this.safetyRatingRequirement = data.safetyRatingRequirement;
+            this.racecraftRatingRequirement = data.racecraftRatingRequirement;
+            this.spectatorSlots = data.spectatorSlots;
+            this.spectatorPassword = data.spectatorPassword;
+            this.dumpLeaderboards = data.dumpLeaderboards;
+            this.isRaceLocked = data.isRaceLocked;
         },
         getData() {
             return {
@@ -37,7 +53,12 @@ export default {
                 password: this.password,
                 adminPassword: this.adminPassword,
                 trackMedalsRequirement: parseInt(this.trackMedalsRequirement),
-                safetyRatingRequirement: parseInt(this.safetyRatingRequirement)
+                safetyRatingRequirement: parseInt(this.safetyRatingRequirement),
+                racecraftRatingRequirement: parseInt(this.racecraftRatingRequirement),
+                spectatorSlots: parseInt(this.spectatorSlots),
+                spectatorPassword: this.spectatorPassword,
+                dumpLeaderboards: parseInt(this.dumpLeaderboards),
+                isRaceLocked: parseInt(this.isRaceLocked)
             };
         }
     }
@@ -52,7 +73,12 @@ export default {
         "password_label": "Password",
         "adminpassword_label": "Admin password",
         "trackmedalsrequirement_label": "Track medals requirement",
-        "safetyratingrequirement_label": "Safety rating requirement"
+        "safetyratingrequirement_label": "Safety rating requirement",
+        "racecraftratingrequirement_label": "Racecraft Training Requirement",
+        "spectatorslots_label": "Spectator Slots",
+        "spectatorpassword_label": "Spectator Password",
+        "dumpleaderboards_label": "Dump Leaderboards",
+        "isracelocked_label": "Is Race Locked"
     }
 }
 </i18n>

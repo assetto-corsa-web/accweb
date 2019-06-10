@@ -14,19 +14,25 @@ type ServerSettings struct {
 }
 
 type ConfigurationJson struct {
-	UdpPort       int `json:"udpPort"`
-	TcpPort       int `json:"tcpPort"`
-	MaxClients    int `json:"maxClients"`
-	ConfigVersion int `json:"configVersion"`
+	UdpPort         int `json:"udpPort"`
+	TcpPort         int `json:"tcpPort"`
+	MaxClients      int `json:"maxClients"`
+	ConfigVersion   int `json:"configVersion"`
+	RegisterToLobby int `json:"registerToLobby"`
 }
 
 type SettingsJson struct {
-	ServerName              string `json:"serverName"`
-	Password                string `json:"password"`
-	AdminPassword           string `json:"adminPassword"`
-	TrackMedalsRequirement  int    `json:"trackMedalsRequirement"`
-	SafetyRatingRequirement int    `json:"safetyRatingRequirement"`
-	ConfigVersion           int    `json:"configVersion"`
+	ServerName                 string `json:"serverName"`
+	Password                   string `json:"password"`
+	AdminPassword              string `json:"adminPassword"`
+	TrackMedalsRequirement     int    `json:"trackMedalsRequirement"`
+	SafetyRatingRequirement    int    `json:"safetyRatingRequirement"`
+	ConfigVersion              int    `json:"configVersion"`
+	RacecraftRatingRequirement int    `json:"racecraftRatingRequirement"`
+	SpectatorSlots             int    `json:"spectatorSlots"`
+	SpectatorPassword          string `json:"spectatorPassword"`
+	DumpLeaderboards           int    `json:"dumpLeaderboards"`
+	IsRaceLocked               int    `json:"isRaceLocked"`
 }
 
 type EventJson struct {
@@ -41,6 +47,8 @@ type EventJson struct {
 	WeatherRandomness         int               `json:"weatherRandomness"`
 	ConfigVersion             int               `json:"configVersion"`
 	Sessions                  []SessionSettings `json:"sessions"`
+	PostQualySeconds          int               `json:"postQualySeconds"`
+	PostRaceSeconds           int               `json:"postRaceSeconds"`
 }
 
 type SessionSettings struct {

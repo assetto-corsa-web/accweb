@@ -87,6 +87,7 @@ func GetServerList(withPasswords bool) []ServerSettings {
 	for _, server := range serverList {
 		server.Settings.Password = ""
 		server.Settings.AdminPassword = ""
+		server.Settings.SpectatorPassword = ""
 		list = append(list, server)
 	}
 
@@ -102,6 +103,7 @@ func GetServerById(id int, withPasswords bool) *ServerSettings {
 			if !withPasswords {
 				server.Settings.Password = ""
 				server.Settings.AdminPassword = ""
+				server.Settings.SpectatorPassword = ""
 			}
 
 			return &server

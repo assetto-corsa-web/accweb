@@ -9,6 +9,8 @@
         <field type="number" :label="$t('cloudlevel_label')" :step="0.01" v-model="cloudLevel"></field>
         <field type="number" :label="$t('rain_label')" :step="0.01" v-model="rain"></field>
         <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
+        <field type="number" :label="$t('postqualyseconds_label')" v-model="postQualySeconds"></field>
+        <field type="number" :label="$t('postraceseconds_label')" v-model="postRaceSeconds"></field>
         <session v-for="session in sessions"
             :key="session.index"
             :session="session"
@@ -53,6 +55,8 @@ export default {
 			cloudLevel: 0.3,
 			rain: 0.0,
 			weatherRandomness: 1,
+            postQualySeconds: 0,
+            postRaceSeconds: 0,
             
             sessionIndex: 0,
             sessions: []
@@ -69,6 +73,8 @@ export default {
             this.cloudLevel = data.cloudLevel;
             this.rain = data.rain;
             this.weatherRandomness = data.weatherRandomness;
+            this.postQualySeconds = data.postQualySeconds;
+            this.postRaceSeconds = data.postRaceSeconds;
             this.setSessionData(data.sessions);
         },
         setSessionData(data) {
@@ -95,6 +101,8 @@ export default {
 				cloudLevel: this.toFloat(this.cloudLevel),
 				rain: this.toFloat(this.rain),
 				weatherRandomness: parseInt(this.weatherRandomness),
+                postQualySeconds: parseInt(this.postQualySeconds),
+                postRaceSeconds: parseInt(this.postRaceSeconds),
                 sessions: this.getSessionData()
     		};
     	},
@@ -158,7 +166,9 @@ export default {
         "cloudlevel_label": "Cloud level",
         "rain_label": "Rain",
         "weatherrandomness_label": "Weather randomness",
-        "add_session_button": "Add session"
+        "add_session_button": "Add session",
+        "postqualyseconds_label": "Post Qualy Seconds",
+        "postraceseconds_label": "Post Race Seconds"
     }
 }
 </i18n>
