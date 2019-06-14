@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 )
 
-func ImportServer(configuration, settings, event io.Reader) error {
+func ImportServer(configuration, settings, event, entrylist io.Reader) error {
 	server := new(ServerSettings)
 
 	if err := importFile(configuration, &server.Configuration); err != nil {
@@ -18,6 +18,10 @@ func ImportServer(configuration, settings, event io.Reader) error {
 	}
 
 	if err := importFile(event, &server.Event); err != nil {
+		return err
+	}
+
+	if err := importFile(entrylist, &server.Entrylist); err != nil {
 		return err
 	}
 

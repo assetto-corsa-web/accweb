@@ -11,23 +11,24 @@ type ServerSettings struct {
 	Configuration ConfigurationJson `json:"basic"`
 	Settings      SettingsJson      `json:"settings"`
 	Event         EventJson         `json:"event"`
+	Entrylist     EntrylistJson     `json:"entrylist"`
 }
 
 type ConfigurationJson struct {
+	ConfigVersion   int `json:"configVersion"`
 	UdpPort         int `json:"udpPort"`
 	TcpPort         int `json:"tcpPort"`
 	MaxClients      int `json:"maxClients"`
-	ConfigVersion   int `json:"configVersion"`
 	RegisterToLobby int `json:"registerToLobby"`
 }
 
 type SettingsJson struct {
+	ConfigVersion              int    `json:"configVersion"`
 	ServerName                 string `json:"serverName"`
 	Password                   string `json:"password"`
 	AdminPassword              string `json:"adminPassword"`
 	TrackMedalsRequirement     int    `json:"trackMedalsRequirement"`
 	SafetyRatingRequirement    int    `json:"safetyRatingRequirement"`
-	ConfigVersion              int    `json:"configVersion"`
 	RacecraftRatingRequirement int    `json:"racecraftRatingRequirement"`
 	SpectatorSlots             int    `json:"spectatorSlots"`
 	SpectatorPassword          string `json:"spectatorPassword"`
@@ -36,6 +37,7 @@ type SettingsJson struct {
 }
 
 type EventJson struct {
+	ConfigVersion             int               `json:"configVersion"`
 	Track                     string            `json:"track"`
 	EventType                 string            `json:"eventType"`
 	PreRaceWaitingTimeSeconds int               `json:"preRaceWaitingTimeSeconds"`
@@ -45,7 +47,6 @@ type EventJson struct {
 	CloudLevel                float64           `json:"cloudLevel"`
 	Rain                      float64           `json:"rain"`
 	WeatherRandomness         int               `json:"weatherRandomness"`
-	ConfigVersion             int               `json:"configVersion"`
 	Sessions                  []SessionSettings `json:"sessions"`
 	PostQualySeconds          int               `json:"postQualySeconds"`
 	PostRaceSeconds           int               `json:"postRaceSeconds"`
@@ -57,6 +58,27 @@ type SessionSettings struct {
 	TimeMultiplier         int    `json:"timeMultiplier"`
 	SessionType            string `json:"sessionType"`
 	SessionDurationMinutes int    `json:"sessionDurationMinutes"`
+}
+
+type EntrylistJson struct {
+	ConfigVersion int             `json:"configVersion"`
+	Entries       []EntrySettings `json:"entries"`
+}
+
+type EntrySettings struct {
+	Drivers            []DriverSettings `json:"drivers"`
+	RaceNumber         int              `json:"raceNumber"`
+	ForcedCarModel     int              `json:"forcedCarModel"`
+	OverrideDriverInfo int              `json:"overrideDriverInfo"`
+	IsServerAdmin      int              `json:"isServerAdmin"`
+}
+
+type DriverSettings struct {
+	FirstName      string `json:"firstName"`
+	LastName       string `json:"lastName"`
+	ShortName      string `json:"shortName"`
+	DriverCategory int    `json:"driverCategory"`
+	PlayerID       string `json:"playerID"`
 }
 
 func (server *ServerSettings) start(cmd *exec.Cmd) {

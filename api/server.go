@@ -11,8 +11,8 @@ const (
 	maxMemory = 10000000 // 10 MB
 )
 
-func SaveServerSetttingsHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
-	req := &server.ServerSettings{}
+func SaveServerSettingsHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
+	req := new(server.ServerSettings)
 
 	if err := decodeJSON(r, req); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -134,8 +134,21 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 			logrus.WithError(err).Error("Error closing file on import")
 		}
 	}()
+	entrylist, entrylistHeader, err := r.FormFile("entrylist")
 
-	if err := server.ImportServer(configuration, settings, event); err != nil {
+	if err != nil || entrylistHeader.Size == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	defer func() {
+		if err := event.Close(); err != nil {
+			logrus.WithError(err).Error("Error closing file on import")
+		}
+	}()
+
+	if err := server.ImportServer(configuration, settings, event, entrylist); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return

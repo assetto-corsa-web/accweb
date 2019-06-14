@@ -18,7 +18,7 @@ const (
 	logTimeFormat      = "20060102_150405"
 	logExt             = ".log"
 	cfgDir             = "cfg"
-	accServerFile      = "accServer.exe" // TODO Linux support once released
+	accServerFile      = "accServer.exe"
 	serverLogDir       = "log"
 	serverErrorLogDir  = "error"
 	serverLogFile      = "server.log"
@@ -145,6 +145,10 @@ func copyCfgFiles(id int) error {
 	}
 
 	if err := copyFile(filepath.Join(sourceDir, eventJsonName), filepath.Join(targetDir, eventJsonName), 0755); err != nil {
+		return err
+	}
+
+	if err := copyFile(filepath.Join(sourceDir, entrylistJsonName), filepath.Join(targetDir, entrylistJsonName), 0755); err != nil {
 		return err
 	}
 

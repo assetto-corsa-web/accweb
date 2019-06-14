@@ -14,6 +14,7 @@ const (
 	configurationJsonName = "configuration.json"
 	settingsJsonName      = "settings.json"
 	eventJsonName         = "event.json"
+	entrylistJsonName     = "entrylist.json"
 	configVersion         = 1
 )
 
@@ -37,6 +38,10 @@ func SaveServerSettings(settings *ServerSettings) error {
 		return err
 	}
 
+	if err := saveConfigToFile(settings.Entrylist, dir, entrylistJsonName); err != nil {
+		return err
+	}
+
 	if settings.Id == 0 {
 		settings.Id = id
 		addServer(settings)
@@ -51,6 +56,7 @@ func setConfigVersion(settings *ServerSettings) {
 	settings.Configuration.ConfigVersion = configVersion
 	settings.Settings.ConfigVersion = configVersion
 	settings.Event.ConfigVersion = configVersion
+	settings.Entrylist.ConfigVersion = configVersion
 }
 
 func getConfigDirectoryAndID(id int) (string, int, error) {

@@ -16,6 +16,7 @@
             <basic ref="basic"></basic>
             <settings ref="settings"></settings>
             <event ref="event"></event>
+            <entrylist ref="entrylist"></entrylist>
         </div>
         <div v-show="activeTab === 1">
             <p>{{$t("upload_hint")}}</p>
@@ -26,6 +27,8 @@
                 <input type="file" name="settings.json" v-on:change="settingsJsonListener" />
                 <label>event.json</label>
                 <input type="file" name="event.json" v-on:change="eventJsonListener" />
+                <label>entrylist.json</label>
+                <input type="file" name="entrylist.json" v-on:change="entrylistJsonListener" />
                 <input class="primary" type="submit" :value="$t('import_button')" />
             </form>
         </div>
@@ -34,10 +37,10 @@
 
 <script>
 import axios from "axios";
-import {layout, end, basic, settings, event} from "../components";
+import {layout, end, basic, settings, event, entrylist} from "../components";
 
 export default {
-    components: {layout, end, basic, settings, event},
+    components: {layout, end, basic, settings, event, entrylist},
     data() {
         return {
             activeTab: 0,
@@ -45,7 +48,8 @@ export default {
             servername: "New Server",
             configurationJson: null,
             settingsJson: null,
-            eventJson: null
+            eventJson: null,
+            entrylistJson: null
         };
     },
     mounted() {
@@ -63,18 +67,21 @@ export default {
                 this.$refs.basic.setData(r.data.basic);
                 this.$refs.settings.setData(r.data.settings);
                 this.$refs.event.setData(r.data.event);
+                this.$refs.entrylist.setData(r.data.entrylist);
             });
         },
         save() {
             let basic = this.$refs.basic.getData();
             let settings = this.$refs.settings.getData();
             let event = this.$refs.event.getData();
+            let entrylist = this.$refs.entrylist.getData();
             let data = {
                 id: parseInt(this.id),
                 basic,
                 settings,
-                event
-            };
+                event,
+                entrylist
+            }
 
             axios.post("/api/server", data)
             .then(() => {
@@ -93,11 +100,15 @@ export default {
         eventJsonListener(e) {
             this.eventJson = e.target.files[0];
         },
+        entrylistJsonListener(e) {
+            this.entrylistJson = e.target.files[0];
+        },
         importServer() {
             let data = new FormData();
             data.append("configuration", this.configurationJson);
             data.append("settings", this.settingsJson);
             data.append("event", this.eventJson);
+            data.append("entrylist", this.entrylistJson);
 
             let headers = {headers: {"Content-Type": "multipart/form-data"}};
 
