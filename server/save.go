@@ -45,8 +45,13 @@ func SaveServerSettings(settings *ServerSettings) error {
 	if settings.Id == 0 {
 		settings.Id = id
 		addServer(settings)
+		logrus.WithField("server", settings).Debug("Adding new server")
 	} else {
+		server := GetServerById(settings.Id, false)
+		settings.PID = server.PID
+		settings.Cmd = server.Cmd
 		setServer(settings)
+		logrus.WithField("server", settings).Debug("Updating existing server")
 	}
 
 	return nil
