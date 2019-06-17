@@ -9,10 +9,11 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 
 1. [Features](#features)
 2. [Installation](#installation)
-3. [Contribute and support](#support)
-4. [Links](#links)
-5. [License](#license)
-6. [Screenshots](#screenshots)
+3. [Backup](#backup)
+4. [Contribute and support](#support)
+5. [Links](#links)
+6. [License](#license)
+7. [Screenshots](#screenshots)
 
 ## Features
 <a name="features" />
@@ -85,6 +86,11 @@ To be able to run accweb through Docker, you have to install Docker and Compose 
 2. open a terminal
 3. change directory to the `docker-compose.yml` location
 4. start accweb with the command: `docker-compose up -d`
+
+## Backup
+<a name="backup" />
+
+To backup your files, copy and save the `config` directory as well as the `start.sh` or `start.cmd` depending on your OS. The `config` directory can later be placed inside the new accweb version directory and you can adjust the new `start.sh`/`start.cmd` based on your old configuration (don't overwrite it, there meight be breaking changes).
 
 ## Contribute and support
 <a name="support" />
