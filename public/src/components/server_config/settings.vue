@@ -5,12 +5,12 @@
         <field type="password" :label="$t('adminpassword_label')" v-model="adminPassword"></field>
         <field type="number" :label="$t('trackmedalsrequirement_label')" v-model="trackMedalsRequirement"></field>
         <field type="number" :label="$t('safetyratingrequirement_label')" v-model="safetyRatingRequirement"></field>
-
         <field type="number" :label="$t('racecraftratingrequirement_label')" v-model="racecraftRatingRequirement"></field>
         <field type="number" :label="$t('spectatorslots_label')" v-model="spectatorSlots"></field>
         <field type="password" :label="$t('spectatorpassword_label')" v-model="spectatorPassword"></field>
         <field type="number" :label="$t('dumpleaderboards_label')" v-model="dumpLeaderboards"></field>
         <field type="number" :label="$t('isracelocked_label')" v-model="isRaceLocked"></field>
+        <field type="number" :label="$t('randomizetrackwhenempty_label')" v-model="randomizeTrackWhenEmpty"></field>
     </collapsible>
 </template>
 
@@ -31,7 +31,8 @@ export default {
             spectatorSlots: 0,
             spectatorPassword: "",
             dumpLeaderboards: 0,
-            isRaceLocked: 0
+            isRaceLocked: 0,
+            randomizeTrackWhenEmpty: 0
         };
     },
     methods: {
@@ -46,6 +47,7 @@ export default {
             this.spectatorPassword = data.spectatorPassword;
             this.dumpLeaderboards = data.dumpLeaderboards;
             this.isRaceLocked = data.isRaceLocked;
+            this.randomizeTrackWhenEmpty = data.randomizeTrackWhenEmpty;
         },
         getData() {
             return {
@@ -58,7 +60,8 @@ export default {
                 spectatorSlots: parseInt(this.spectatorSlots),
                 spectatorPassword: this.spectatorPassword,
                 dumpLeaderboards: parseInt(this.dumpLeaderboards),
-                isRaceLocked: parseInt(this.isRaceLocked)
+                isRaceLocked: parseInt(this.isRaceLocked),
+                randomizeTrackWhenEmpty: parseInt(this.randomizeTrackWhenEmpty)
             };
         }
     }
@@ -78,7 +81,8 @@ export default {
         "spectatorslots_label": "Spectator Slots",
         "spectatorpassword_label": "Spectator Password",
         "dumpleaderboards_label": "Dump Leaderboards",
-        "isracelocked_label": "Is Race Locked"
+        "isracelocked_label": "Is Race Locked",
+        "randomizetrackwhenempty_label": "Randomize Track When Empty"
     }
 }
 </i18n>

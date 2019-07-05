@@ -4,6 +4,8 @@
         <field type="number" :label="$t('forcedcarmodel_label')" v-model="entry.forcedCarModel"></field>
         <field type="number" :label="$t('overridedriverinfo_label')" v-model="entry.overrideDriverInfo"></field>
         <field type="number" :label="$t('isserveradmin_label')" v-model="entry.isServerAdmin"></field>
+        <field type="text" :label="$t('customcar_label')" v-model="entry.customCar"></field>
+        <field type="number" :label="$t('overridecarmodelforcustomcar_label')" v-model="entry.overrideCarModelForCustomCar"></field>
         <driver v-for="driver in drivers"
             :key="driver.index"
             :driver="driver"
@@ -77,6 +79,8 @@ export default {
         "forcedcarmodel_label": "Forced Car Model",
         "overridedriverinfo_label": "Override Driver Info",
         "isserveradmin_label": "Is Server Admin",
+        "customcar_label": "Custom Car",
+        "overridecarmodelforcustomcar_label": "Override Car Model For Custom Car",
         "add_driver_button": "Add Driver",
         "remove_button": "Remove Entry"
     }

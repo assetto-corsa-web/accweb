@@ -34,6 +34,7 @@ type SettingsJson struct {
 	SpectatorPassword          string `json:"spectatorPassword"`
 	DumpLeaderboards           int    `json:"dumpLeaderboards"`
 	IsRaceLocked               int    `json:"isRaceLocked"`
+	RandomizeTrackWhenEmpty    int    `json:"randomizeTrackWhenEmpty"`
 }
 
 type EventJson struct {
@@ -61,16 +62,19 @@ type SessionSettings struct {
 }
 
 type EntrylistJson struct {
-	ConfigVersion int             `json:"configVersion"`
-	Entries       []EntrySettings `json:"entries"`
+	ConfigVersion  int             `json:"configVersion"`
+	Entries        []EntrySettings `json:"entries"`
+	ForceEntryList int             `json:"forceEntryList"`
 }
 
 type EntrySettings struct {
-	Drivers            []DriverSettings `json:"drivers"`
-	RaceNumber         int              `json:"raceNumber"`
-	ForcedCarModel     int              `json:"forcedCarModel"`
-	OverrideDriverInfo int              `json:"overrideDriverInfo"`
-	IsServerAdmin      int              `json:"isServerAdmin"`
+	Drivers                      []DriverSettings `json:"drivers"`
+	RaceNumber                   int              `json:"raceNumber"`
+	ForcedCarModel               int              `json:"forcedCarModel"`
+	OverrideDriverInfo           int              `json:"overrideDriverInfo"`
+	IsServerAdmin                int              `json:"isServerAdmin"`
+	CustomCar                    string           `json:"customCar"`
+	OverrideCarModelForCustomCar int              `json:"overrideCarModelForCustomCar"`
 }
 
 type DriverSettings struct {

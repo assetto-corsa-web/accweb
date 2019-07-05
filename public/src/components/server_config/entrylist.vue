@@ -4,6 +4,7 @@
             :key="entry.index"
             :entry="entry"
             v-on:remove="removeEntry"></entry>
+        <field type="number" :label="$t('forceentrylist_label')" v-model="forceEntryList"></field>
         <button v-on:click="addEntry">{{$t("add_entry_button")}}</button>
     </collapsible>
 </template>
@@ -11,13 +12,15 @@
 <script>
 import collapsible from "../collapsible.vue";
 import entry from "./entry.vue";
+import field from "../field.vue";
 
 export default {
-    components: {collapsible, entry},
+    components: {collapsible, entry, field},
     data() {
         return {
             entryIndex: 0,
-            entries: []
+            entries: [],
+            forceEntryList: 0
         };
     },
     methods: {
@@ -31,14 +34,19 @@ export default {
                     raceNumber: entries[i].raceNumber,
                     forcedCarModel: entries[i].forcedCarModel,
                     overrideDriverInfo: entries[i].overrideDriverInfo,
-                    isServerAdmin: entries[i].isServerAdmin
+                    isServerAdmin: entries[i].isServerAdmin,
+                    customCar: entries[i].customCar,
+                    overrideCarModelForCustomCar: entries[i].overrideCarModelForCustomCar
                 });
                 this.entryIndex++;
             }
+
+            this.forceEntryList = data.forceEntryList;
         },
         getData() {
             return {
-                entries: this.getEntryData()
+                entries: this.getEntryData(),
+                forceEntryList: parseInt(this.forceEntryList)
             };
         },
         getEntryData() {
@@ -50,7 +58,9 @@ export default {
                     raceNumber: parseInt(this.entries[i].raceNumber),
                     forcedCarModel: parseInt(this.entries[i].forcedCarModel),
                     overrideDriverInfo: parseInt(this.entries[i].overrideDriverInfo),
-                    isServerAdmin: parseInt(this.entries[i].isServerAdmin)
+                    isServerAdmin: parseInt(this.entries[i].isServerAdmin),
+                    customCar: this.entries[i].customCar,
+                    overrideCarModelForCustomCar: parseInt(this.entries[i].overrideCarModelForCustomCar)
                 });
             }
 
@@ -63,7 +73,9 @@ export default {
                 raceNumber: 0,
                 forcedCarModel: -1,
                 overrideDriverInfo: 0,
-                isServerAdmin: 0
+                isServerAdmin: 0,
+                customCar: "",
+                overrideCarModelForCustomCar: 0
             });
             this.entryIndex++;
         },
@@ -85,6 +97,7 @@ export default {
 {
     "en": {
         "title": "Entry List",
+        "forceentrylist_label": "Force Entry List",
         "add_entry_button": "Add Entry"
     }
 }
