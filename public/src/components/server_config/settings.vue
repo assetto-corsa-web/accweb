@@ -11,6 +11,8 @@
         <field type="number" :label="$t('dumpleaderboards_label')" v-model="dumpLeaderboards"></field>
         <field type="number" :label="$t('isracelocked_label')" v-model="isRaceLocked"></field>
         <field type="number" :label="$t('randomizetrackwhenempty_label')" v-model="randomizeTrackWhenEmpty"></field>
+        <field type="number" :label="$t('maxclientsoverride_label')" v-model="maxClientsOverride"></field>
+        <field type="text" :label="$t('centralentrylistpath_label')" v-model="centralEntryListPath"></field>
     </collapsible>
 </template>
 
@@ -32,7 +34,9 @@ export default {
             spectatorPassword: "",
             dumpLeaderboards: 0,
             isRaceLocked: 0,
-            randomizeTrackWhenEmpty: 0
+            randomizeTrackWhenEmpty: 0,
+            maxClientsOverride: 30,
+            centralEntryListPath: ""
         };
     },
     methods: {
@@ -48,6 +52,8 @@ export default {
             this.dumpLeaderboards = data.dumpLeaderboards;
             this.isRaceLocked = data.isRaceLocked;
             this.randomizeTrackWhenEmpty = data.randomizeTrackWhenEmpty;
+            this.maxClientsOverride = data.maxClientsOverride;
+            this.centralEntryListPath = data.centralEntryListPath;
         },
         getData() {
             return {
@@ -61,7 +67,9 @@ export default {
                 spectatorPassword: this.spectatorPassword,
                 dumpLeaderboards: parseInt(this.dumpLeaderboards),
                 isRaceLocked: parseInt(this.isRaceLocked),
-                randomizeTrackWhenEmpty: parseInt(this.randomizeTrackWhenEmpty)
+                randomizeTrackWhenEmpty: parseInt(this.randomizeTrackWhenEmpty),
+                maxClientsOverride: parseInt(this.maxClientsOverride),
+                centralEntryListPath: this.centralEntryListPath
             };
         }
     }
@@ -82,7 +90,9 @@ export default {
         "spectatorpassword_label": "Spectator Password",
         "dumpleaderboards_label": "Dump Leaderboards",
         "isracelocked_label": "Is Race Locked",
-        "randomizetrackwhenempty_label": "Randomize Track When Empty"
+        "randomizetrackwhenempty_label": "Randomize Track When Empty",
+        "maxclientsoverride_label": "Max Clients Override",
+        "centralentrylistpath_label": "Central Entry List Path"
     }
 }
 </i18n>

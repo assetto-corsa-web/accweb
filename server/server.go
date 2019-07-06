@@ -35,6 +35,8 @@ type SettingsJson struct {
 	DumpLeaderboards           int    `json:"dumpLeaderboards"`
 	IsRaceLocked               int    `json:"isRaceLocked"`
 	RandomizeTrackWhenEmpty    int    `json:"randomizeTrackWhenEmpty"`
+	MaxClientsOverride         int    `json:"maxClientsOverride"`
+	CentralEntryListPath       string `json:"centralEntryListPath"`
 }
 
 type EventJson struct {
