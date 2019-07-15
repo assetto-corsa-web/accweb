@@ -13,9 +13,10 @@
             </div>
             <div class="info">
                 <span v-if="server.pid">PID: {{server.pid}}</span>
-                UDP: {{server.basic.udpPort}}
-                TCP: {{server.basic.tcpPort}}
+                UDP: {{server.basic.udpPort}} &bull;
+                TCP: {{server.basic.tcpPort}} &bull;
                 Track: {{server.event.track}}
+                <span v-if="!ro">&bull; Config Dir: {{server.id}}</span>
             </div>
         </div>
         <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>
