@@ -4,7 +4,7 @@ Rem It configures and starts accweb for local development.
 set ACCWEB_LOGLEVEL=debug
 set ACCWEB_WATCH_BUILD_JS=true
 set ACCWEB_ALLOWED_ORIGINS=*
-set ACCWEB_HOST=localhost:8080
+set ACCWEB_HOST=localhost:8888
 set ACCWEB_ADMIN_PASSWORD=admin
 set ACCWEB_MOD_PASSWORD=mod
 set ACCWEB_RO_PASSWORD=ro

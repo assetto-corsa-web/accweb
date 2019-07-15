@@ -37,6 +37,7 @@ type SettingsJson struct {
 	RandomizeTrackWhenEmpty    int    `json:"randomizeTrackWhenEmpty"`
 	MaxClientsOverride         int    `json:"maxClientsOverride"`
 	CentralEntryListPath       string `json:"centralEntryListPath"`
+	ShortFormationLap          int    `json:"shortFormationLap"`
 }
 
 type EventJson struct {

@@ -13,6 +13,7 @@
         <field type="number" :label="$t('randomizetrackwhenempty_label')" v-model="randomizeTrackWhenEmpty"></field>
         <field type="number" :label="$t('maxclientsoverride_label')" v-model="maxClientsOverride"></field>
         <field type="text" :label="$t('centralentrylistpath_label')" v-model="centralEntryListPath"></field>
+        <field type="number" :label="$t('shortformationlap_label')" v-model="shortFormationLap"></field>
     </collapsible>
 </template>
 
@@ -36,7 +37,8 @@ export default {
             isRaceLocked: 0,
             randomizeTrackWhenEmpty: 0,
             maxClientsOverride: 30,
-            centralEntryListPath: ""
+            centralEntryListPath: "",
+            shortFormationLap: 0
         };
     },
     methods: {
@@ -54,6 +56,7 @@ export default {
             this.randomizeTrackWhenEmpty = data.randomizeTrackWhenEmpty;
             this.maxClientsOverride = data.maxClientsOverride;
             this.centralEntryListPath = data.centralEntryListPath;
+            this.shortFormationLap = data.shortFormationLap;
         },
         getData() {
             return {
@@ -69,7 +72,8 @@ export default {
                 isRaceLocked: parseInt(this.isRaceLocked),
                 randomizeTrackWhenEmpty: parseInt(this.randomizeTrackWhenEmpty),
                 maxClientsOverride: parseInt(this.maxClientsOverride),
-                centralEntryListPath: this.centralEntryListPath
+                centralEntryListPath: this.centralEntryListPath,
+                shortFormationLap: parseInt(this.shortFormationLap)
             };
         }
     }
@@ -92,7 +96,8 @@ export default {
         "isracelocked_label": "Is Race Locked",
         "randomizetrackwhenempty_label": "Randomize Track When Empty",
         "maxclientsoverride_label": "Max Clients Override",
-        "centralentrylistpath_label": "Central Entry List Path"
+        "centralentrylistpath_label": "Central Entry List Path",
+        "shortformationlap_label": "Short Formation Lap"
     }
 }
 </i18n>
