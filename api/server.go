@@ -134,6 +134,19 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 			logrus.WithError(err).Error("Error closing file on import")
 		}
 	}()
+	eventRules, eventRulesHeader, err := r.FormFile("eventRules")
+
+	if err != nil || eventRulesHeader.Size == 0 {
+		w.WriteHeader(http.StatusBadRequest)
+		writeResponse(w, nil)
+		return
+	}
+
+	defer func() {
+		if err := eventRules.Close(); err != nil {
+			logrus.WithError(err).Error("Error closing file on import")
+		}
+	}()
 	entrylist, entrylistHeader, err := r.FormFile("entrylist")
 
 	if err != nil || entrylistHeader.Size == 0 {
@@ -148,7 +161,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 		}
 	}()
 
-	if err := server.ImportServer(configuration, settings, event, entrylist); err != nil {
+	if err := server.ImportServer(configuration, settings, event, eventRules, entrylist); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return

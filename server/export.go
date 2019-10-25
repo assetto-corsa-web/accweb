@@ -29,6 +29,10 @@ func ExportServer(id int, withPasswords bool) ([]byte, error) {
 		return nil, err
 	}
 
+	if err := addFileToZip(archive, server.EventRules, eventRulesJsonName); err != nil {
+		return nil, err
+	}
+
 	if err := addFileToZip(archive, server.Entrylist, entrylistJsonName); err != nil {
 		return nil, err
 	}

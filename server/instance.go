@@ -148,6 +148,10 @@ func copyCfgFiles(id int) error {
 		return err
 	}
 
+	if err := copyFile(filepath.Join(sourceDir, eventRulesJsonName), filepath.Join(targetDir, eventRulesJsonName), 0755); err != nil {
+		return err
+	}
+
 	if err := copyFile(filepath.Join(sourceDir, entrylistJsonName), filepath.Join(targetDir, entrylistJsonName), 0755); err != nil {
 		return err
 	}

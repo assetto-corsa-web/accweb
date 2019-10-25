@@ -14,6 +14,7 @@ const (
 	configurationJsonName = "configuration.json"
 	settingsJsonName      = "settings.json"
 	eventJsonName         = "event.json"
+	eventRulesJsonName    = "eventRules.json"
 	entrylistJsonName     = "entrylist.json"
 	configVersion         = 1
 )
@@ -35,6 +36,10 @@ func SaveServerSettings(settings *ServerSettings) error {
 	}
 
 	if err := saveConfigToFile(settings.Event, dir, eventJsonName); err != nil {
+		return err
+	}
+
+	if err := saveConfigToFile(settings.EventRules, dir, eventRulesJsonName); err != nil {
 		return err
 	}
 
@@ -61,6 +66,7 @@ func setConfigVersion(settings *ServerSettings) {
 	settings.Configuration.ConfigVersion = configVersion
 	settings.Settings.ConfigVersion = configVersion
 	settings.Event.ConfigVersion = configVersion
+	settings.EventRules.ConfigVersion = configVersion
 	settings.Entrylist.ConfigVersion = configVersion
 }
 

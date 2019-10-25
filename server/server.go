@@ -11,6 +11,7 @@ type ServerSettings struct {
 	Configuration ConfigurationJson `json:"basic"`
 	Settings      SettingsJson      `json:"settings"`
 	Event         EventJson         `json:"event"`
+	EventRules    EventRulesJson    `json:"eventRules"`
 	Entrylist     EntrylistJson     `json:"entrylist"`
 }
 
@@ -56,6 +57,21 @@ type EventJson struct {
 	Sessions                  []SessionSettings `json:"sessions"`
 	PostQualySeconds          int               `json:"postQualySeconds"`
 	PostRaceSeconds           int               `json:"postRaceSeconds"`
+}
+
+type EventRulesJson struct {
+	ConfigVersion                        int  `json:"configVersion"`
+	QualifyStandingType                  int  `json:"qualifyStandingType"`
+	PitWindowLengthSec                   int  `json:"pitWindowLengthSec"`
+	DriverStintTimeSec                   int  `json:"driverStintTimeSec"`
+	MandatoryPitstopCount                int  `json:"mandatoryPitstopCount"`
+	MaxTotalDrivingTime                  int  `json:"maxTotalDrivingTime"`
+	MaxDriversCount                      int  `json:"maxDriversCount"`
+	IsRefuellingAllowedInRace            bool `json:"isRefuellingAllowedInRace"`
+	IsRefuellingTimeFixed                bool `json:"isRefuellingTimeFixed"`
+	IsMandatoryPitstopRefuellingRequired bool `json:"isMandatoryPitstopRefuellingRequired"`
+	IsMandatoryPitstopTyreChangeRequired bool `json:"isMandatoryPitstopTyreChangeRequired"`
+	IsMandatoryPitstopSwapDriverRequired bool `json:"isMandatoryPitstopSwapDriverRequired"`
 }
 
 type SessionSettings struct {
