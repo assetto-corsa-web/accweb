@@ -38,7 +38,19 @@ export default {
                 {value: "brands_hatch", label: "Brands Hatch"},
                 {value: "barcelona", label: "Barcelona"},
                 {value: "silverstone", label: "Silverstone"},
-                {value: "spa", label: "Spa"}
+                {value: "spa", label: "Spa"},
+                {value: "zandvoort", label: "Zandvoort"},
+                {value: "monza_2019", label: "Monza (2019)"},
+                {value: "zolder_2019", label: "Zolder (2019)"},
+                {value: "brands_hatch_2019", label: "Brands Hatch (2019)"},
+                {value: "silverstone_2019", label: "Silverstone (2019)"},
+                {value: "paul_ricard_2019", label: "Paul Ricard (2019)"},
+                {value: "misano_2019", label: "Misano (2019)"},
+                {value: "spa_2019", label: "Spa (2019)"},
+                {value: "nurburgring_2019", label: "Nürburgring (2019)"},
+                {value: "barcelona_2019", label: "Barcelona (2019)"},
+                {value: "hungaroring_2019", label: "Hungaroring (2019)"},
+                {value: "zandvoort_2019", label: "Zandvoort (2019)"}
     		],
     		eventTypes: [
     			{value: "E_3h", label: "Endurance - 3h"},
