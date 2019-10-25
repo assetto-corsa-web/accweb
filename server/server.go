@@ -83,10 +83,9 @@ type SessionSettings struct {
 }
 
 type EntrylistJson struct {
-	ConfigVersion       int             `json:"configVersion"`
-	Entries             []EntrySettings `json:"entries"`
-	ForceEntryList      int             `json:"forceEntryList"`
-	DefaultGridPosition int             `json:"defaultGridPosition"`
+	ConfigVersion  int             `json:"configVersion"`
+	Entries        []EntrySettings `json:"entries"`
+	ForceEntryList int             `json:"forceEntryList"`
 }
 
 type EntrySettings struct {
@@ -100,11 +99,12 @@ type EntrySettings struct {
 }
 
 type DriverSettings struct {
-	FirstName      string `json:"firstName"`
-	LastName       string `json:"lastName"`
-	ShortName      string `json:"shortName"`
-	DriverCategory int    `json:"driverCategory"`
-	PlayerID       string `json:"playerID"`
+	FirstName           string `json:"firstName"`
+	LastName            string `json:"lastName"`
+	ShortName           string `json:"shortName"`
+	DriverCategory      int    `json:"driverCategory"`
+	PlayerID            string `json:"playerID"`
+	DefaultGridPosition int    `json:"defaultGridPosition"`
 }
 
 func (server *ServerSettings) start(cmd *exec.Cmd) {

@@ -5,6 +5,7 @@
         <field type="text" :label="$t('shortname_label')" v-model="shortName"></field>
         <field type="number" :label="$t('drivercategory_label')" v-model="driverCategory"></field>
         <field type="text" :label="$t('playerid_label')" v-model="playerID"></field>
+        <field type="number" :label="$t('defaultgridposition_label')" v-model="defaultGridPosition"></field>
         <button v-on:click="$emit('remove', driver.index)">{{$t("remove_button")}}</button>
     </div>
 </template>
@@ -35,6 +36,10 @@ export default {
         playerID(value) {
             this.driver.playerID = value;
             this.$emit("update", this.driver);
+        },
+        defaultGridPosition(value) {
+            this.driver.defaultGridPosition = parseInt(value);
+            this.$emit("update", this.driver);
         }
     },
     data() {
@@ -43,7 +48,8 @@ export default {
             lastName: "",
             shortName: "",
             driverCategory: 0,
-            playerID: ""
+            playerID: "",
+            defaultGridPosition: 0
         };
     },
     mounted() {
@@ -52,6 +58,7 @@ export default {
         this.shortName = this.driver.shortName;
         this.driverCategory = this.driver.driverCategory;
         this.playerID = this.driver.playerID;
+        this.defaultGridPosition = this.driver.defaultGridPosition;
     }
 }
 </script>
@@ -64,6 +71,7 @@ export default {
         "shortname_label": "Short Name",
         "drivercategory_label": "Driver Category",
         "playerid_label": "PlayerID",
+        "defaultgridposition_label": "Default Grid Position",
         "remove_button": "Remove Driver"
     }
 }
