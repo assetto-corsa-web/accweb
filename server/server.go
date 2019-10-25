@@ -20,6 +20,7 @@ type ConfigurationJson struct {
 	TcpPort         int `json:"tcpPort"`
 	MaxClients      int `json:"maxClients"`
 	RegisterToLobby int `json:"registerToLobby"`
+	LanDiscovery    int `json:"lanDiscovery"`
 }
 
 type SettingsJson struct {
@@ -38,6 +39,8 @@ type SettingsJson struct {
 	MaxClientsOverride         int    `json:"maxClientsOverride"`
 	CentralEntryListPath       string `json:"centralEntryListPath"`
 	ShortFormationLap          int    `json:"shortFormationLap"`
+	AllowAutoDQ                int    `json:"allowAutoDQ"`
+	DumpEntryList              int    `json:"dumpEntryList"`
 }
 
 type EventJson struct {
@@ -47,7 +50,6 @@ type EventJson struct {
 	PreRaceWaitingTimeSeconds int               `json:"preRaceWaitingTimeSeconds"`
 	SessionOverTimeSeconds    int               `json:"sessionOverTimeSeconds"`
 	AmbientTemp               int               `json:"ambientTemp"`
-	TrackTemp                 int               `json:"trackTemp"`
 	CloudLevel                float64           `json:"cloudLevel"`
 	Rain                      float64           `json:"rain"`
 	WeatherRandomness         int               `json:"weatherRandomness"`
@@ -65,9 +67,10 @@ type SessionSettings struct {
 }
 
 type EntrylistJson struct {
-	ConfigVersion  int             `json:"configVersion"`
-	Entries        []EntrySettings `json:"entries"`
-	ForceEntryList int             `json:"forceEntryList"`
+	ConfigVersion       int             `json:"configVersion"`
+	Entries             []EntrySettings `json:"entries"`
+	ForceEntryList      int             `json:"forceEntryList"`
+	DefaultGridPosition int             `json:"defaultGridPosition"`
 }
 
 type EntrySettings struct {

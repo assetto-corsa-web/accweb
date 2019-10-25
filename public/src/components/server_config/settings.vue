@@ -14,6 +14,8 @@
         <field type="number" :label="$t('maxclientsoverride_label')" v-model="maxClientsOverride"></field>
         <field type="text" :label="$t('centralentrylistpath_label')" v-model="centralEntryListPath"></field>
         <field type="number" :label="$t('shortformationlap_label')" v-model="shortFormationLap"></field>
+        <field type="number" :label="$t('allowautodq_label')" v-model="allowAutoDQ"></field>
+        <field type="number" :label="$t('dumpentrylist_label')" v-model="dumpEntryList"></field>
     </collapsible>
 </template>
 
@@ -38,7 +40,9 @@ export default {
             randomizeTrackWhenEmpty: 0,
             maxClientsOverride: 30,
             centralEntryListPath: "",
-            shortFormationLap: 0
+            shortFormationLap: 0,
+            allowAutoDQ: 0,
+            dumpEntryList: 0
         };
     },
     methods: {
@@ -57,6 +61,8 @@ export default {
             this.maxClientsOverride = data.maxClientsOverride;
             this.centralEntryListPath = data.centralEntryListPath;
             this.shortFormationLap = data.shortFormationLap;
+            this.allowAutoDQ = data.allowAutoDQ;
+            this.dumpEntryList = data.dumpEntryList;
         },
         getData() {
             return {
@@ -73,7 +79,9 @@ export default {
                 randomizeTrackWhenEmpty: parseInt(this.randomizeTrackWhenEmpty),
                 maxClientsOverride: parseInt(this.maxClientsOverride),
                 centralEntryListPath: this.centralEntryListPath,
-                shortFormationLap: parseInt(this.shortFormationLap)
+                shortFormationLap: parseInt(this.shortFormationLap),
+                allowAutoDQ: parseInt(this.allowAutoDQ),
+                dumpEntryList: parseInt(this.dumpEntryList)
             };
         }
     }
@@ -97,7 +105,9 @@ export default {
         "randomizetrackwhenempty_label": "Randomize Track When Empty",
         "maxclientsoverride_label": "Max Clients Override",
         "centralentrylistpath_label": "Central Entry List Path",
-        "shortformationlap_label": "Short Formation Lap"
+        "shortformationlap_label": "Short Formation Lap",
+        "allowautodq_label": "Allow Auto DQ",
+        "dumpentrylist_label": "Dump Entry List"
     }
 }
 </i18n>

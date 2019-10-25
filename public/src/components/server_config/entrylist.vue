@@ -5,6 +5,7 @@
             :entry="entry"
             v-on:remove="removeEntry"></entry>
         <field type="number" :label="$t('forceentrylist_label')" v-model="forceEntryList"></field>
+        <field type="number" :label="$t('defaultgridposition_label')" v-model="defaultGridPosition"></field>
         <button v-on:click="addEntry">{{$t("add_entry_button")}}</button>
     </collapsible>
 </template>
@@ -20,7 +21,8 @@ export default {
         return {
             entryIndex: 0,
             entries: [],
-            forceEntryList: 0
+            forceEntryList: 0,
+            defaultGridPosition: 0
         };
     },
     methods: {
@@ -42,11 +44,13 @@ export default {
             }
 
             this.forceEntryList = data.forceEntryList;
+            this.defaultGridPosition = data.defaultGridPosition;
         },
         getData() {
             return {
                 entries: this.getEntryData(),
-                forceEntryList: parseInt(this.forceEntryList)
+                forceEntryList: parseInt(this.forceEntryList),
+                defaultGridPosition: parseInt(this.defaultGridPosition)
             };
         },
         getEntryData() {
@@ -98,6 +102,7 @@ export default {
     "en": {
         "title": "Entry List",
         "forceentrylist_label": "Force Entry List",
+        "defaultgridposition_label": "Default Grid Position",
         "add_entry_button": "Add Entry"
     }
 }
