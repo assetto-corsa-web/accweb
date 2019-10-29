@@ -19,7 +19,7 @@ type ConfigurationJson struct {
 	ConfigVersion   int `json:"configVersion"`
 	UdpPort         int `json:"udpPort"`
 	TcpPort         int `json:"tcpPort"`
-	MaxClients      int `json:"maxClients"`
+	MaxConnections  int `json:"maxConnections"`
 	RegisterToLobby int `json:"registerToLobby"`
 	LanDiscovery    int `json:"lanDiscovery"`
 }
@@ -32,12 +32,11 @@ type SettingsJson struct {
 	TrackMedalsRequirement     int    `json:"trackMedalsRequirement"`
 	SafetyRatingRequirement    int    `json:"safetyRatingRequirement"`
 	RacecraftRatingRequirement int    `json:"racecraftRatingRequirement"`
-	SpectatorSlots             int    `json:"spectatorSlots"`
 	SpectatorPassword          string `json:"spectatorPassword"`
 	DumpLeaderboards           int    `json:"dumpLeaderboards"`
 	IsRaceLocked               int    `json:"isRaceLocked"`
 	RandomizeTrackWhenEmpty    int    `json:"randomizeTrackWhenEmpty"`
-	MaxClientsOverride         int    `json:"maxClientsOverride"`
+	MaxCarSlots                int    `json:"maxCarSlots"`
 	CentralEntryListPath       string `json:"centralEntryListPath"`
 	ShortFormationLap          int    `json:"shortFormationLap"`
 	AllowAutoDQ                int    `json:"allowAutoDQ"`

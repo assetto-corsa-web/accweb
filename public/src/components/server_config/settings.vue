@@ -6,12 +6,11 @@
         <field type="number" :label="$t('trackmedalsrequirement_label')" v-model="trackMedalsRequirement"></field>
         <field type="number" :label="$t('safetyratingrequirement_label')" v-model="safetyRatingRequirement"></field>
         <field type="number" :label="$t('racecraftratingrequirement_label')" v-model="racecraftRatingRequirement"></field>
-        <field type="number" :label="$t('spectatorslots_label')" v-model="spectatorSlots"></field>
         <field type="password" :label="$t('spectatorpassword_label')" v-model="spectatorPassword"></field>
         <field type="number" :label="$t('dumpleaderboards_label')" v-model="dumpLeaderboards"></field>
         <field type="number" :label="$t('isracelocked_label')" v-model="isRaceLocked"></field>
         <field type="number" :label="$t('randomizetrackwhenempty_label')" v-model="randomizeTrackWhenEmpty"></field>
-        <field type="number" :label="$t('maxclientsoverride_label')" v-model="maxClientsOverride"></field>
+        <field type="number" :label="$t('maxcarslots_label')" v-model="maxCarSlots"></field>
         <field type="text" :label="$t('centralentrylistpath_label')" v-model="centralEntryListPath"></field>
         <field type="number" :label="$t('shortformationlap_label')" v-model="shortFormationLap"></field>
         <field type="number" :label="$t('allowautodq_label')" v-model="allowAutoDQ"></field>
@@ -33,12 +32,11 @@ export default {
             trackMedalsRequirement: 0,
             safetyRatingRequirement: -1,
             racecraftRatingRequirement: 0,
-            spectatorSlots: 0,
             spectatorPassword: "",
             dumpLeaderboards: 0,
             isRaceLocked: 0,
             randomizeTrackWhenEmpty: 0,
-            maxClientsOverride: 30,
+            maxCarSlots: 30,
             centralEntryListPath: "",
             shortFormationLap: 0,
             allowAutoDQ: 0,
@@ -53,12 +51,11 @@ export default {
             this.trackMedalsRequirement = data.trackMedalsRequirement;
             this.safetyRatingRequirement = data.safetyRatingRequirement;
             this.racecraftRatingRequirement = data.racecraftRatingRequirement;
-            this.spectatorSlots = data.spectatorSlots;
             this.spectatorPassword = data.spectatorPassword;
             this.dumpLeaderboards = data.dumpLeaderboards;
             this.isRaceLocked = data.isRaceLocked;
             this.randomizeTrackWhenEmpty = data.randomizeTrackWhenEmpty;
-            this.maxClientsOverride = data.maxClientsOverride;
+            this.maxCarSlots = data.maxCarSlots;
             this.centralEntryListPath = data.centralEntryListPath;
             this.shortFormationLap = data.shortFormationLap;
             this.allowAutoDQ = data.allowAutoDQ;
@@ -72,12 +69,11 @@ export default {
                 trackMedalsRequirement: parseInt(this.trackMedalsRequirement),
                 safetyRatingRequirement: parseInt(this.safetyRatingRequirement),
                 racecraftRatingRequirement: parseInt(this.racecraftRatingRequirement),
-                spectatorSlots: parseInt(this.spectatorSlots),
                 spectatorPassword: this.spectatorPassword,
                 dumpLeaderboards: parseInt(this.dumpLeaderboards),
                 isRaceLocked: parseInt(this.isRaceLocked),
                 randomizeTrackWhenEmpty: parseInt(this.randomizeTrackWhenEmpty),
-                maxClientsOverride: parseInt(this.maxClientsOverride),
+                maxCarSlots: parseInt(this.maxCarSlots),
                 centralEntryListPath: this.centralEntryListPath,
                 shortFormationLap: parseInt(this.shortFormationLap),
                 allowAutoDQ: parseInt(this.allowAutoDQ),
@@ -98,12 +94,11 @@ export default {
         "trackmedalsrequirement_label": "Track medals requirement",
         "safetyratingrequirement_label": "Safety rating requirement",
         "racecraftratingrequirement_label": "Racecraft Training Requirement",
-        "spectatorslots_label": "Spectator Slots",
         "spectatorpassword_label": "Spectator Password",
         "dumpleaderboards_label": "Dump Leaderboards",
         "isracelocked_label": "Is Race Locked",
         "randomizetrackwhenempty_label": "Randomize Track When Empty",
-        "maxclientsoverride_label": "Max Clients Override",
+        "maxcarslots_label": "Max Car Slots",
         "centralentrylistpath_label": "Central Entry List Path",
         "shortformationlap_label": "Short Formation Lap",
         "allowautodq_label": "Allow Auto DQ",
