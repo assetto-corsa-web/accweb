@@ -1,6 +1,8 @@
 package server
 
-import "os/exec"
+import (
+	"os/exec"
+)
 
 type ServerSettings struct {
 	Id  int       `json:"id"`
