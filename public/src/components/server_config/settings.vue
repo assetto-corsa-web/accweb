@@ -80,7 +80,7 @@ export default {
                 centralEntryListPath: this.centralEntryListPath,
                 shortFormationLap: parseInt(this.shortFormationLap),
                 allowAutoDQ: parseInt(this.allowAutoDQ),
-                dumpEntryList: parseInt(this.dumpEntryList)
+                dumpEntryList: parseInt(this.dumpEntryList),
                 formationLapType: parseInt(this.formationLapType)
             };
         }
@@ -106,7 +106,7 @@ export default {
         "centralentrylistpath_label": "Central Entry List Path",
         "shortformationlap_label": "Short Formation Lap",
         "allowautodq_label": "Allow Auto DQ",
-        "dumpentrylist_label": "Dump Entry List"
+        "dumpentrylist_label": "Dump Entry List",
         "formationlaptype_label": "Formation Lap Type"
     }
 }
