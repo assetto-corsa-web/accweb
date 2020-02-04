@@ -51,6 +51,10 @@ export default {
                 {value: "barcelona_2019", label: "Barcelona (2019)"},
                 {value: "hungaroring_2019", label: "Hungaroring (2019)"},
                 {value: "zandvoort_2019", label: "Zandvoort (2019)"}
+                {value: "kyalami_2019", label: "Kyalami (2019)"}
+                {value: "mount_panorama_2019", label: "Mount Panorama (2019)"}
+                {value: "suzuka_2019", label: "Suzuka (2019)"}
+                {value: "laguna_seca_2019", label: "Laguna Seca (2019)"}
     		],
     		eventTypes: [
     			{value: "E_3h", label: "Endurance - 3h"},
