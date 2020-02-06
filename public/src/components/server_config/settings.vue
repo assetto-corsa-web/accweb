@@ -22,9 +22,10 @@
 <script>
 import collapsible from "../collapsible.vue";
 import field from "../field.vue";
+import selection from "../selection.vue";
 
 export default {
-    components: {collapsible, field},
+    components: {collapsible, field, selection},
     data() {
         return {
             serverName: "Servername",
