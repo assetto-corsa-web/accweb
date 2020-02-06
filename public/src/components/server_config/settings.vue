@@ -15,7 +15,7 @@
         <field type="number" :label="$t('shortformationlap_label')" v-model="shortFormationLap"></field>
         <field type="number" :label="$t('allowautodq_label')" v-model="allowAutoDQ"></field>
         <field type="number" :label="$t('dumpentrylist_label')" v-model="dumpEntryList"></field>
-        <field type="number" :label="$t('formationlaptype_label')" v-model="formationLapType"></field>
+        <selection :label="$t('formationlaptype_label')" :options="formationLapTypes" v-model="formationLapType"></selection>
     </collapsible>
 </template>
 
@@ -42,7 +42,11 @@ export default {
             shortFormationLap: 0,
             allowAutoDQ: 0,
             dumpEntryList: 0,
-            formationLapType: 3
+    		formationLapType: [
+    			{value: "3", label: "Position control and UI"},
+    			{value: "1", label: "Old limiter lap"},
+    			{value: "0", label: "Free"},
+    		],
         };
     },
     methods: {
