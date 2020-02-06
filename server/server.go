@@ -43,6 +43,7 @@ type SettingsJson struct {
 	ShortFormationLap          int    `json:"shortFormationLap"`
 	AllowAutoDQ                int    `json:"allowAutoDQ"`
 	DumpEntryList              int    `json:"dumpEntryList"`
+	FormationLapType           int    `json:"formationLapType"`
 }
 
 type EventJson struct {
