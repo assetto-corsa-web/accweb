@@ -42,11 +42,12 @@ export default {
             shortFormationLap: 0,
             allowAutoDQ: 0,
             dumpEntryList: 0,
-    		formationLapType: [
+    		formationLapTypes: [
     			{value: "3", label: "Position control and UI"},
     			{value: "1", label: "Old limiter lap"},
     			{value: "0", label: "Free"},
     		],
+            formationLapType: 3,
         };
     },
     methods: {
