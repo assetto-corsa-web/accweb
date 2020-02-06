@@ -49,7 +49,6 @@ type SettingsJson struct {
 type EventJson struct {
 	ConfigVersion             int               `json:"configVersion"`
 	Track                     string            `json:"track"`
-	EventType                 string            `json:"eventType"`
 	PreRaceWaitingTimeSeconds int               `json:"preRaceWaitingTimeSeconds"`
 	SessionOverTimeSeconds    int               `json:"sessionOverTimeSeconds"`
 	AmbientTemp               int               `json:"ambientTemp"`
