@@ -97,6 +97,8 @@ type EntrySettings struct {
 	IsServerAdmin                int              `json:"isServerAdmin"`
 	CustomCar                    string           `json:"customCar"`
 	OverrideCarModelForCustomCar int              `json:"overrideCarModelForCustomCar"`
+	Ballast int `json:"ballast"`
+	Restrictor int `json:"restrictor"`
 }
 
 type DriverSettings struct {

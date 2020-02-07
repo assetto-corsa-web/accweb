@@ -6,6 +6,8 @@
         <field type="number" :label="$t('isserveradmin_label')" v-model="entry.isServerAdmin"></field>
         <field type="text" :label="$t('customcar_label')" v-model="entry.customCar"></field>
         <field type="number" :label="$t('overridecarmodelforcustomcar_label')" v-model="entry.overrideCarModelForCustomCar"></field>
+        <field type="number" :label="$t('ballast_label')" v-model="entry.ballast"></field>
+        <field type="number" :label="$t('restrictor_label')" v-model="entry.restrictor"></field>
         <driver v-for="driver in drivers"
             :key="driver.index"
             :driver="driver"
@@ -81,6 +83,8 @@ export default {
         "isserveradmin_label": "Is Server Admin",
         "customcar_label": "Custom Car",
         "overridecarmodelforcustomcar_label": "Override Car Model For Custom Car",
+        "ballast_label": "Ballast (0 - 100kg)",
+        "restrictor_label": "Restrictor (0 - 20%)",
         "add_driver_button": "Add Driver",
         "remove_button": "Remove Entry"
     }

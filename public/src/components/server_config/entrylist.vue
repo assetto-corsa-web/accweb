@@ -36,7 +36,9 @@ export default {
                     overrideDriverInfo: entries[i].overrideDriverInfo,
                     isServerAdmin: entries[i].isServerAdmin,
                     customCar: entries[i].customCar,
-                    overrideCarModelForCustomCar: entries[i].overrideCarModelForCustomCar
+                    overrideCarModelForCustomCar: entries[i].overrideCarModelForCustomCar,
+                    ballast: entries[i].ballast,
+                    restrictor: entries[i].restrictor
                 });
                 this.entryIndex++;
             }
@@ -60,7 +62,9 @@ export default {
                     overrideDriverInfo: parseInt(this.entries[i].overrideDriverInfo),
                     isServerAdmin: parseInt(this.entries[i].isServerAdmin),
                     customCar: this.entries[i].customCar,
-                    overrideCarModelForCustomCar: parseInt(this.entries[i].overrideCarModelForCustomCar)
+                    overrideCarModelForCustomCar: parseInt(this.entries[i].overrideCarModelForCustomCar),
+                    ballast: parseInt(this.entries[i].ballast),
+                    restrictor: parseInt(this.entries[i].restrictor)
                 });
             }
 
@@ -75,7 +79,9 @@ export default {
                 overrideDriverInfo: 0,
                 isServerAdmin: 0,
                 customCar: "",
-                overrideCarModelForCustomCar: 0
+                overrideCarModelForCustomCar: 0,
+                ballast: 0,
+                restrictor: 0
             });
             this.entryIndex++;
         },
