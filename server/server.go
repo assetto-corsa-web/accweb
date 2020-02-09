@@ -49,7 +49,6 @@ type SettingsJson struct {
 type EventJson struct {
 	ConfigVersion             int               `json:"configVersion"`
 	Track                     string            `json:"track"`
-	EventType                 string            `json:"eventType"`
 	PreRaceWaitingTimeSeconds int               `json:"preRaceWaitingTimeSeconds"`
 	SessionOverTimeSeconds    int               `json:"sessionOverTimeSeconds"`
 	AmbientTemp               int               `json:"ambientTemp"`
@@ -98,6 +97,8 @@ type EntrySettings struct {
 	IsServerAdmin                int              `json:"isServerAdmin"`
 	CustomCar                    string           `json:"customCar"`
 	OverrideCarModelForCustomCar int              `json:"overrideCarModelForCustomCar"`
+	Ballast int `json:"ballast"`
+	Restrictor int `json:"restrictor"`
 }
 
 type DriverSettings struct {

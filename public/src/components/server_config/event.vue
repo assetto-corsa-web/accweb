@@ -1,7 +1,6 @@
 <template>
     <collapsible :title="$t('title')">
         <selection :label="$t('track_label')" :options="tracks" v-model="track"></selection>
-        <selection :label="$t('eventtype_label')" :options="eventTypes" v-model="eventType"></selection>
         <field type="number" :label="$t('preracewaitingtimeseconds_label')" v-model="preRaceWaitingTimeSeconds"></field>
         <field type="number" :label="$t('sessionovertimeseconds_label')" v-model="sessionOverTimeSeconds"></field>
         <field type="number" :label="$t('ambienttemp_label')" v-model="ambientTemp"></field>
@@ -54,15 +53,10 @@ export default {
                 {value: "kyalami_2019", label: "Kyalami (2019)"},
                 {value: "mount_panorama_2019", label: "Mount Panorama (2019)"},
                 {value: "suzuka_2019", label: "Suzuka (2019)"},
-                {value: "laguna_seca_2019", label: "Laguna Seca (2019)"},
-    		],
-    		eventTypes: [
-    			{value: "E_3h", label: "Endurance - 3h"},
-                {value: "E_6h", label: "Endurance - 6h"},
+                {value: "laguna_seca_2019", label: "Laguna Seca (2019)"}
     		],
 
     		track: "misano",
-			eventType: "E_3h",
 			preRaceWaitingTimeSeconds: 15,
 			sessionOverTimeSeconds: 120,
 			ambientTemp: 26,
@@ -79,7 +73,6 @@ export default {
     methods: {
         setData(data) {
             this.track = data.track;
-            this.eventType = data.eventType;
             this.preRaceWaitingTimeSeconds = data.preRaceWaitingTimeSeconds;
             this.sessionOverTimeSeconds = data.sessionOverTimeSeconds;
             this.ambientTemp = data.ambientTemp;
@@ -106,7 +99,6 @@ export default {
     	getData() {
     		return {
 				track: this.track,
-				eventType: this.eventType,
 				preRaceWaitingTimeSeconds: parseInt(this.preRaceWaitingTimeSeconds),
 				sessionOverTimeSeconds: parseInt(this.sessionOverTimeSeconds),
 				ambientTemp: parseInt(this.ambientTemp),
@@ -170,7 +162,6 @@ export default {
     "en": {
         "title": "Event settings",
         "track_label": "Track",
-        "eventtype_label": "Event type",
         "preracewaitingtimeseconds_label": "Pre race waiting time seconds",
         "sessionovertimeseconds_label": "Session overtime seconds",
         "ambienttemp_label": "Ambient temp",
