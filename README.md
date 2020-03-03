@@ -12,9 +12,10 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 2. [Installation](#installation)
 3. [Backup](#backup)
 4. [Contribute and support](#support)
-5. [Links](#links)
-6. [License](#license)
-7. [Screenshots](#screenshots)
+5. [Build release](#release)
+6. [Links](#links)
+7. [License](#license)
+8. [Screenshots](#screenshots)
 
 ## Features
 <a name="features" />
@@ -99,6 +100,17 @@ To backup your files, copy and save the `config` directory as well as the `start
 If you like to contribute, have questions or suggestions you can open tickets and pull requests on GitHub.
 
 All Go code must have been run through go fmt. The frontend and backend changes must be (manually) tested on your system. If you have issues running it locally open a ticket. You can use the `dev.sh` and `gen_rsa_keys.sh` scripts to start accweb on your computer (on Linux).
+
+## Build release
+<a name="release" />
+
+To build a release, execute the `build_release.sh` script (on Linux) or follow the steps inside the script. You need to pass the build version as the first parameter. Example:
+
+```
+./build_release.sh 1.2.3
+```
+
+This will create a directory `accweb_1.2.3` containing the release build of accweb. This directory can be zipped, uploaded to GitHub and deployed on a server.
 
 ## Links
 <a name="links" />
