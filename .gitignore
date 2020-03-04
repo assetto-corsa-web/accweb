@@ -1,3 +1,6 @@
 .idea/
 secrets/
 config/
+accweb_*/
+main
+main.exe
