@@ -4,10 +4,10 @@ $light_gray: #f2f2f2;
 $red: #cc241d;
 $green: #10c600;
 $background: #1d2021;
-$background_light: #232728;
+$background_light: #01232b;
 
 $font_size: 14px;
-$font_size_small: 10px;
+$font_size_small: 12px;
 $font_family: sans-serif;
 $font_color: #ffffff;
 
@@ -27,7 +27,7 @@ html, body {
 }
 
 .main {
-	max-width: 600px;
+	max-width: 900px;
 	margin: 40px auto 40px auto;
 	padding: 20px;
 	box-shadow: 0 0 5px 5px $shadow;
@@ -103,7 +103,7 @@ html, body {
 }
 
 .main-small {
-	max-width: 300px;
+	max-width: 450px;
 }
 
 .end {

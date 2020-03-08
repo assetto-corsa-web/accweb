@@ -97,19 +97,14 @@ To backup your files, copy and save the `config` directory as well as the `start
 ## Contribute and support
 <a name="support" />
 
-If you like to contribute, have questions or suggestions you can open tickets and pull requests on GitHub. To work on accweb, you need to have npm and Go installed on your machine. The scripts can be used to start accweb in development mode (`start.sh`/`start.cmd`).
+If you like to contribute, have questions or suggestions you can open tickets and pull requests on GitHub.
 
 All Go code must have been run through go fmt. The frontend and backend changes must be (manually) tested on your system. If you have issues running it locally open a ticket. You can use the `dev.sh` and `gen_rsa_keys.sh` scripts to start accweb on your computer (on Linux).
 
 ## Build release
 <a name="release" />
 
-To build a release, execute the `build_release.sh` script (on Linux) or follow the steps inside the script. You need to pass the build version as the first parameter. The following tools need to be installed to build accweb:
-
-* npm
-* Go
-
-Example build:
+To build a release, execute the `build_release.sh` script (on Linux) or follow the steps inside the script. You need to pass the build version as the first parameter. Example:
 
 ```
 ./build_release.sh 1.2.3
@@ -137,3 +132,7 @@ MIT
 ![Import](screenshots/import.png)
 ![Logs](screenshots/logs.png)
 ![Status page](screenshots/statuspage.png)
+![BOP](screenshots/bop.png)
+![Event](screenshots/event.png)
+![Assist Rules](screenshots/assistrules.png)
+![General view](screenshots/view.png)

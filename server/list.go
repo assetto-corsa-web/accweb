@@ -56,6 +56,14 @@ func loadServerSettings(name string) error {
 	if err := loadConfigFromFile(&server.Entrylist, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, entrylistJsonName)); err != nil {
 		return err
 	}
+	
+	if err := loadConfigFromFile(&server.Bop, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, bopJsonName)); err != nil {
+		return err
+	}
+	
+	if err := loadConfigFromFile(&server.AssistRules, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, assistRulesJsonName)); err != nil {
+		return err
+	}
 
 	addServer(server)
 	return nil
