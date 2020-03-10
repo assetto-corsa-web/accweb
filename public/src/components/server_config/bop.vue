@@ -1,0 +1,110 @@
+<template>
+    <collapsible :title="$t('title')">
+        <entry v-for="entry in entries"
+            :key="entry.index"
+            :entry="entry"
+            v-on:remove="removeEntry"></entry>
+        <button v-on:click="addEntry">{{$t("add_entry_button")}}</button>
+    </collapsible>
+</template>
+
+<script>
+import collapsible from "../collapsible.vue";
+import field from "../field.vue";
+import selection from "../selection.vue";
+import entry from "./bopsession.vue";
+
+export default {
+    components: {collapsible, field, selection, entry},
+    data() {
+    	return {
+    		entryIndex: 0,
+            entries: []
+    	};
+    },
+    methods: {
+        setData(data) {
+            this.track = data.track;
+            this.carModel = data.carModel;
+            this.ballast = data.ballast;
+            this.restrictor = data.restrictor;
+            this.setEntryData(data.entries);
+        },
+        setEntryData(data) {
+            for(let i = 0; i < data.length; i++) {
+                this.entries.push({
+                    index: this.entryIndex,
+                    track: data[i].track,
+                    carModel: data[i].carModel,
+                    ballast: data[i].ballast,
+                    restrictor: data[i].restrictor                    
+                });
+                this.entryIndex++;
+            }
+        },
+    	getData() {
+    		return {
+				track: this.track,
+				carModel: parseInt(this.carModel),
+				ballast: parseInt(this.ballast),
+				restrictor: parseInt(this.restrictor),				
+                entries: this.getEntryData()
+    		};
+    	},
+        getEntryData() {
+            let entries = [];
+
+            for(let i = 0; i < this.entries.length; i++) {
+                entries.push({
+                    track: this.entries[i].track,
+                    carModel: parseInt(this.entries[i].carModel),
+                    ballast: parseInt(this.entries[i].ballast),
+					restrictor: parseInt(this.entries[i].restrictor)
+                });
+            }
+
+            return entries;
+        },
+        addEntry() {
+            this.entries.push({
+                index: this.entryIndex,
+                track: "",
+                carModel: 99,
+                ballast: 0,
+                restrictor: 0
+            });
+            this.entryIndex++;
+        },
+        removeEntry(index) {
+            index = parseInt(index);
+
+            for(let i = 0; i < this.entries.length; i++) {
+                if(this.entries[i].index === index) {
+                    this.entries.splice(i, 1);
+                    break;
+                }
+            }
+        },
+        toFloat(value) {
+            if(typeof value === "string") {
+                return parseFloat(value.replace(",", "."));
+            }
+
+            return value;
+        }
+    }
+}
+</script>
+
+<i18n>
+{
+    "en": {
+        "title": "BOP Settings",
+        "track_label": "Track",
+        "carModel_label": "Car Model #",
+        "ballast_label": "Ballast: 0 to 100kg max.",
+		"restrictor_label": "Motor Restrictor: 0 to 20% max.",
+		"add_entry_button": "Add BOP"
+    }
+}
+</i18n>

@@ -16,6 +16,8 @@ const (
 	eventJsonName         = "event.json"
 	eventRulesJsonName    = "eventRules.json"
 	entrylistJsonName     = "entrylist.json"
+	bopJsonName			  = "bop.json"
+	assistRulesJsonName   = "assistRules.json"
 	configVersion         = 1
 )
 
@@ -47,6 +49,14 @@ func SaveServerSettings(settings *ServerSettings) error {
 		return err
 	}
 
+	if err := saveConfigToFile(settings.Bop, dir, bopJsonName); err != nil {
+		return err
+	}
+
+	if err := saveConfigToFile(settings.AssistRules, dir, assistRulesJsonName); err != nil {
+		return err
+	}
+
 	if settings.Id == 0 {
 		settings.Id = id
 		addServer(settings)
@@ -68,6 +78,8 @@ func setConfigVersion(settings *ServerSettings) {
 	settings.Event.ConfigVersion = configVersion
 	settings.EventRules.ConfigVersion = configVersion
 	settings.Entrylist.ConfigVersion = configVersion
+	settings.Bop.ConfigVersion = configVersion
+	settings.AssistRules.ConfigVersion = configVersion
 }
 
 func getConfigDirectoryAndID(id int) (string, int, error) {

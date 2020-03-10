@@ -15,6 +15,8 @@ type ServerSettings struct {
 	Event         EventJson         `json:"event"`
 	EventRules    EventRulesJson    `json:"eventRules"`
 	Entrylist     EntrylistJson     `json:"entrylist"`
+	Bop     	  BopJson		    `json:"bop"`
+	AssistRules   AssistRulesJson   `json:"assistRules"`
 }
 
 type ConfigurationJson struct {
@@ -47,17 +49,19 @@ type SettingsJson struct {
 }
 
 type EventJson struct {
-	ConfigVersion             int               `json:"configVersion"`
-	Track                     string            `json:"track"`
-	PreRaceWaitingTimeSeconds int               `json:"preRaceWaitingTimeSeconds"`
-	SessionOverTimeSeconds    int               `json:"sessionOverTimeSeconds"`
-	AmbientTemp               int               `json:"ambientTemp"`
-	CloudLevel                float64           `json:"cloudLevel"`
-	Rain                      float64           `json:"rain"`
-	WeatherRandomness         int               `json:"weatherRandomness"`
-	Sessions                  []SessionSettings `json:"sessions"`
-	PostQualySeconds          int               `json:"postQualySeconds"`
-	PostRaceSeconds           int               `json:"postRaceSeconds"`
+	ConfigVersion             		int               `json:"configVersion"`
+	Track                     		string            `json:"track"`
+	PreRaceWaitingTimeSeconds 		int               `json:"preRaceWaitingTimeSeconds"`
+	SessionOverTimeSeconds    		int               `json:"sessionOverTimeSeconds"`
+	AmbientTemp               		int               `json:"ambientTemp"`
+	CloudLevel                		float64           `json:"cloudLevel"`
+	Rain                      		float64           `json:"rain"`
+	WeatherRandomness         		int               `json:"weatherRandomness"`
+	Sessions                  		[]SessionSettings `json:"sessions"`
+	PostQualySeconds          		int               `json:"postQualySeconds"`
+	PostRaceSeconds           		int               `json:"postRaceSeconds"`
+	SimracerWeatherConditions 		bool              `json:"simracerWeatherConditions"`
+	IsFixedConditionQualification   bool              `json:"isFixedConditionQualification"`
 }
 
 type EventRulesJson struct {
@@ -97,8 +101,8 @@ type EntrySettings struct {
 	IsServerAdmin                int              `json:"isServerAdmin"`
 	CustomCar                    string           `json:"customCar"`
 	OverrideCarModelForCustomCar int              `json:"overrideCarModelForCustomCar"`
-	Ballast int `json:"ballast"`
-	Restrictor int `json:"restrictor"`
+	Ballast                      int              `json:"ballast"`
+	Restrictor                   int              `json:"restrictor"`
 }
 
 type DriverSettings struct {
@@ -108,6 +112,31 @@ type DriverSettings struct {
 	DriverCategory      int    `json:"driverCategory"`
 	PlayerID            string `json:"playerID"`
 	DefaultGridPosition int    `json:"defaultGridPosition"`
+}
+
+type BopJson struct {
+	ConfigVersion  int             `json:"configVersion"`
+	Entries        []BopSettings   `json:"entries"`	
+}
+
+type BopSettings struct {
+	Track                        string           `json:"track"`
+	CarModel        	         int              `json:"carModel"`
+	Ballast                      int              `json:"ballast"`
+	Restrictor                   int              `json:"restrictor"`
+}
+
+type AssistRulesJson struct {
+	ConfigVersion                           int  `json:"configVersion"`
+	StabilityControlLevelMax                int  `json:"stabilityControlLevelMax"`
+	DisableAutosteer                        bool `json:"disableAutosteer"`
+	DisableAutoLights                       bool `json:"disableAutoLights"`
+	DisableAutoWiper                        bool `json:"disableAutoWiper"`
+	DisableAutoEngineStart                  bool `json:"disableAutoEngineStart"`
+	DisableAutoPitLimiter                   bool `json:"disableAutoPitLimiter"`
+	DisableAutoGear           	            bool `json:"disableAutoGear"`
+	DisableAutoClutch                       bool `json:"disableAutoClutch"`
+	DisableIdealLine                        bool `json:"disableIdealLine"`
 }
 
 func (server *ServerSettings) start(cmd *exec.Cmd) {
