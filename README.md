@@ -12,13 +12,14 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Table of contents
 
 1. [Features](#features)
-2. [Installation](#installation)
-3. [Backup](#backup)
-4. [Contribute and support](#support)
-5. [Build release](#release)
-6. [Links](#links)
-7. [License](#license)
-8. [Screenshots](#screenshots)
+2. [Changelog](#changelog)
+3. [Installation](#installation)
+4. [Backup](#backup)
+5. [Contribute and support](#support)
+6. [Build release](#release)
+7. [Links](#links)
+8. [License](#license)
+9. [Screenshots](#screenshots)
 
 ## Features
 <a name="features" />
@@ -34,20 +35,21 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 * status page for non logged in users
 * easy setup
     * no database required
-    * simple configuration using environment variables 
+    * simple configuration using environment variables
+    
+## Changelog
+<a name="changelog" />
 
-Version 1.8.0:
+### Version 1.8.0
 
 * Minor changes to the global view
 * Corrections of values for "formationLapType"
 * Added parameter "simracerWeatherConditions" in event.json
 * Added parameter "isFixedConditionQualification" in event.json
 * Added "bop.json"
-* Added "assistRules"​
+* Added "assistRules"
 
-IMPORTANT:
-You can update the latest Release of "accweb" 1.7.0 to version 1.8.0 of this fork.
-BUT, you will have to delete the servers already created in order to recreate new ones!
+IMPORTANT: You will have to delete the servers already created in order to create new ones!
 
 ## Installation and configuration
 <a name="installation" />
