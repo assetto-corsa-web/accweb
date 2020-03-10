@@ -131,7 +131,7 @@ This will create a directory `accweb_1.2.3` containing the release build of accw
 <a name="links" />
 
 * [Docker Hub](https://cloud.docker.com/repository/docker/kugel/accweb/general)
-* [Assetto Corsa Forums - Fork by Cestcomi](https://www.assettocorsa.net/forum/index.php?threads/fork-accweb-assetto-corsa-competizione-server-management-tool-via-web-interface-cestcomi.63083/)
+* [Assetto Corsa Forums](https://www.assettocorsa.net/forum/index.php?threads/release-accweb-assetto-corsa-competizione-server-management-tool-via-web-interface.57572/)
 
 ## License
 <a name="license" />
