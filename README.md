@@ -44,6 +44,7 @@ Version 1.8.0:
 * Added parameter "isFixedConditionQualification" in event.json
 * Added "bop.json"
 * Added "assistRules"​
+
 IMPORTANT:
 You can update the latest Release of "accweb" 1.7.0 to version 1.8.0 of this fork.
 BUT, you will have to delete the servers already created in order to recreate new ones!
