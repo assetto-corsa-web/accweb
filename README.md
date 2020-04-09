@@ -81,7 +81,7 @@ You can also use an online service which generates RSA key pairs (search for "ge
 ## Backup
 <a name="backup" />
 
-To backup your files, copy and save the `config` directory as well as the `start.sh` or `start.cmd` depending on your OS. The `config` directory can later be placed inside the new accweb version directory and you can adjust the new `start.sh`/`start.cmd` based on your old configuration (don't overwrite it, there meight be breaking changes).
+To backup your files, copy and save the `config` directory as well as the `config.yml`. The `config` directory can later be placed inside the new accweb version directory and you can adjust the new `config.yml` based on your old configuration (don't overwrite it, there meight be breaking changes).
 
 ## Contribute and support
 <a name="support" />
