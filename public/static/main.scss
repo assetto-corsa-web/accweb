@@ -1,10 +1,11 @@
-$shadow: #243447;
-$gray: #7a7a7a;
+$gray: #c7d5e0;
 $light_gray: #f2f2f2;
-$red: #cc241d;
+$red: #ff0000;
 $green: #10c600;
-$background: #1d2021;
-$background_light: #01232b;
+$background: #171a21;
+$dark_blue: #1b2838;
+$medium_blue: #2a475e;
+$light_blue: #66c0f4;
 
 $font_size: 14px;
 $font_size_small: 12px;
@@ -18,7 +19,7 @@ html, body {
 	font-family: $font_family;
 	color: $font_color;
 	line-height: 1;
-	background: $background_light;
+	background: $dark_blue;
 }
 
 .logo {
@@ -30,9 +31,9 @@ html, body {
 	max-width: 900px;
 	margin: 40px auto 40px auto;
 	padding: 20px;
-	box-shadow: 0 0 5px 5px $shadow;
-	border-radius: 3px;
 	background: $background;
+	border: 1px solid $medium_blue;
+	border-radius: 3px;
 
 	.title {
 		display: flex;
@@ -56,7 +57,7 @@ html, body {
 		justify-content: space-between;
 		margin: 6px 0 6px 0;
 		padding: 10px;
-		border: 1px solid $shadow;
+		border: 1px solid $gray;
 		border-radius: 1px;
 
 		.name {
@@ -122,7 +123,7 @@ html, body {
 	.tab {
 		padding: 6px;
 		margin: 0 2px 0 0;
-		border-radius: 3px 3px 0 0;
+		border-radius: 1px 1px 0 0;
 	}
 
 	.tab:hover {
@@ -157,7 +158,7 @@ html, body {
 
 .box {
 	border: 1px solid $gray;
-	border-radius: 3px;
+	border-radius: 1px;
 	padding: 20px;
 	margin: 10px 0 10px 0;
 }
@@ -205,7 +206,6 @@ button, input[type~="submit"] {
 
 button:hover, input[type~="submit"]:hover {
 	cursor: pointer;
-	box-shadow: 0 0 2px 2px $shadow;
 }
 
 input, select, textarea {
