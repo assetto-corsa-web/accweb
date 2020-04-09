@@ -37,72 +37,46 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### Version 1.9.0
+
+* added automatic generation of private/public token files
+* switched to yaml configuration instead of environment variables
+* new design
+
 ### Version 1.8.0
 
-* Minor changes to the global view
-* Corrections of values for "formationLapType"
-* Added parameter "simracerWeatherConditions" in event.json
-* Added parameter "isFixedConditionQualification" in event.json
-* Added "bop.json"
-* Added "assistRules"
+* minor changes to the global view
+* corrections of values for "formationLapType"
+* added parameter "simracerWeatherConditions" in event.json
+* added parameter "isFixedConditionQualification" in event.json
+* added "bop.json"
+* added "assistRules"
 
 IMPORTANT: You will have to delete the servers already created in order to create new ones!
 
 ## Installation and configuration
 <a name="installation" />
 
-accweb can be installed manually or by using Docker. Both installation methods use environment variables for configuration. Here is a list with all configuration variables and possible values. The instructions below don't use all of them.
-
-```
-ACCWEB_LOGLEVEL=debug|info
-ACCWEB_ALLOWED_ORIGINS=*|<your domain or IP>
-ACCWEB_CORS_LOGLEVEL=debug|<empty>
-ACCWEB_HTTP_WRITE_TIMEOUT=<seconds>
-ACCWEB_HTTP_READ_TIMEOUT<seconds>
-ACCWEB_HOST=<ip>:<port>
-ACCWEB_TLS_ENABLE=true|false
-ACCWEB_TLS_CERT=<path to certificate>
-ACCWEB_TLS_PKEY=<path to private key>
-ACCWEB_CONFIG_PATH=<path server configurations are stored>
-ACCWEB_SERVER_DIR=<path to ACC server directory>
-ACCWEB_TOKEN_PUBLIC_KEY=<path to public key for token generation>
-ACCWEB_TOKEN_PRIVATE_KEY=<path to private key for token generation>
-ACCWEB_ADMIN_PASSWORD=<password>
-ACCWEB_MOD_PASSWORD=<password>
-ACCWEB_RO_PASSWORD=<password>
-```
-
-To set one of these, use `set NAME=value` on Windows and `export NAME=value` on Linux before you start the accweb executable. The `start.sh` and `start.cmd` as well as the `docker-compose.yml` use recommended default values, but you meight have to change a few of them.
-`ACCWEB_ADMIN_PASSWORD`, `ACCWEB_MOD_PASSWORD` and `ACCWEB_RO_PASSWORD` are used to configure the administrator, moderator and read only passwords. They must be set or accweb won't start. Make sure you use a unique strong pasword for each of them.
+accweb is installed by extracting the zip on your server, modifing the YAML configuration file to your needs and starting it in a terminal.
 
 ### Manuall installation
 
 1. download the latest release from the release section on GitHub
 2. extract the zip file on your server
-3. edit the `start.sh` (Linux) or `start.cmd` (Windows) to your needs
+3. edit the `config.yml` to match your needs
 4. open a terminal
 5. change directory to the accweb installation location
-6. generate a new RSA key pair for user tokens (this is important for security!) and place them as `token.private` and `token.public` inside a new directory called `secrets`
-7. run the start script (`./start.sh` on Linux and `start.cmd` on Windows)
+6. start accweb using `./accweb` on Linux and `accweb.exe` on Windows
 8. leave the terminal open (or start in background using screens on Linux for example)
 9. visit the server IP/domain and port you've configured, for example: http://example.com:8080
 
-I recommend to setup an SSL certificate, but that's out of scope for this instructions. You can enable a certificate by using the environment variables above.
+I recommend to setup an SSL certificate, but that's out of scope for this instructions. You can enable a certificate inside the `config.yml`.
 
-To generate the RSA key pair, you can use the `gen_rsa_keys.sh` on Linux or install one of the tools available for Windows. You can also use an online service which generates RSA key pairs (search for "generate rsa key pair online").
+accweb should generate the key files for authentication on its own, but in case that doesn't work you can do it manually.
+To generate the RSA key pair, you can use the `gen_rsa_keys.sh` on Linux or install one of the tools available for Windows and run `gen_rsa_keys.cmd`.
+You can also use an online service which generates RSA key pairs (search for "generate rsa key pair online").
 
 **Note that you have to install [wine](https://www.winehq.org/) if you're on Linux.**
-
-### Docker installation
-
-**WORK IN PROGRESS, DO NOT USE YET**
-
-To be able to run accweb through Docker, you have to install Docker and Compose on your server. Please refer to the Docker/Compose documentation on how to do that.
-
-1. edit `docker-compose.yml` to your needs
-2. open a terminal
-3. change directory to the `docker-compose.yml` location
-4. start accweb with the command: `docker-compose up -d`
 
 ## Backup
 <a name="backup" />
@@ -137,17 +111,3 @@ This will create a directory `accweb_1.2.3` containing the release build of accw
 <a name="license" />
 
 MIT
-
-## Screenshots
-<a name="screenshots" />
-
-![Login](screenshots/login.png)
-![Overview](screenshots/overview.png)
-![Configuration](screenshots/configuration.png)
-![Import](screenshots/import.png)
-![Logs](screenshots/logs.png)
-![Status page](screenshots/statuspage.png)
-![BOP](screenshots/bop.png)
-![Event](screenshots/event.png)
-![Assist Rules](screenshots/assistrules.png)
-![General view](screenshots/view.png)

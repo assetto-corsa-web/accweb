@@ -1,27 +1,52 @@
-# Adjust this file to match your needs.
+# accweb server and application configuration.
+# https://github.com/assetto-corsa-web/accweb
 
-# sets host and port
-# 80 is the default port for web servers and meight be blocked on your machine
-# in that case, change it to anything else, e.g. 8080
-export ACCWEB_HOST=0.0.0.0:80
+webserver:
+  # Sets the host and port.
+  # Port 80 is the default port for web servers and might be blocked on your maschine.
+  # If that is the case you can use anything else like 8080 for example.
+  host: 0.0.0.0:80
 
-  # IMPORTANT must be set, use strong different passwords for each
-export ACCWEB_ADMIN_PASSWORD=
-export ACCWEB_MOD_PASSWORD=
-export ACCWEB_RO_PASSWORD=
+  # Set tls to true and provide paths to the key files in order to enable SSL.
+  # This is highly recommended as otherwise your passwords and all other traffic won't be encrypted!
+  # accweb will probably support automatic Letsencrypt certificates in the future.
+  tls: false
+  cert: path to ssl certificate
+  private_key: path to ssl private key
 
-  # these files must exist
-export ACCWEB_TOKEN_PUBLIC_KEY=secrets/token.public
-export ACCWEB_TOKEN_PRIVATE_KEY=secrets/token.private
+  # http write/read timeouts
+  # technical stuff you shouldn't mess around with
+  write_timeout: 5
+  read_timeout: 5
 
-  # create this directory in your installation directory
-export ACCWEB_CONFIG_PATH=config/
+auth:
+  # Set the admin, moderator and read only user password.
+  # accweb won't start without an admin password.
+  admin_password: admin-password
+  moderator_password: moderator-password
+  read_only_password: read-only-password
 
-  # export the installation path of the ACC server
-export ACCWEB_SERVER_DIR="/home/username/.steam/steam/steamapps/common/Assetto Corsa Competizione/server"
+  # Path to public and private token key files.
+  # These must be provided as they are required to generate save tokens for authentication.
+  # accweb won't start without them. They will be automatically generated if accweb finds the gen_rsa_keys script
+  # next to the accweb executable. So you will most likely be able to start the server without touching this.
+  public_key_path: secrets/token.public
+  private_key_path: secrets/token.private
 
-export ACCWEB_LOGLEVEL=info
-export ACCWEB_ALLOWED_ORIGINS=*
-export ACCWEB_SERVER_EXE=accServer.exe
+acc:
+  # Path to ACC server installation directory.
+  # Use forward slashes (even if you're on Windows!). The example path is for Linux.
+  server_path: "/home/username/.steam/steam/steamapps/common/Assetto Corsa Competizione/server"
 
-./accweb
+  # Name of the server executable within the server installation directory.
+  # You don't need to change this (except the ACC devs change its name for some reason).
+  server_exe: accServer.exe
+
+# TECHNICAL STUFF FROM HERE ON
+
+config_path: config/
+dev: false
+loglevel: debug
+cors:
+  origins: "*"
+  loglevel: info
