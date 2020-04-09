@@ -159,7 +159,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 		if err := event.Close(); err != nil {
 			logrus.WithError(err).Error("Error closing file on import")
 		}
-	}()	
+	}()
 	bop, bopHeader, err := r.FormFile("bop")
 
 	if err != nil || bopHeader.Size == 0 {
@@ -172,7 +172,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 		if err := bop.Close(); err != nil {
 			logrus.WithError(err).Error("Error closing file on import")
 		}
-	}()	
+	}()
 	assistRules, assistRulesHeader, err := r.FormFile("assistRules")
 
 	if err != nil || assistRulesHeader.Size == 0 {
@@ -185,7 +185,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 		if err := assistRules.Close(); err != nil {
 			logrus.WithError(err).Error("Error closing file on import")
 		}
-	}()	
+	}()
 
 	if err := server.ImportServer(configuration, settings, event, eventRules, entrylist, bop, assistRules); err != nil {
 		w.WriteHeader(http.StatusBadRequest)

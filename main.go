@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/assetto-corsa-web/accweb/api"
+	"github.com/assetto-corsa-web/accweb/cfg"
 	serverList "github.com/assetto-corsa-web/accweb/server"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -9,24 +10,19 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
-	"strconv"
 	"strings"
 	"time"
 )
 
 const (
-	staticDir       = "public/static"
-	staticDirPrefix = "/static/"
-	buildJsFile     = "public/dist/build.js"
-	buildJsPrefix   = "/dist/build.js"
-	cssFile         = "public/dist/main.css"
-	cssFilePrefix   = "/dist/main.css"
-	indexFile       = "public/index.html"
-	rootDirPrefix   = "/"
-
-	envPrefix = "ACCWEB_"
-	pwdString = "PASSWORD" // do not log passwords!
-
+	staticDir               = "public/static"
+	staticDirPrefix         = "/static/"
+	buildJsFile             = "public/dist/build.js"
+	buildJsPrefix           = "/dist/build.js"
+	cssFile                 = "public/dist/main.css"
+	cssFilePrefix           = "/dist/main.css"
+	indexFile               = "public/index.html"
+	rootDirPrefix           = "/"
 	defaultHttpWriteTimeout = 20
 	defaultHttpReadTimeout  = 20
 )
@@ -38,7 +34,7 @@ var (
 
 func configureLog() {
 	logrus.Info("Configure logging...")
-	level := strings.ToLower(os.Getenv("ACCWEB_LOGLEVEL"))
+	level := strings.ToLower(cfg.Get().Loglevel)
 
 	if level == "debug" {
 		logrus.SetLevel(logrus.DebugLevel)
@@ -50,23 +46,14 @@ func configureLog() {
 }
 
 func createConfigDir() {
-	if err := os.MkdirAll(os.Getenv("ACCWEB_CONFIG_PATH"), 0755); err != nil {
+	if err := os.MkdirAll(cfg.Get().ConfigPath, 0755); err != nil {
 		logrus.WithError(err).Fatal("Error creating config directory")
-	}
-}
-
-func logEnvConfig() {
-	for _, e := range os.Environ() {
-		if strings.HasPrefix(e, envPrefix) && !strings.Contains(e, pwdString) {
-			pair := strings.Split(e, "=")
-			logrus.Info(pair[0] + "=" + pair[1])
-		}
 	}
 }
 
 func loadBuildJs() {
 	logrus.Info("Loading build.js...")
-	watchBuildJs = os.Getenv("ACCWEB_WATCH_BUILD_JS") != ""
+	watchBuildJs = cfg.Get().Dev
 	content, err := ioutil.ReadFile(buildJsFile)
 
 	if err != nil {
@@ -120,61 +107,39 @@ func setupRouter() *mux.Router {
 func configureCors(router *mux.Router) http.Handler {
 	logrus.Info("Configuring CORS...")
 
-	origins := strings.Split(os.Getenv("ACCWEB_ALLOWED_ORIGINS"), ",")
+	origins := strings.Split(cfg.Get().CORS.Origins, ",")
 	c := cors.New(cors.Options{
 		AllowedOrigins:   origins,
 		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"*"},
 		AllowCredentials: true,
-		Debug:            strings.ToLower(os.Getenv("ACCWEB_CORS_LOGLEVEL")) == "debug",
+		Debug:            strings.ToLower(cfg.Get().CORS.Loglevel) == "debug",
 	})
 	return c.Handler(router)
 }
 
 func start(handler http.Handler) {
 	logrus.Info("Starting server...")
-
-	writeTimeout := defaultHttpWriteTimeout
-	readTimeout := defaultHttpReadTimeout
-	var err error
-
-	if os.Getenv("ACCWEB_HTTP_WRITE_TIMEOUT") != "" {
-		writeTimeout, err = strconv.Atoi(os.Getenv("ACCWEB_HTTP_WRITE_TIMEOUT"))
-
-		if err != nil {
-			logrus.Fatal(err)
-		}
-	}
-
-	if os.Getenv("ACCWEB_HTTP_READ_TIMEOUT") != "" {
-		readTimeout, err = strconv.Atoi(os.Getenv("ACCWEB_HTTP_READ_TIMEOUT"))
-
-		if err != nil {
-			logrus.Fatal(err)
-		}
-	}
-
-	logrus.WithFields(logrus.Fields{"write_timeout": writeTimeout, "read_timeout": readTimeout}).Info("Using HTTP read/write timeouts")
-
 	server := &http.Server{
 		Handler:      handler,
-		Addr:         os.Getenv("ACCWEB_HOST"),
-		WriteTimeout: time.Duration(writeTimeout) * time.Second,
-		ReadTimeout:  time.Duration(readTimeout) * time.Second,
+		Addr:         cfg.Get().Webserver.Host,
+		WriteTimeout: time.Duration(cfg.Get().Webserver.WriteTimeout) * time.Second,
+		ReadTimeout:  time.Duration(cfg.Get().Webserver.ReadTimeout) * time.Second,
 	}
 
-	if strings.ToLower(os.Getenv("ACCWEB_TLS_ENABLE")) == "true" {
+	if cfg.Get().Webserver.TLS {
 		logrus.Info("TLS enabled")
-		logrus.Fatal(server.ListenAndServeTLS(os.Getenv("ACCWEB_TLS_CERT"), os.Getenv("ACCWEB_TLS_PKEY")))
+		logrus.Fatal(server.ListenAndServeTLS(cfg.Get().Webserver.Cert, cfg.Get().Webserver.PrivateKey))
 	} else {
 		logrus.Fatal(server.ListenAndServe())
 	}
 }
 
 func main() {
+	cfg.Load()
 	configureLog()
 	createConfigDir()
-	logEnvConfig()
+	api.LoadConfig()
 	loadBuildJs()
 	serverList.LoadServerList()
 	router := setupRouter()

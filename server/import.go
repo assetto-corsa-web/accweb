@@ -32,7 +32,7 @@ func ImportServer(configuration, settings, event, eventRules, entrylist, bop, as
 	if err := importFile(bop, &server.Bop); err != nil {
 		return err
 	}
-	
+
 	if err := importFile(assistRules, &server.AssistRules); err != nil {
 		return err
 	}

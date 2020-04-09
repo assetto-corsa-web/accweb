@@ -2,6 +2,7 @@ package api
 
 import (
 	"crypto/rsa"
+	"github.com/assetto-corsa-web/accweb/cfg"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
@@ -18,18 +19,19 @@ var (
 	roPassword    string // read only
 )
 
-func init() {
+func LoadConfig() {
+	config := cfg.Get()
 	generateKeyFilesIfRequired()
-	publicKey, err := ioutil.ReadFile(os.Getenv("ACCWEB_TOKEN_PUBLIC_KEY"))
+	publicKey, err := ioutil.ReadFile(config.Auth.PublicKeyPath)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{"err": err, "file": os.Getenv("ACCWEB_TOKEN_PUBLIC_KEY")}).Fatal("Token public key file not found")
+		logrus.WithFields(logrus.Fields{"err": err, "file": config.Auth.PublicKeyPath}).Fatal("Token public key file not found")
 	}
 
-	privateKey, err := ioutil.ReadFile(os.Getenv("ACCWEB_TOKEN_PRIVATE_KEY"))
+	privateKey, err := ioutil.ReadFile(config.Auth.PrivateKeyPath)
 
 	if err != nil {
-		logrus.WithFields(logrus.Fields{"err": err, "file": os.Getenv("ACCWEB_TOKEN_PRIVATE_KEY")}).Fatal("Token private key file not found")
+		logrus.WithFields(logrus.Fields{"err": err, "file": config.Auth.PrivateKeyPath}).Fatal("Token private key file not found")
 	}
 
 	verify, err := jwt.ParseRSAPublicKeyFromPEM(publicKey)
@@ -46,17 +48,17 @@ func init() {
 
 	verifyKey = verify
 	signKey = sign
-	adminPassword = os.Getenv("ACCWEB_ADMIN_PASSWORD")
-	modPassword = os.Getenv("ACCWEB_MOD_PASSWORD")
-	roPassword = os.Getenv("ACCWEB_RO_PASSWORD")
+	adminPassword = config.Auth.AdminPassword
+	modPassword = config.Auth.ModeratorPassword
+	roPassword = config.Auth.ReadOnlyPassword
 
 	if adminPassword == "" {
-		logrus.Fatal("ACCWEB_ADMIN_PASSWORD must be set")
+		logrus.Fatal("Admin password must be set")
 	}
 }
 
 func generateKeyFilesIfRequired() {
-	_, err := os.Stat(os.Getenv("ACCWEB_TOKEN_PUBLIC_KEY"))
+	_, err := os.Stat(cfg.Get().Auth.PublicKeyPath)
 
 	if os.IsNotExist(err) {
 		logrus.Info("Private/public token key files not found, generating new ones")

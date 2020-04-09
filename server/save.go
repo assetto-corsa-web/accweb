@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"github.com/assetto-corsa-web/accweb/cfg"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
@@ -16,7 +17,7 @@ const (
 	eventJsonName         = "event.json"
 	eventRulesJsonName    = "eventRules.json"
 	entrylistJsonName     = "entrylist.json"
-	bopJsonName			  = "bop.json"
+	bopJsonName           = "bop.json"
 	assistRulesJsonName   = "assistRules.json"
 	configVersion         = 1
 )
@@ -88,7 +89,7 @@ func getConfigDirectoryAndID(id int) (string, int, error) {
 		id = int(time.Now().Unix())
 	}
 
-	dir := filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(id))
+	dir := filepath.Join(cfg.Get().ConfigPath, strconv.Itoa(id))
 
 	if err := os.MkdirAll(dir, 0755); err != nil {
 		logrus.WithField("err", err).Error("Error creating configuration directory")

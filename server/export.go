@@ -40,7 +40,7 @@ func ExportServer(id int, withPasswords bool) ([]byte, error) {
 	if err := addFileToZip(archive, server.Bop, bopJsonName); err != nil {
 		return nil, err
 	}
-	
+
 	if err := addFileToZip(archive, server.AssistRules, assistRulesJsonName); err != nil {
 		return nil, err
 	}
