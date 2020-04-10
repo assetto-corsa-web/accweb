@@ -18,6 +18,9 @@
             <event ref="event"></event>
             <eventrules ref="eventrules"></eventrules>
             <entrylist ref="entrylist"></entrylist>
+			<bop ref="bop"></bop>
+			<assistrules ref="assistrules"></assistrules>
+			
         </div>
         <div v-show="activeTab === 1">
             <p>{{$t("upload_hint")}}</p>
@@ -32,6 +35,10 @@
                 <input type="file" name="eventRules.json" v-on:change="eventRulesJsonListener" />
                 <label>entrylist.json</label>
                 <input type="file" name="entrylist.json" v-on:change="entrylistJsonListener" />
+				<label>bop.json</label>
+                <input type="file" name="bop.json" v-on:change="bopJsonListener" />
+				<label>assistRules.json</label>
+                <input type="file" name="assistRules.json" v-on:change="assistRulesJsonListener" />				
                 <input class="primary" type="submit" :value="$t('import_button')" />
             </form>
         </div>
@@ -40,10 +47,10 @@
 
 <script>
 import axios from "axios";
-import {layout, end, basic, settings, event, eventrules, entrylist} from "../components";
+import {layout, end, basic, settings, event, eventrules, entrylist, bop, assistrules} from "../components";
 
 export default {
-    components: {layout, end, basic, settings, event, eventrules, entrylist},
+    components: {layout, end, basic, settings, event, eventrules, entrylist, bop, assistrules},
     data() {
         return {
             activeTab: 0,
@@ -53,7 +60,9 @@ export default {
             settingsJson: null,
             eventJson: null,
             eventRulesJson: null,
-            entrylistJson: null
+            entrylistJson: null,
+			bopJson: null,
+			assistRulesJson: null
         };
     },
     mounted() {
@@ -73,6 +82,8 @@ export default {
                 this.$refs.event.setData(r.data.event);
                 this.$refs.eventrules.setData(r.data.eventRules);
                 this.$refs.entrylist.setData(r.data.entrylist);
+				this.$refs.bop.setData(r.data.bop);
+				this.$refs.assistrules.setData(r.data.assistrules);				
             });
         },
         save() {
@@ -81,13 +92,17 @@ export default {
             let event = this.$refs.event.getData();
             let eventRules = this.$refs.eventrules.getData();
             let entrylist = this.$refs.entrylist.getData();
+			let bop = this.$refs.bop.getData();
+			let assistrules = this.$refs.assistrules.getData();			
             let data = {
                 id: parseInt(this.id),
                 basic,
                 settings,
                 event,
                 eventRules,
-                entrylist
+                entrylist,
+				bop,
+				assistrules
             };
 
             axios.post("/api/server", data)
@@ -113,13 +128,21 @@ export default {
         entrylistJsonListener(e) {
             this.entrylistJson = e.target.files[0];
         },
-        importServer() {
+		bopJsonListener(e) {
+            this.bopJson = e.target.files[0];
+        },
+		assistRulesJsonListener(e) {
+            this.assistRulesJson = e.target.files[0];
+        },
+		importServer() {
             let data = new FormData();
             data.append("configuration", this.configurationJson);
             data.append("settings", this.settingsJson);
             data.append("event", this.eventJson);
             data.append("eventRules", this.eventRulesJson);
             data.append("entrylist", this.entrylistJson);
+			data.append("bop", this.bopJson);
+			data.append("assistRules", this.assistRulesJson);
 
             let headers = {headers: {"Content-Type": "multipart/form-data"}};
 

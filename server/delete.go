@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/assetto-corsa-web/accweb/cfg"
 	"github.com/sirupsen/logrus"
 	"os"
 	"path/filepath"
@@ -18,7 +19,7 @@ func DeleteServer(id int) error {
 		return ServerNotFound
 	}
 
-	if err := os.RemoveAll(filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), strconv.Itoa(server.Id))); err != nil {
+	if err := os.RemoveAll(filepath.Join(cfg.Get().ConfigPath, strconv.Itoa(server.Id))); err != nil {
 		logrus.WithError(err).Error("Error deleting server directory")
 		return err
 	}

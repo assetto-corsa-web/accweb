@@ -43,12 +43,12 @@ export default {
             shortFormationLap: 0,
             allowAutoDQ: 0,
             dumpEntryList: 0,
-    		formationLapTypes: [
-    			{value: "3", label: "Position control and UI"},
-    			{value: "1", label: "Old limiter lap"},
-    			{value: "0", label: "Free"},
+    		formationLapTypes: [    			
+    			{value: "0", label: "0 - Old with limiter"},
+    			{value: "1", label: "1 - Free No Limiter"},
+				{value: "3", label: "3 - New Position control and UI"},
     		],
-            formationLapType: 3,
+            formationLapType: 1,
         };
     },
     methods: {
@@ -109,7 +109,7 @@ export default {
         "isracelocked_label": "Is Race Locked",
         "randomizetrackwhenempty_label": "Randomize Track When Empty",
         "maxcarslots_label": "Max Car Slots",
-        "centralentrylistpath_label": "Central Entry List Path",
+        "centralentrylistpath_label": "Path to the central entrylist.json file - Do not put entrylist.json at the end of the path !",
         "shortformationlap_label": "Short Formation Lap",
         "allowautodq_label": "Allow Auto DQ",
         "dumpentrylist_label": "Dump Entry List",
