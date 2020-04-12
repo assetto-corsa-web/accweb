@@ -21,15 +21,15 @@ export default {
     components: {collapsible, field, checkbox},
     data() {
         return {
-            stabilityControlLevelMax: 0,
-            disableAutosteer: true,
+            stabilityControlLevelMax: 100,
+            disableAutosteer: false,
             disableAutoLights: false,
             disableAutoWiper: false,
             disableAutoEngineStart: false,
             disableAutoPitLimiter: false,
-			disableAutoGear: true,
+			disableAutoGear: false,
             disableAutoClutch: false,
-			disableIdealLine: true
+			disableIdealLine: false
         };
     },
     methods: {
