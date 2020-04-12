@@ -6,9 +6,9 @@
         <checkbox :label="$t('disableAutoWiper_label')" v-model="disableAutoWiper"></checkbox>
         <checkbox :label="$t('disableAutoEngineStart_label')" v-model="disableAutoEngineStart"></checkbox>
         <checkbox :label="$t('disableAutoPitLimiter_label')" v-model="disableAutoPitLimiter"></checkbox>
-		<checkbox :label="$t('disableAutoGear_label')" v-model="disableAutoGear"></checkbox>
+        <checkbox :label="$t('disableAutoGear_label')" v-model="disableAutoGear"></checkbox>
         <checkbox :label="$t('disableAutoClutch_label')" v-model="disableAutoClutch"></checkbox>
-        <checkbox :label="$t('disableIdealLine_label')" v-model="disableIdealLine"></checkbox>		
+        <checkbox :label="$t('disableIdealLine_label')" v-model="disableIdealLine"></checkbox>
     </collapsible>
 </template>
 
@@ -27,9 +27,9 @@ export default {
             disableAutoWiper: false,
             disableAutoEngineStart: false,
             disableAutoPitLimiter: false,
-			disableAutoGear: false,
+            disableAutoGear: false,
             disableAutoClutch: false,
-			disableIdealLine: false
+            disableIdealLine: false
         };
     },
     methods: {
@@ -50,10 +50,10 @@ export default {
                 disableAutosteer: this.disableAutosteer,
                 disableAutoLights: this.disableAutoLights,
                 disableAutoWiper: this.disableAutoWiper,
-				disableAutoEngineStart: this.disableAutoEngineStart,
+                disableAutoEngineStart: this.disableAutoEngineStart,
                 disableAutoPitLimiter: this.disableAutoPitLimiter,
                 disableAutoGear: this.disableAutoGear,
-                disableAutoClutch: this.disableAutoClutch,				
+                disableAutoClutch: this.disableAutoClutch,
                 disableIdealLine: this.disableIdealLine
             };
         }
