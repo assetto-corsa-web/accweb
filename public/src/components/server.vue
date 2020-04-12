@@ -48,9 +48,17 @@ export default {
             });
         },
         exportConfig() {
+            // replace everything that's not a "normal" character or number so we export using a valid filename
+            // in case it's empty afterwards, set a default filename
+            let filename = this.server.settings.serverName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            
+            if(!filename.length) {
+                filename = "server";
+            }
+            
             let link = document.createElement("a");
             link.setAttribute("type", "hidden");
-            link.href = `/api/server/export/${this.server.id}_${this.server.settings.serverName}.zip?id=${this.server.id}&token=${this.$store.state.auth.token}`;
+            link.href = `/api/server/export/${this.server.id}_${filename}.zip?id=${this.server.id}&token=${this.$store.state.auth.token}`;
             document.body.appendChild(link);
             link.click();
             link.remove();
