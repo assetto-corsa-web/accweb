@@ -48,7 +48,7 @@ export default {
     			{value: "1", label: "1 - Free No Limiter"},
 				{value: "3", label: "3 - New Position control and UI"},
     		],
-            formationLapType: 1,
+            formationLapType: 3,
         };
     },
     methods: {
