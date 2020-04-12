@@ -37,6 +37,11 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### Version 1.9.1
+
+* better default configuration
+* fixed exporting configuration if server name contains invalid characters for filenames
+
 ### Version 1.9.0
 
 * added automatic generation of private/public token files
