@@ -2,9 +2,9 @@ package server
 
 import (
 	"encoding/json"
+	"github.com/assetto-corsa-web/accweb/cfg"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"strconv"
 	"sync"
@@ -17,7 +17,7 @@ var (
 
 func LoadServerList() {
 	logrus.Info("Loading server list...")
-	dir, err := ioutil.ReadDir(os.Getenv("ACCWEB_CONFIG_PATH"))
+	dir, err := ioutil.ReadDir(cfg.Get().ConfigPath)
 
 	if err != nil {
 		logrus.WithError(err).Fatal("Error opening config directory to initialize server list")
@@ -37,23 +37,31 @@ func LoadServerList() {
 func loadServerSettings(name string) error {
 	server := &ServerSettings{Id: parseServerId(name)}
 
-	if err := loadConfigFromFile(&server.Configuration, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, configurationJsonName)); err != nil {
+	if err := loadConfigFromFile(&server.Configuration, filepath.Join(cfg.Get().ConfigPath, name, configurationJsonName)); err != nil {
 		return err
 	}
 
-	if err := loadConfigFromFile(&server.Settings, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, settingsJsonName)); err != nil {
+	if err := loadConfigFromFile(&server.Settings, filepath.Join(cfg.Get().ConfigPath, name, settingsJsonName)); err != nil {
 		return err
 	}
 
-	if err := loadConfigFromFile(&server.Event, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, eventJsonName)); err != nil {
+	if err := loadConfigFromFile(&server.Event, filepath.Join(cfg.Get().ConfigPath, name, eventJsonName)); err != nil {
 		return err
 	}
 
-	if err := loadConfigFromFile(&server.EventRules, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, eventRulesJsonName)); err != nil {
+	if err := loadConfigFromFile(&server.EventRules, filepath.Join(cfg.Get().ConfigPath, name, eventRulesJsonName)); err != nil {
 		return err
 	}
 
-	if err := loadConfigFromFile(&server.Entrylist, filepath.Join(os.Getenv("ACCWEB_CONFIG_PATH"), name, entrylistJsonName)); err != nil {
+	if err := loadConfigFromFile(&server.Entrylist, filepath.Join(cfg.Get().ConfigPath, name, entrylistJsonName)); err != nil {
+		return err
+	}
+
+	if err := loadConfigFromFile(&server.Bop, filepath.Join(cfg.Get().ConfigPath, name, bopJsonName)); err != nil {
+		return err
+	}
+
+	if err := loadConfigFromFile(&server.AssistRules, filepath.Join(cfg.Get().ConfigPath, name, assistRulesJsonName)); err != nil {
 		return err
 	}
 
