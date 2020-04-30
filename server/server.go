@@ -101,7 +101,7 @@ type EntrySettings struct {
 	IsServerAdmin                int              `json:"isServerAdmin"`
 	CustomCar                    string           `json:"customCar"`
 	OverrideCarModelForCustomCar int              `json:"overrideCarModelForCustomCar"`
-	BallastKg                      int              `json:"ballastKg"`
+	BallastKg                    int              `json:"ballastKg"`
 	Restrictor                   int              `json:"restrictor"`
 }
 
@@ -127,16 +127,16 @@ type BopSettings struct {
 }
 
 type AssistRulesJson struct {
-	ConfigVersion            int  `json:"configVersion"`
-	StabilityControlLevelMax int  `json:"stabilityControlLevelMax"`
-	DisableAutosteer         bool `json:"disableAutosteer"`
-	DisableAutoLights        bool `json:"disableAutoLights"`
-	DisableAutoWiper         bool `json:"disableAutoWiper"`
-	DisableAutoEngineStart   bool `json:"disableAutoEngineStart"`
-	DisableAutoPitLimiter    bool `json:"disableAutoPitLimiter"`
-	DisableAutoGear          bool `json:"disableAutoGear"`
-	DisableAutoClutch        bool `json:"disableAutoClutch"`
-	DisableIdealLine         bool `json:"disableIdealLine"`
+	ConfigVersion            int `json:"configVersion"`
+	StabilityControlLevelMax int `json:"stabilityControlLevelMax"`
+	DisableAutosteer         int `json:"disableAutosteer"`
+	DisableAutoLights        int `json:"disableAutoLights"`
+	DisableAutoWiper         int `json:"disableAutoWiper"`
+	DisableAutoEngineStart   int `json:"disableAutoEngineStart"`
+	DisableAutoPitLimiter    int `json:"disableAutoPitLimiter"`
+	DisableAutoGear          int `json:"disableAutoGear"`
+	DisableAutoClutch        int `json:"disableAutoClutch"`
+	DisableIdealLine         int `json:"disableIdealLine"`
 }
 
 func (server *ServerSettings) start(cmd *exec.Cmd) {

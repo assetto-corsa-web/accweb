@@ -47,14 +47,14 @@ export default {
         getData() {
             return {
                 stabilityControlLevelMax: parseInt(this.stabilityControlLevelMax),
-                disableAutosteer: this.disableAutosteer,
-                disableAutoLights: this.disableAutoLights,
-                disableAutoWiper: this.disableAutoWiper,
-                disableAutoEngineStart: this.disableAutoEngineStart,
-                disableAutoPitLimiter: this.disableAutoPitLimiter,
-                disableAutoGear: this.disableAutoGear,
-                disableAutoClutch: this.disableAutoClutch,
-                disableIdealLine: this.disableIdealLine
+                disableAutosteer: this.disableAutosteer ? 1 : 0,
+                disableAutoLights: this.disableAutoLights ? 1 : 0,
+                disableAutoWiper: this.disableAutoWiper ? 1 : 0,
+                disableAutoEngineStart: this.disableAutoEngineStart ? 1 : 0,
+                disableAutoPitLimiter: this.disableAutoPitLimiter ? 1 : 0,
+                disableAutoGear: this.disableAutoGear ? 1 : 0,
+                disableAutoClutch: this.disableAutoClutch ? 1 : 0,
+                disableIdealLine: this.disableIdealLine ? 1 : 0
             };
         }
     }
