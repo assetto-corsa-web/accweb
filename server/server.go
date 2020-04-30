@@ -101,7 +101,7 @@ type EntrySettings struct {
 	IsServerAdmin                int              `json:"isServerAdmin"`
 	CustomCar                    string           `json:"customCar"`
 	OverrideCarModelForCustomCar int              `json:"overrideCarModelForCustomCar"`
-	Ballast                      int              `json:"ballast"`
+	BallastKg                      int              `json:"ballastKg"`
 	Restrictor                   int              `json:"restrictor"`
 }
 

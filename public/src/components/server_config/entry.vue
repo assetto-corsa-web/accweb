@@ -6,7 +6,7 @@
         <field type="number" :label="$t('isserveradmin_label')" v-model="entry.isServerAdmin"></field>
         <field type="text" :label="$t('customcar_label')" v-model="entry.customCar"></field>
         <field type="number" :label="$t('overridecarmodelforcustomcar_label')" v-model="entry.overrideCarModelForCustomCar"></field>
-        <field type="number" :label="$t('ballast_label')" v-model="entry.ballast"></field>
+        <field type="number" :label="$t('ballast_label')" v-model="entry.ballastKg"></field>
         <field type="number" :label="$t('restrictor_label')" v-model="entry.restrictor"></field>
         <driver v-for="driver in drivers"
             :key="driver.index"
