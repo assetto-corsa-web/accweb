@@ -37,7 +37,7 @@ export default {
                     isServerAdmin: entries[i].isServerAdmin,
                     customCar: entries[i].customCar,
                     overrideCarModelForCustomCar: entries[i].overrideCarModelForCustomCar,
-                    ballast: entries[i].ballast,
+                    ballastKg: entries[i].ballastKg,
                     restrictor: entries[i].restrictor
                 });
                 this.entryIndex++;
@@ -63,7 +63,7 @@ export default {
                     isServerAdmin: parseInt(this.entries[i].isServerAdmin),
                     customCar: this.entries[i].customCar,
                     overrideCarModelForCustomCar: parseInt(this.entries[i].overrideCarModelForCustomCar),
-                    ballast: parseInt(this.entries[i].ballast),
+                    ballastKg: parseInt(this.entries[i].ballastKg),
                     restrictor: parseInt(this.entries[i].restrictor)
                 });
             }
@@ -80,7 +80,7 @@ export default {
                 isServerAdmin: 0,
                 customCar: "",
                 overrideCarModelForCustomCar: 0,
-                ballast: 0,
+                ballastKg: 0,
                 restrictor: 0
             });
             this.entryIndex++;
