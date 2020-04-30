@@ -20,7 +20,6 @@
             <entrylist ref="entrylist"></entrylist>
 			<bop ref="bop"></bop>
 			<assistrules ref="assistrules"></assistrules>
-			
         </div>
         <div v-show="activeTab === 1">
             <p>{{$t("upload_hint")}}</p>
@@ -83,7 +82,7 @@ export default {
                 this.$refs.eventrules.setData(r.data.eventRules);
                 this.$refs.entrylist.setData(r.data.entrylist);
 				this.$refs.bop.setData(r.data.bop);
-				this.$refs.assistrules.setData(r.data.assistrules);				
+				this.$refs.assistrules.setData(r.data.assistRules);
             });
         },
         save() {
