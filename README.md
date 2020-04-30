@@ -37,6 +37,12 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### Version 1.9.2
+
+* fixed saving/loading assist rules
+* fixed assist rules import
+* fixed name of ballast to ballastKg in entrylist
+
 ### Version 1.9.1
 
 * better default configuration
