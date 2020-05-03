@@ -26,13 +26,13 @@ FROM alpine:3.9.6
 
 COPY --from=build /go/src/github.com/assetto-corsa-web/accweb /accweb
 
-ENV ACCWEB_HOST=0.0.0.0:8080 \
+ENV ACCWEB_HOST=localhost:8080 \
 	ACCWEB_ENABLE_TLS=false \
 	ACCWEB_CERT_FILE=/sslcerts/certificate.crt \
 	ACCWEB_PRIV_FILE=/sslcerts/private.key \
-	ACCWEB_ADMIN_PASSWORD=jesuisuntest \
-	ACCWEB_MOD_PASSWORD= \
-	ACCWEB_RO_PASSWORD= \
+	ACCWEB_ADMIN_PASSWORD=weakadminpassword \
+	ACCWEB_MOD_PASSWORD=weakmodpassword \
+	ACCWEB_RO_PASSWORD=weakropassword \
 	ACCWEB_LOGLEVEL=info \
 	ACCWEB_CORS=*
 
@@ -41,8 +41,7 @@ VOLUME /accserver /accweb /sslcerts
 WORKDIR /accweb
 
 RUN apk add gettext wine wine-dev wine-libs
-RUN	rm -rf config.yml && envsubst < docker_config.yml > config.yml
 
 EXPOSE 8080
 
-CMD "/accweb/main"
+ENTRYPOINT [ "/accweb/docker-entrypoint.sh" ] 
