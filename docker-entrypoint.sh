@@ -9,8 +9,5 @@ rm -rf config.yml
 # envsubst to replace set config properly
 envsubst < docker_config.yml > config.yml
 
-echo $ENV 
-cat config.yml
-
 # Launch accweb main
 ./main
