@@ -11,12 +11,13 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 1. [Features](#features)
 2. [Changelog](#changelog)
 3. [Installation](#installation)
-4. [Backup](#backup)
-5. [Contribute and support](#support)
-6. [Build release](#release)
-7. [Links](#links)
-8. [License](#license)
-9. [Screenshots](#screenshots)
+4. [Docker](#docker)
+5. [Backup](#backup)
+6. [Contribute and support](#support)
+7. [Build release](#release)
+8. [Links](#links)
+9. [License](#license)
+10. [Screenshots](#screenshots)
 
 ## Features
 <a name="features" />
@@ -88,6 +89,68 @@ To generate the RSA key pair, you can use the `gen_rsa_keys.sh` on Linux or inst
 You can also use an online service which generates RSA key pairs (search for "generate rsa key pair online").
 
 **Note that you have to install [wine](https://www.winehq.org/) if you're on Linux.**
+
+## Docker container
+<a name="docker" />
+
+Keep in mind that this docker image doesn't include accserver.exe file, you will have to copy it manually to the /accserver directory inside the docker after its started.
+Check the volumes section for more informations
+
+### Docker image
+
+A docker implementation is now available.
+
+To build the image manually : 
+* git clone https://github.com/assetto-corsa-web/accweb
+* cd accweb
+* docker build --pull --rm -f "Dockerfile" -t accweb:latest "."
+
+An official image be availabe at the following url :
+* https://hub.docker.com/r/kugel/accweb
+
+It can be pulled using : 
+* docker pull kugel/accweb
+
+To run the image : 
+* docker run -it accweb
+
+By default this image only expose the 8080 port in order to have the web UI working.
+If you want to run server you will need to open the port manually.
+
+For example, if i want to run 2 server instances, i will need to open 2 differents port.
+
+To run the image with opened port for ACC Server : 
+* docker run -it accweb -p 2600:2600 2601:2601
+
+Note : this will allow you to run a server on 2600 and 2601 port
+
+### Docker compose file
+
+A docker-compose file is available at the root of the git repository in order to have an easier deployment of the product.
+It come with pre-defined env variables and defined volumes.
+
+Note : Keep in mind that this compose file is basic and is not secured. Please follow the documentation and check the recommandations.
+
+### Volumes
+
+Here is the list of docker volumes and their purpose :
+* accweb : Will contain the accweb project
+* accserver : It will contain the accserver.exe file it has to be put manually there since we can't bundle it inside docker
+* sslcerts : This volume is dedicated to certificates storage
+
+### Environment variables list
+
+| Variable name  | Description  | Default value |
+|---|---|---|
+| ACCWEB_HOST  | ACC web server host URL  | 0.0.0.0:8080 (not secure)  |
+| ACCWEB_ENABLE_TLS  | Is TLS enabled or not  | false (not secure)  |
+| ACCWEB_CERT_FILE  | Certificate file location  | /sslcerts/certificate.crt  |
+| ACCWEB_PRIV_FILE  | Certificate key location  | /sslcerts/private.key |
+| ACCWEB_ADMIN_PASSWORD  | Admin password  | weakadminpassword |
+| ACCWEB_MOD_PASSWORD  | Moderator password  | weakmodpassword  |
+| ACCWEB_RO_PASSWORD  | Read only password  | weakropassword  |
+| ACCWEB_LOGLEVEL  | App log level  | info  |
+| ACCWEB_CORS  | Default cors  | "*"  |
 
 ## Backup
 <a name="backup" />
