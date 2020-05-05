@@ -3,7 +3,7 @@ FROM golang AS build
 LABEL maintainer="Kugel" \
 	  contributors="GillesDubois" \
       version="latest" \
-      description="Kugel's accweb app inside docker !"
+      description="Assetto Corsa Competizione Server Management Tool via Web Interface."
 
 COPY . /go/src/github.com/assetto-corsa-web/accweb
 
