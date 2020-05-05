@@ -93,25 +93,17 @@ You can also use an online service which generates RSA key pairs (search for "ge
 ## Docker
 <a name="docker" />
 
-Keep in mind that this docker image doesn't include accserver.exe file, you will have to copy it manually to the /accserver directory inside the docker after its started.
-Check the volumes section for more informations
+Keep in mind that this docker image doesn't include accserver.exe file, you will have to copy it manually to the /accserver directory inside the container after it started. Check the volumes section for details.
 
 ### Docker Image
 
-A docker implementation is now available.
-
 To build the image manually:
+
 * git clone https://github.com/assetto-corsa-web/accweb
 * `cd accweb`
 * `docker build --pull --rm -f "Dockerfile" -t accweb:latest "."`
 
-An official image is availabe at: https://hub.docker.com/r/kugel/accweb
-
-It can be pulled using:
-* `docker pull kugel/accweb`
-
-To run the image:
-* `docker run -it accweb`
+An official image is availabe at: https://hub.docker.com/r/kugel/accweb. It can be pulled using: `docker pull kugel/accweb` and started by running `docker run -it accweb`.
 
 By default this image exposes port 8080 in order to have the web UI working. If you want to run the game server you will need to open the ports manually. For example, if I want to run two server instances I need to open two differents port:
 
