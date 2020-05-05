@@ -1,1 +1,34 @@
-TODO
+version: '3'
+
+services:
+  accweb:
+    image: accweb:latest
+    container_name : accweb-server
+    restart: always
+    ports:
+      - 8080:8080
+    volumes:
+      - "accweb:/accweb"
+      - "acccerts:/sslcerts"
+      - "accserver:/accserver"
+    environment:
+      ACCWEB_HOST: 0.0.0.0:8080
+      ACCWEB_ENABLE_TLS: "false"
+      ACCWEB_CERT_FILE: /sslcerts/certificate.crt
+      ACCWEB_PRIV_FILE: /sslcerts/private.key
+      ACCWEB_ADMIN_PASSWORD: weakadminpassword 
+      ACCWEB_MOD_PASSWORD: weakmodpassword 
+      ACCWEB_RO_PASSWORD: weakropassword 
+      ACCWEB_LOGLEVEL: info 
+      ACCWEB_CORS: "*"
+    networks:
+      - accnetwork
+
+networks:
+  accnetwork:
+    
+volumes:
+  accweb:
+  acccerts:
+  accserver:
+  
