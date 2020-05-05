@@ -90,13 +90,13 @@ You can also use an online service which generates RSA key pairs (search for "ge
 
 **Note that you have to install [wine](https://www.winehq.org/) if you're on Linux.**
 
-## Docker container
+## Docker
 <a name="docker" />
 
 Keep in mind that this docker image doesn't include accserver.exe file, you will have to copy it manually to the /accserver directory inside the docker after its started.
 Check the volumes section for more informations
 
-### Docker image
+### Docker Image
 
 A docker implementation is now available.
 
@@ -121,7 +121,7 @@ docker run -it accweb -p 2600:2600 2601:2601
 
 This will allow you to run a server on 2600 and 2601 port.
 
-### Docker compose file
+### Docker Compose File
 
 The docker-compose file at the root of the git repository can be used to deploy accweb. It comes with pre-defined env variables and volumes. **Keep in mind that this compose file is not secured. Please follow the documentation and check the recommandations.**
 
