@@ -105,7 +105,7 @@ To build the image manually :
 * cd accweb
 * docker build --pull --rm -f "Dockerfile" -t accweb:latest "."
 
-An official image be availabe at the following url :
+An official image is availabe at the following url :
 * https://hub.docker.com/r/kugel/accweb
 
 It can be pulled using : 
