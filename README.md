@@ -100,57 +100,51 @@ Check the volumes section for more informations
 
 A docker implementation is now available.
 
-To build the image manually : 
+To build the image manually:
 * git clone https://github.com/assetto-corsa-web/accweb
-* cd accweb
-* docker build --pull --rm -f "Dockerfile" -t accweb:latest "."
+* `cd accweb`
+* `docker build --pull --rm -f "Dockerfile" -t accweb:latest "."`
 
-An official image is availabe at the following url :
-* https://hub.docker.com/r/kugel/accweb
+An official image is availabe at: https://hub.docker.com/r/kugel/accweb
 
-It can be pulled using : 
-* docker pull kugel/accweb
+It can be pulled using:
+* `docker pull kugel/accweb`
 
-To run the image : 
-* docker run -it accweb
+To run the image:
+* `docker run -it accweb`
 
-By default this image only expose the 8080 port in order to have the web UI working.
-If you want to run server you will need to open the port manually.
+By default this image exposes port 8080 in order to have the web UI working. If you want to run the game server you will need to open the ports manually. For example, if I want to run two server instances I need to open two differents port:
 
-For example, if i want to run 2 server instances, i will need to open 2 differents port.
+```
+docker run -it accweb -p 2600:2600 2601:2601
+```
 
-To run the image with opened port for ACC Server : 
-* docker run -it accweb -p 2600:2600 2601:2601
-
-Note : this will allow you to run a server on 2600 and 2601 port
+This will allow you to run a server on 2600 and 2601 port.
 
 ### Docker compose file
 
-A docker-compose file is available at the root of the git repository in order to have an easier deployment of the product.
-It come with pre-defined env variables and defined volumes.
-
-Note : Keep in mind that this compose file is basic and is not secured. Please follow the documentation and check the recommandations.
+The docker-compose file at the root of the git repository can be used to deploy accweb. It comes with pre-defined env variables and volumes. **Keep in mind that this compose file is not secured. Please follow the documentation and check the recommandations.**
 
 ### Volumes
 
-Here is the list of docker volumes and their purpose :
-* accweb : Will contain the accweb project
-* accserver : It will contain the accserver.exe file it has to be put manually there since we can't bundle it inside docker
-* sslcerts : This volume is dedicated to certificates storage
+Here is the list of docker volumes and their purpose:
+* `accweb`: Contains the accweb project
+* `accserver`: Must contain the `accserver.exe`. It has to be put there manually as we can't bundle it inside docker
+* `sslcerts`: This volume is dedicated to SSL certificates
 
-### Environment variables list
+### Environment Variables List
 
-| Variable name  | Description  | Default value |
+| Variable name | Description | Default value |
 |---|---|---|
-| ACCWEB_HOST  | ACC web server host URL  | 0.0.0.0:8080 (not secure)  |
-| ACCWEB_ENABLE_TLS  | Is TLS enabled or not  | false (not secure)  |
-| ACCWEB_CERT_FILE  | Certificate file location  | /sslcerts/certificate.crt  |
-| ACCWEB_PRIV_FILE  | Certificate key location  | /sslcerts/private.key |
-| ACCWEB_ADMIN_PASSWORD  | Admin password  | weakadminpassword |
-| ACCWEB_MOD_PASSWORD  | Moderator password  | weakmodpassword  |
-| ACCWEB_RO_PASSWORD  | Read only password  | weakropassword  |
-| ACCWEB_LOGLEVEL  | App log level  | info  |
-| ACCWEB_CORS  | Default cors  | "*"  |
+| ACCWEB_HOST | ACC web server host URL | 0.0.0.0:8080 (not secure) |
+| ACCWEB_ENABLE_TLS | Enable or disable SSL | false (not secure) |
+| ACCWEB_CERT_FILE | Certificate file location | /sslcerts/certificate.crt |
+| ACCWEB_PRIV_FILE | Certificate key location | /sslcerts/private.key |
+| ACCWEB_ADMIN_PASSWORD | Admin password | weakadminpassword |
+| ACCWEB_MOD_PASSWORD | Moderator password | weakmodpassword |
+| ACCWEB_RO_PASSWORD | Read only password | weakropassword |
+| ACCWEB_LOGLEVEL | App log level | info |
+| ACCWEB_CORS | Default CORS origin | "*" (accept all sources) |
 
 ## Backup
 <a name="backup" />
