@@ -108,7 +108,7 @@ An official image is availabe at: https://hub.docker.com/r/kugel/accweb. It can 
 By default this image exposes port 8080 in order to have the web UI working. If you want to run the game server you will need to open the ports manually. For example, if I want to run two server instances I need to open two differents port:
 
 ```
-docker run -it accweb -p 2600:2600 2601:2601
+docker run -it accweb -p 8080:8080 -p 2600:2600 -p 2601:2601
 ```
 
 This will allow you to run a server on 2600 and 2601 port.
