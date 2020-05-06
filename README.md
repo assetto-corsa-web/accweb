@@ -120,7 +120,7 @@ If you want to run server you will need to open the port manually.
 For example, if i want to run 2 server instances, i will need to open 2 differents port.
 
 To run the image with opened port for ACC Server : 
-* docker run -it accweb -p 2600:2600 2601:2601
+* docker run -it accweb -p 8080:8080 -p 2600:2600 -p 2601:2601
 
 Note : this will allow you to run a server on 2600 and 2601 port
 
