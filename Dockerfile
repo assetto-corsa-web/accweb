@@ -22,7 +22,7 @@ RUN ./gen_rsa_keys.sh
 RUN cd /go/src/github.com/assetto-corsa-web/accweb/public && npm i && npm rebuild node-sass && npm run build
 
 # Final image
-FROM alpine:3.9.6
+FROM ubuntu:bionic
 
 COPY --from=build /go/src/github.com/assetto-corsa-web/accweb /accweb
 
@@ -40,7 +40,7 @@ VOLUME /accserver /accweb /sslcerts
 
 WORKDIR /accweb
 
-RUN apk add gettext wine wine-dev wine-libs
+RUN apt -y update && apt -y install gettext-base wine64-development wine-development libwine-development libwine-development-dev
 
 EXPOSE 8080
 
