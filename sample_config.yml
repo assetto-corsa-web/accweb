@@ -5,6 +5,7 @@ webserver:
   # Sets the host and port.
   # Port 80 is the default port for web servers and might be blocked on your maschine.
   # If that is the case you can use anything else like 8080 for example.
+  # 0.0.0.0 exposes accweb on the internet.
   host: 0.0.0.0:80
 
   # Set tls to true and provide paths to the key files in order to enable SSL.
@@ -46,7 +47,7 @@ acc:
 
 config_path: config/
 dev: false
-loglevel: debug
+loglevel: info
 cors:
   origins: "*"
   loglevel: info
