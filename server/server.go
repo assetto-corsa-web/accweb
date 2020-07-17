@@ -46,6 +46,7 @@ type SettingsJson struct {
 	AllowAutoDQ                int    `json:"allowAutoDQ"`
 	DumpEntryList              int    `json:"dumpEntryList"`
 	FormationLapType           int    `json:"formationLapType"`
+	CarGroup                   string `json:"carGroup"`
 }
 
 type EventJson struct {

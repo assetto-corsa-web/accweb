@@ -16,6 +16,8 @@
         <field type="number" :label="$t('allowautodq_label')" v-model="allowAutoDQ"></field>
         <field type="number" :label="$t('dumpentrylist_label')" v-model="dumpEntryList"></field>
         <selection :label="$t('formationlaptype_label')" :options="formationLapTypes" v-model="formationLapType"></selection>
+		<selection :label="$t('cargroup_label')" :options="carGroups" v-model="carGroup"></selection>
+
     </collapsible>
 </template>
 
@@ -49,6 +51,14 @@ export default {
 				{value: "3", label: "3 - New Position control and UI"},
     		],
             formationLapType: 3,
+    		carGroups: [    			
+    			{value: "FreeForAll", label: "Mode FreeForAll"},
+    			{value: "GT3_2018", label: "Mode GT3"},
+				{value: "GT4", label: "Mode GT4"},
+				{value: "CUP", label: "Mode CUP"},
+				{value: "ST", label: "Mode ST"}
+    		],
+			carGroup: "FreeForAll"
         };
     },
     methods: {
@@ -69,6 +79,7 @@ export default {
             this.allowAutoDQ = data.allowAutoDQ;
             this.dumpEntryList = data.dumpEntryList;
             this.formationLapType = data.formationLapType;
+			this.carGroup = data.carGroup;
         },
         getData() {
             return {
@@ -87,7 +98,8 @@ export default {
                 shortFormationLap: parseInt(this.shortFormationLap),
                 allowAutoDQ: parseInt(this.allowAutoDQ),
                 dumpEntryList: parseInt(this.dumpEntryList),
-                formationLapType: parseInt(this.formationLapType)
+                formationLapType: parseInt(this.formationLapType),
+				carGroup: this.carGroup
             };
         }
     }
@@ -113,7 +125,8 @@ export default {
         "shortformationlap_label": "Short Formation Lap",
         "allowautodq_label": "Allow Auto DQ",
         "dumpentrylist_label": "Dump Entry List",
-        "formationlaptype_label": "Formation Lap Type"
+        "formationlaptype_label": "Formation Lap Type",
+		"cargroup_label": "car Group"
     }
 }
 </i18n>
