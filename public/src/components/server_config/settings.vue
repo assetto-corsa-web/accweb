@@ -52,9 +52,9 @@ export default {
             formationLapType: 3,
     		carGroups: [    			
     			{value: "FreeForAll", label: "Mode FreeForAll"},
-    			{value: "GT3_2018", label: "Mode GT3"},
+    			{value: "GT3", label: "Mode GT3"},
 				{value: "GT4", label: "Mode GT4"},
-				{value: "CUP", label: "Mode CUP"},
+				{value: "Cup", label: "Mode CUP"},
 				{value: "ST", label: "Mode ST"}
     		],
 			carGroup: "FreeForAll"
