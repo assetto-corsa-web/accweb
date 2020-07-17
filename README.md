@@ -38,6 +38,10 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### Version 1.10.0
+
+* added car groups for GT4 pack DLC
+
 ### Version 1.9.2
 
 * fixed saving/loading assist rules

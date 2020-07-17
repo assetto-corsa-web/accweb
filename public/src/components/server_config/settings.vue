@@ -16,8 +16,7 @@
         <field type="number" :label="$t('allowautodq_label')" v-model="allowAutoDQ"></field>
         <field type="number" :label="$t('dumpentrylist_label')" v-model="dumpEntryList"></field>
         <selection :label="$t('formationlaptype_label')" :options="formationLapTypes" v-model="formationLapType"></selection>
-		<selection :label="$t('cargroup_label')" :options="carGroups" v-model="carGroup"></selection>
-
+        <selection :label="$t('cargroup_label')" :options="carGroups" v-model="carGroup"></selection>
     </collapsible>
 </template>
 
@@ -126,7 +125,7 @@ export default {
         "allowautodq_label": "Allow Auto DQ",
         "dumpentrylist_label": "Dump Entry List",
         "formationlaptype_label": "Formation Lap Type",
-		"cargroup_label": "car Group"
+		"cargroup_label": "Car Group"
     }
 }
 </i18n>
