@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"github.com/assetto-corsa-web/accweb/config"
+	"github.com/assetto-corsa-web/accweb/pages"
 	"github.com/emvi/logbuch"
 	"github.com/gorilla/mux"
 	"github.com/rs/cors"
@@ -46,6 +47,9 @@ func configureCors(router *mux.Router) http.Handler {
 func getRouter() *mux.Router {
 	router := mux.NewRouter()
 
+	// pages
+	router.HandleFunc("/login", pages.RenderLoginPage)
+
 	// serve static content
 	staticDirPrefix := fmt.Sprintf("/%s/", staticDir)
 	router.PathPrefix(staticDirPrefix).Handler(http.StripPrefix(staticDirPrefix, http.FileServer(http.Dir(staticDir))))
@@ -77,11 +81,11 @@ func startServer(handler http.Handler) {
 	if config.Get().Server.TLS {
 		logbuch.Info("TLS enabled")
 
-		if err := server.ListenAndServeTLS(config.Get().Server.Cert, config.Get().Server.PrivateKey); err != nil {
+		if err := server.ListenAndServeTLS(config.Get().Server.Cert, config.Get().Server.PrivateKey); err != http.ErrServerClosed {
 			logbuch.Fatal("Error starting server with TLS enabled", logbuch.Fields{"err": err})
 		}
 	} else {
-		if err := server.ListenAndServe(); err != nil {
+		if err := server.ListenAndServe(); err != http.ErrServerClosed {
 			logbuch.Fatal("Error starting server with TLS disabled", logbuch.Fields{"err": err})
 		}
 	}
@@ -90,6 +94,7 @@ func startServer(handler http.Handler) {
 func main() {
 	config.Load()
 	configureLogging()
+	pages.LoadTemplate()
 	router := getRouter()
 	configureCors(router)
 	startServer(router)

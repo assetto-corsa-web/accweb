@@ -28,6 +28,7 @@ type Server struct {
 	TLS          bool   `yaml:"tls"`
 	Cert         string `yaml:"cert"`
 	PrivateKey   string `yaml:"private_key"`
+	HotReload    bool   `yaml:"hot_reload"` // to reload templates in development mode
 }
 
 type CORS struct {
