@@ -1,0 +1,6 @@
+# This is a test configuration file.
+# It's incomplete, just here to check it can be loaded.
+
+server:
+  host: localhost:8080
+  write_timeout: 5

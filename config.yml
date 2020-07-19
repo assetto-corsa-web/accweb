@@ -1,7 +1,8 @@
 # This configuration is for development only!
 # If you're looking for an example configuration, take a look at the sample_config.yml.
 
-webserver:
+loglevel: debug
+server:
   host: localhost:8080
   write_timeout: 5
   read_timeout: 5
@@ -14,13 +15,6 @@ auth:
   admin_password: admin
   moderator_password: mod
   read_only_password: ro
-acc:
-  server_path: "/home/marvin/.steam/steam/steamapps/common/Assetto Corsa Competizione/server"
-  server_exe: accServer.exe
-
-config_path: config/
-dev: true
-loglevel: debug
 cors:
   origins: "*"
   loglevel: info
