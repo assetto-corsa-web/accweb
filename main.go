@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/assetto-corsa-web/accweb/auth"
 	"github.com/assetto-corsa-web/accweb/config"
 	"github.com/assetto-corsa-web/accweb/pages"
 	"github.com/emvi/logbuch"
@@ -48,12 +49,17 @@ func getRouter() *mux.Router {
 	router := mux.NewRouter()
 
 	// pages
-	router.HandleFunc("/login", pages.RenderLoginPage)
+	router.Handle("/", auth.Middleware(pages.Overview))
+	router.HandleFunc("/login", pages.Login)
+	router.Handle("/server", auth.Middleware(pages.Server))
+	router.Handle("/logs", auth.Middleware(pages.Logs))
+	router.HandleFunc("/status", pages.Status)
 
 	// serve static content
 	staticDirPrefix := fmt.Sprintf("/%s/", staticDir)
 	router.PathPrefix(staticDirPrefix).Handler(http.StripPrefix(staticDirPrefix, http.FileServer(http.Dir(staticDir))))
 
+	router.NotFoundHandler = http.HandlerFunc(pages.NotFound)
 	return router
 }
 
@@ -94,6 +100,7 @@ func startServer(handler http.Handler) {
 func main() {
 	config.Load()
 	configureLogging()
+	auth.LoadConfig()
 	pages.LoadTemplate()
 	router := getRouter()
 	configureCors(router)

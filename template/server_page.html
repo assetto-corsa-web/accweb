@@ -1,0 +1,18 @@
+{{template "head.html"}}
+
+<div class="main">
+    <img src="static/logo.png" alt="" class="logo" />
+    <div class="title">
+        <h1>Server</h1>
+        <div class="menu">
+            {{if .IsAdmin}}
+                <button class="primary"><i class="fas fa-save"></i> Save</button>
+                <a href="/"><i class="fas fa-ban"></i> Cancel</a>
+            {{else}}
+                <a href="/" class="primary"><i class="fas fa-arrow-left"></i> Back</a>
+            {{end}}
+        </div>
+    </div>
+</div>
+
+{{template "end.html"}}

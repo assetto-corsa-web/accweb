@@ -1,6 +1,7 @@
 .idea/
 secrets/
 style/node_modules/
+secrets/
 static/main.css
 main
 main.exe

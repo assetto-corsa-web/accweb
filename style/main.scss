@@ -59,8 +59,10 @@ body {
 			align-items: center;
 			height: 40px;
 
-			button {
+			a, button {
+				display: block;
 				margin: 0 2px;
+				padding: 8px 12px;
 			}
 		}
 	}
@@ -257,10 +259,13 @@ label {
 }
 
 .error {
-	color: $red;
+	color: #fff;
 	width: 100%;
 	box-sizing: border-box;
-	font-size: $font_size_small;
+	padding: 8px 6px;
+	margin: 10px 0;
+	background: $red;
+	border-radius: 1px;
 }
 
 a {

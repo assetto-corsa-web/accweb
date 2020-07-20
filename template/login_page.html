@@ -5,6 +5,9 @@
     <div class="title">
         <h1>Login</h1>
     </div>
+    {{if .Message}}
+        <div class="error">{{.Message}}</div>
+    {{end}}
     <form method="post">
         <label>
             Password

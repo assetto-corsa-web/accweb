@@ -1,0 +1,17 @@
+{{template "head.html"}}
+
+<div class="main">
+    <img src="static/logo.png" alt="" class="logo" />
+    <div class="title">
+        <h1>Server</h1>
+        <div class="menu">
+            {{if .IsAdmin}}
+                <a href="/server" class="primary"><i class="fas fa-plus"></i> Add Server</a>
+            {{end}}
+            <a href="#"><i class="fas fa-sync"></i> Refresh</a>
+            <a href="/logout"><i class="fas fa-sign-out-alt"></i></a>
+        </div>
+    </div>
+</div>
+
+{{template "end.html"}}
