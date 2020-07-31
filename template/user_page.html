@@ -1,0 +1,16 @@
+{{template "head.html"}}
+
+<div class="main">
+    <img src="static/logo.png" alt="" class="logo" />
+    <div class="title">
+        <h1>User</h1>
+        <div class="menu">
+            {{if .IsAdmin}}
+                <a href="/user/new" class="primary"><i class="fas fa-plus"></i> Add User</a>
+            {{end}}
+            <a href="/" class="primary"><i class="fas fa-arrow-left"></i> Back</a>
+        </div>
+    </div>
+</div>
+
+{{template "end.html"}}

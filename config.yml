@@ -11,11 +11,9 @@ server:
   private_key: path to ssl private key
   hot_reload: true
 auth:
+  salt: salt
   public_key_path: secrets/token.public
   private_key_path: secrets/token.private
-  admin_password: admin
-  moderator_password: mod
-  read_only_password: ro
 cors:
   origins: "*"
   loglevel: info

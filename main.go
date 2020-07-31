@@ -17,11 +17,13 @@ import (
 )
 
 const (
+	logTimeFormat   = "2006-01-02_15:04:05"
 	shutdownTimeout = time.Second * 30
 	staticDir       = "static"
 )
 
 func configureLogging() {
+	logbuch.SetFormatter(logbuch.NewFieldFormatter(logTimeFormat, "\t\t"))
 	level := strings.ToLower(config.Get().Loglevel)
 	logbuch.Info("Configuring logging...", logbuch.Fields{"level": level})
 
@@ -51,6 +53,9 @@ func getRouter() *mux.Router {
 	// pages
 	router.Handle("/", auth.Middleware(pages.Overview))
 	router.HandleFunc("/login", pages.Login)
+	router.HandleFunc("/logout", pages.Logout)
+	router.Handle("/user", auth.Middleware(pages.User))
+	router.Handle("/user/new", auth.Middleware(pages.NewUser))
 	router.Handle("/server", auth.Middleware(pages.Server))
 	router.Handle("/logs", auth.Middleware(pages.Logs))
 	router.HandleFunc("/status", pages.Status)
@@ -101,6 +106,7 @@ func main() {
 	config.Load()
 	configureLogging()
 	auth.LoadConfig()
+	auth.LoadUser()
 	pages.LoadTemplate()
 	router := getRouter()
 	configureCors(router)

@@ -5,3 +5,4 @@ secrets/
 static/main.css
 main
 main.exe
+auth/user.yml

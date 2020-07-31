@@ -2,7 +2,6 @@ package pages
 
 import (
 	"github.com/assetto-corsa-web/accweb/auth"
-	"github.com/assetto-corsa-web/accweb/config"
 	"github.com/emvi/logbuch"
 	"net/http"
 )
@@ -18,17 +17,19 @@ func Login(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		username := r.FormValue("username")
 		password := r.FormValue("password")
-		isAdmin := password == config.Get().Auth.AdminPassword
-		isMod := password == config.Get().Auth.ModeratorPassword || isAdmin
-		isRO := password == config.Get().Auth.ReadOnlyPassword || isMod
+		user := auth.GetUser(username, password)
 
-		if !isAdmin && !isMod && !isRO {
+		if user == nil {
 			w.WriteHeader(http.StatusBadRequest)
 			renderLogin(w, "Password incorrect.")
 			return
 		}
 
+		isAdmin := user.Role == auth.RoleAdmin
+		isMod := user.Role == auth.RoleMod || isAdmin
+		isRO := user.Role == auth.RoleReadOnly || isMod
 		token, expires, err := auth.NewToken(isAdmin, isMod, isRO)
 
 		if err != nil {

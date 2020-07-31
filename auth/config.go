@@ -46,10 +46,6 @@ func LoadConfig() {
 
 	verifyKey = verify
 	signKey = sign
-
-	if cfg.Auth.AdminPassword == "" {
-		logbuch.Fatal("Admin password must be set")
-	}
 }
 
 func generateKeyFilesIfRequired() {

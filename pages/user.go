@@ -5,14 +5,14 @@ import (
 	"net/http"
 )
 
-func Overview(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims) {
+func User(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims) {
 	data := struct {
 		IsAdmin bool
 	}{
 		claims.IsAdmin,
 	}
 
-	if err := executeTemplate(w, "overview_page.html", data); err != nil {
+	if err := executeTemplate(w, "user_page.html", data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

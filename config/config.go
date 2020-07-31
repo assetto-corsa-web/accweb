@@ -37,11 +37,9 @@ type CORS struct {
 }
 
 type Auth struct {
-	PublicKeyPath     string `yaml:"public_key_path"`
-	PrivateKeyPath    string `yaml:"private_key_path"`
-	AdminPassword     string `yaml:"admin_password"`
-	ModeratorPassword string `yaml:"moderator_password"`
-	ReadOnlyPassword  string `yaml:"read_only_password"`
+	Salt           string `yaml:"salt"`
+	PublicKeyPath  string `yaml:"public_key_path"`
+	PrivateKeyPath string `yaml:"private_key_path"`
 }
 
 // Load loads the application configuration.
