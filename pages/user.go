@@ -8,8 +8,10 @@ import (
 func User(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims) {
 	data := struct {
 		IsAdmin bool
+		User    []auth.User
 	}{
 		claims.IsAdmin,
+		auth.GetUserList().GetAll(),
 	}
 
 	if err := executeTemplate(w, "user_page.html", data); err != nil {

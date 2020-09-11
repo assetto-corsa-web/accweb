@@ -14,6 +14,7 @@ import (
 var (
 	verifyKey *rsa.PublicKey
 	signKey   *rsa.PrivateKey
+	user      *UserList
 )
 
 // LoadConfig loads the JWT private/public key and generates them if required.
@@ -46,6 +47,7 @@ func LoadConfig() {
 
 	verifyKey = verify
 	signKey = sign
+	user = NewUserList()
 }
 
 func generateKeyFilesIfRequired() {
@@ -71,4 +73,9 @@ func generateKeyFilesIfRequired() {
 			logbuch.Info("Private/public token key files generated")
 		}
 	}
+}
+
+// GetUserList returns the complete user list.
+func GetUserList() *UserList {
+	return user
 }

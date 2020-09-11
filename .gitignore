@@ -2,8 +2,9 @@
 secrets/
 style/node_modules/
 secrets/
+data/
+auth/data/
 static/main.css
 main
 main.exe
-auth/user.yml
 user.yml

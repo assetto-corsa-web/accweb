@@ -19,8 +19,25 @@ import (
 const (
 	logTimeFormat   = "2006-01-02_15:04:05"
 	shutdownTimeout = time.Second * 30
+	dataDir         = "data"
 	staticDir       = "static"
 )
+
+func getRouter() *mux.Router {
+	router := mux.NewRouter()
+	router.Handle("/", auth.Middleware(pages.Overview))
+	router.HandleFunc("/login", pages.Login)
+	router.HandleFunc("/logout", pages.Logout)
+	router.Handle("/user", auth.Middleware(pages.User))
+	router.Handle("/user/new", auth.Middleware(pages.NewUser))
+	router.Handle("/server", auth.Middleware(pages.Server))
+	router.Handle("/logs", auth.Middleware(pages.Logs))
+	router.HandleFunc("/status", pages.Status)
+	staticDirPrefix := fmt.Sprintf("/%s/", staticDir)
+	router.PathPrefix(staticDirPrefix).Handler(http.StripPrefix(staticDirPrefix, http.FileServer(http.Dir(staticDir))))
+	router.NotFoundHandler = http.HandlerFunc(pages.NotFound)
+	return router
+}
 
 func configureLogging() {
 	logbuch.SetFormatter(logbuch.NewFieldFormatter(logTimeFormat, "\t\t"))
@@ -47,25 +64,12 @@ func configureCors(router *mux.Router) http.Handler {
 	return c.Handler(router)
 }
 
-func getRouter() *mux.Router {
-	router := mux.NewRouter()
-
-	// pages
-	router.Handle("/", auth.Middleware(pages.Overview))
-	router.HandleFunc("/login", pages.Login)
-	router.HandleFunc("/logout", pages.Logout)
-	router.Handle("/user", auth.Middleware(pages.User))
-	router.Handle("/user/new", auth.Middleware(pages.NewUser))
-	router.Handle("/server", auth.Middleware(pages.Server))
-	router.Handle("/logs", auth.Middleware(pages.Logs))
-	router.HandleFunc("/status", pages.Status)
-
-	// serve static content
-	staticDirPrefix := fmt.Sprintf("/%s/", staticDir)
-	router.PathPrefix(staticDirPrefix).Handler(http.StripPrefix(staticDirPrefix, http.FileServer(http.Dir(staticDir))))
-
-	router.NotFoundHandler = http.HandlerFunc(pages.NotFound)
-	return router
+func createDataDirectory() {
+	if _, err := os.Stat(dataDir); err != nil {
+		if err := os.Mkdir(dataDir, 0755); err != nil {
+			logbuch.Fatal("Error creating data directory. Make sure the data directory can be created", logbuch.Fields{"err": err})
+		}
+	}
 }
 
 func startServer(handler http.Handler) {
@@ -105,8 +109,8 @@ func startServer(handler http.Handler) {
 func main() {
 	config.Load()
 	configureLogging()
+	createDataDirectory()
 	auth.LoadConfig()
-	auth.LoadUser()
 	pages.LoadTemplate()
 	router := getRouter()
 	configureCors(router)

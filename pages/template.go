@@ -5,6 +5,13 @@ import (
 	"github.com/emvi/logbuch"
 	"html/template"
 	"io"
+	"os"
+	"path/filepath"
+	"strings"
+)
+
+const (
+	templateDir = "template/"
 )
 
 var (
@@ -13,8 +20,16 @@ var (
 
 // LoadTemplate loads the template files.
 func LoadTemplate() {
-	var err error
-	tpl, err = template.New("").ParseGlob("template/*")
+	tpl = template.New("")
+	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
+		if strings.Contains(path, ".html") {
+			if _, err := tpl.ParseFiles(path); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	})
 
 	if err != nil {
 		logbuch.Fatal("Error loading templates", logbuch.Fields{"err": err})

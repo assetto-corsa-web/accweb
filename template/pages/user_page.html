@@ -11,6 +11,11 @@
             <a href="/" class="primary"><i class="fas fa-arrow-left"></i> Back</a>
         </div>
     </div>
+    <div>
+        {{range $user := .User}}
+            {{template "user.html" $user}}
+        {{end}}
+    </div>
 </div>
 
 {{template "end.html"}}

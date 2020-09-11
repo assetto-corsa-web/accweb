@@ -13,15 +13,12 @@ import (
 )
 
 const (
-	userListFile = "user.yml"
-	RoleAdmin    = "admin"
-	RoleMod      = "moderator"
-	RoleReadOnly = "read-only"
-)
-
-var (
-	user UserList
-	m    sync.Mutex
+	userListFile        = "data/user.yml"
+	RoleAdmin           = "admin"
+	RoleMod             = "moderator"
+	RoleReadOnly        = "read-only"
+	defaultUser         = "admin"
+	defaultUserPassword = "admin"
 )
 
 // User is used for authentication and role management.
@@ -33,37 +30,28 @@ type User struct {
 
 // UserList is a list of users that can login to accweb.
 type UserList struct {
-	User []User `yaml:"user"`
+	user []User
+	m    sync.Mutex
 }
 
-// LoadUser loads the list of users for authentication.
-func LoadUser() {
-	logbuch.Info("Loading user file")
-	data, err := ioutil.ReadFile(userListFile)
-
-	if os.IsNotExist(err) {
-		logbuch.Info("User list file not found, you won't be able to login. Create the user.yml in the root directory and add users.")
-	} else if err != nil {
-		logbuch.Fatal("Error loading user list file", logbuch.Fields{"err": err})
+// NewUserList creates and loads the list of users for authentication.
+func NewUserList() *UserList {
+	list := &UserList{
+		user: make([]User, 0),
 	}
-
-	m.Lock()
-	defer m.Unlock()
-
-	if err := yaml.Unmarshal(data, &user); err != nil {
-		logbuch.Fatal("Error parsing user list file", logbuch.Fields{"err": err})
-	}
+	list.load()
+	return list
 }
 
-// GetUser returns the user for given username and password (clear text) or nil if not found.
-func GetUser(username, password string) *User {
-	m.Lock()
-	defer m.Unlock()
+// Get returns the user for given username and password (clear text) or nil if not found.
+func (list *UserList) Get(username, password string) *User {
+	list.m.Lock()
+	defer list.m.Unlock()
 	username = strings.ToLower(username)
 	password = sha256base64(password)
 	logbuch.Debug("Getting user", logbuch.Fields{"username": username, "password": password})
 
-	for _, u := range user.User {
+	for _, u := range list.user {
 		if strings.ToLower(u.Username) == username && u.Password == password {
 			return &u
 		}
@@ -72,56 +60,88 @@ func GetUser(username, password string) *User {
 	return nil
 }
 
-// SetUser adds/updates the user for given username.
-func SetUser(username, password, role string) {
-	m.Lock()
-	defer m.Unlock()
+// GetAll returns all users in the list.
+func (list *UserList) GetAll() []User {
+	list.m.Lock()
+	defer list.m.Unlock()
+	user := make([]User, len(list.user))
+	copy(user, list.user)
+	return user
+}
+
+// Set adds/updates the user for given username.
+func (list *UserList) Set(username, password, role string) {
+	list.m.Lock()
+	defer list.m.Unlock()
 	username = strings.ToLower(username)
 	password = sha256base64(password)
+	index := -1
 
-	for i, u := range user.User {
+	for i, u := range list.user {
 		if strings.ToLower(u.Username) == username {
-			setUser(i, username, password, role)
-			return
+			index = i
+			break
 		}
 	}
 
-	setUser(-1, username, password, role)
+	list.setUser(index, username, password, role)
 }
 
-func setUser(index int, username, password, role string) {
+func (list *UserList) setUser(index int, username, password, role string) {
 	if index > -1 {
-		user.User[index].Password = password
-		user.User[index].Role = role
+		list.user[index].Password = password
+		list.user[index].Role = role
 	} else {
-		user.User = append(user.User, User{
+		list.user = append(list.user, User{
 			username,
 			password,
 			role,
 		})
 	}
 
-	saveUser()
+	list.save()
 }
 
-// RemoveUser removes a user by its username.
-func RemoveUser(username string) {
-	m.Lock()
-	defer m.Unlock()
+// Remove removes a user by its username.
+func (list *UserList) Remove(username string) {
+	list.m.Lock()
+	defer list.m.Unlock()
 	username = strings.ToLower(username)
 
-	for i, u := range user.User {
+	for i, u := range list.user {
 		if strings.ToLower(u.Username) == username {
-			user.User = append(user.User[:i], user.User[i+1:]...)
-			saveUser()
+			list.user = append(list.user[:i], list.user[i+1:]...)
+			list.save()
 			return
 		}
 	}
 }
 
-func saveUser() {
+func (list *UserList) load() {
+	logbuch.Info("Loading user file...")
+	data, err := ioutil.ReadFile(userListFile)
+
+	if os.IsNotExist(err) {
+		logbuch.Info("User list file not found, creating default")
+		list.Set(defaultUser, defaultUserPassword, RoleAdmin)
+		logbuch.Info("Default user file created")
+	} else if err != nil {
+		logbuch.Fatal("Error loading user list file", logbuch.Fields{"err": err})
+	}
+
+	list.m.Lock()
+	defer list.m.Unlock()
+
+	if err := yaml.Unmarshal(data, &list.user); err != nil {
+		logbuch.Fatal("Error parsing user list file", logbuch.Fields{"err": err})
+	}
+
+	logbuch.Info("Users loaded", logbuch.Fields{"users": len(list.user)})
+}
+
+func (list *UserList) save() {
 	logbuch.Info("Saving user file")
-	out, err := yaml.Marshal(&user)
+	out, err := yaml.Marshal(list.user)
 
 	if err != nil {
 		logbuch.Fatal("Error marshalling user list", logbuch.Fields{"err": err})
