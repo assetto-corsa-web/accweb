@@ -6,6 +6,7 @@
         <field type="number" :label="$t('mandatoryPitstopCount_label')" v-model="mandatoryPitstopCount"></field>
         <field type="number" :label="$t('maxTotalDrivingTime_label')" v-model="maxTotalDrivingTime"></field>
         <field type="number" :label="$t('maxDriversCount_label')" v-model="maxDriversCount"></field>
+        <field type="number" :label="$t('tyreSetCount_label')" v-model="tyreSetCount"></field>
         <checkbox :label="$t('isRefuellingAllowedInRace_label')" v-model="isRefuellingAllowedInRace"></checkbox>
         <checkbox :label="$t('isRefuellingTimeFixed_label')" v-model="isRefuellingTimeFixed"></checkbox>
         <checkbox :label="$t('isMandatoryPitstopRefuellingRequired_label')" v-model="isMandatoryPitstopRefuellingRequired"></checkbox>
@@ -29,6 +30,7 @@ export default {
             mandatoryPitstopCount: 0,
             maxTotalDrivingTime: -1,
             maxDriversCount: 1,
+            tyreSetCount: 0,
             isRefuellingAllowedInRace: true,
             isRefuellingTimeFixed: false,
             isMandatoryPitstopRefuellingRequired: false,
@@ -44,6 +46,7 @@ export default {
             this.mandatoryPitstopCount = data.mandatoryPitstopCount;
             this.maxTotalDrivingTime = data.maxTotalDrivingTime;
             this.maxDriversCount = data.maxDriversCount;
+            this.tyreSetCount = data.tyreSetCount;
             this.isRefuellingAllowedInRace = data.isRefuellingAllowedInRace;
             this.isRefuellingTimeFixed = data.isRefuellingTimeFixed;
             this.isMandatoryPitstopRefuellingRequired = data.isMandatoryPitstopRefuellingRequired;
@@ -58,6 +61,7 @@ export default {
                 mandatoryPitstopCount: parseInt(this.mandatoryPitstopCount),
                 maxTotalDrivingTime: parseInt(this.maxTotalDrivingTime),
                 maxDriversCount: parseInt(this.maxDriversCount),
+                tyreSetCount: parseInt(this.tyreSetCount),
                 isRefuellingAllowedInRace: this.isRefuellingAllowedInRace,
                 isRefuellingTimeFixed: this.isRefuellingTimeFixed,
                 isMandatoryPitstopRefuellingRequired: this.isMandatoryPitstopRefuellingRequired,
@@ -79,6 +83,7 @@ export default {
         "mandatoryPitstopCount_label": "Mandatory Pitstop Count",
         "maxTotalDrivingTime_label": "Max Total Driving Time",
         "maxDriversCount_label": "Max Drivers Count",
+        "tyreSetCount_label": "Tyre Set Count",
         "isRefuellingAllowedInRace_label": "Is Refuelling Allowed in Race",
         "isRefuellingTimeFixed_label": "Is Refuelling Time Fixed",
         "isMandatoryPitstopRefuellingRequired_label": "Is Mandatory Pitstop Refuelling Required",

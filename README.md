@@ -38,28 +38,33 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
-### Version 1.10.0
+### 1.11.0
+
+* fixed type of simracerWeatherConditions and isFixedConditionQualification
+* added tyreSetCount to reventRules.json
+
+### 1.10.0
 
 * added car groups for GT4 pack DLC
 
-### Version 1.9.2
+### 1.9.2
 
 * fixed saving/loading assist rules
 * fixed assist rules import
 * fixed name of ballast to ballastKg in entrylist
 
-### Version 1.9.1
+### 1.9.1
 
 * better default configuration
 * fixed exporting configuration if server name contains invalid characters for filenames
 
-### Version 1.9.0
+### 1.9.0
 
 * added automatic generation of private/public token files
 * switched to yaml configuration instead of environment variables
 * new design
 
-### Version 1.8.0
+### 1.8.0
 
 * minor changes to the global view
 * corrections of values for "formationLapType"

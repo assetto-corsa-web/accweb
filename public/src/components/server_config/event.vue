@@ -9,8 +9,8 @@
         <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
         <field type="number" :label="$t('postqualyseconds_label')" v-model="postQualySeconds"></field>
         <field type="number" :label="$t('postraceseconds_label')" v-model="postRaceSeconds"></field>
-		<checkbox :label="$t('simracerWeatherConditions_label')" v-model="simracerWeatherConditions"></checkbox>
-        <checkbox :label="$t('isFixedConditionQualification_label')" v-model="isFixedConditionQualification"></checkbox>		
+		<field type="number" :label="$t('simracerWeatherConditions_label')" v-model="simracerWeatherConditions"></field>
+        <field type="number" :label="$t('isFixedConditionQualification_label')" v-model="isFixedConditionQualification"></field>
         <session v-for="session in sessions"
             :key="session.index"
             :session="session"
@@ -23,11 +23,10 @@
 import collapsible from "../collapsible.vue";
 import field from "../field.vue";
 import selection from "../selection.vue";
-import checkbox from "../checkbox.vue";
 import session from "./session.vue";
 
 export default {
-    components: {collapsible, field, selection, checkbox, session},
+    components: {collapsible, field, selection, session},
     data() {
     	return {
     		tracks: [
@@ -68,9 +67,8 @@ export default {
 			weatherRandomness: 1,
             postQualySeconds: 0,
             postRaceSeconds: 0,
-			simracerWeatherConditions: true,
-			isFixedConditionQualification: true,
-            
+			simracerWeatherConditions: 0,
+			isFixedConditionQualification: 0,
             sessionIndex: 0,
             sessions: []
     	};
@@ -114,8 +112,8 @@ export default {
 				weatherRandomness: parseInt(this.weatherRandomness),
                 postQualySeconds: parseInt(this.postQualySeconds),
                 postRaceSeconds: parseInt(this.postRaceSeconds),				
-				simracerWeatherConditions: this.simracerWeatherConditions,
-				isFixedConditionQualification: this.isFixedConditionQualification,
+				simracerWeatherConditions: parseInt(this.simracerWeatherConditions),
+				isFixedConditionQualification: parseInt(this.isFixedConditionQualification),
                 sessions: this.getSessionData()
     		};
     	},

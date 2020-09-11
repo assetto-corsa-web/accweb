@@ -61,8 +61,8 @@ type EventJson struct {
 	Sessions                      []SessionSettings `json:"sessions"`
 	PostQualySeconds              int               `json:"postQualySeconds"`
 	PostRaceSeconds               int               `json:"postRaceSeconds"`
-	SimracerWeatherConditions     bool              `json:"simracerWeatherConditions"`
-	IsFixedConditionQualification bool              `json:"isFixedConditionQualification"`
+	SimracerWeatherConditions     int               `json:"simracerWeatherConditions"`
+	IsFixedConditionQualification int               `json:"isFixedConditionQualification"`
 }
 
 type EventRulesJson struct {
@@ -78,6 +78,7 @@ type EventRulesJson struct {
 	IsMandatoryPitstopRefuellingRequired bool `json:"isMandatoryPitstopRefuellingRequired"`
 	IsMandatoryPitstopTyreChangeRequired bool `json:"isMandatoryPitstopTyreChangeRequired"`
 	IsMandatoryPitstopSwapDriverRequired bool `json:"isMandatoryPitstopSwapDriverRequired"`
+	TyreSetCount                         int  `json:"tyreSetCount"`
 }
 
 type SessionSettings struct {
