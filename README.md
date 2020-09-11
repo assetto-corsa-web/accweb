@@ -1,10 +1,12 @@
 # Assetto Corsa Competizione Server Web Interface
 
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/assetto-corsa-web/accweb) 
 [![CircleCI](https://circleci.com/gh/assetto-corsa-web/accweb.svg?style=svg)](https://circleci.com/gh/assetto-corsa-web/accweb)
 [![Go Report Card](https://goreportcard.com/badge/github.com/assetto-corsa-web/accweb)](https://goreportcard.com/report/github.com/assetto-corsa-web/accweb)
+[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/assetto-corsa-web/accweb) 
 
 The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb lets you manage your Assetto Corsa Competizione servers via a nice and simple web interface. You can start, stop and configure server instances and monitor their status.
+
+**VERSION 2.0 IS IN DEVELOPMENT AT THE MOMENT. DO NOT USE IT YET!**
 
 ## Table of contents
 
@@ -38,37 +40,9 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
-### Version 1.10.0
+### 2.0.0
 
-* added car groups for GT4 pack DLC
-
-### Version 1.9.2
-
-* fixed saving/loading assist rules
-* fixed assist rules import
-* fixed name of ballast to ballastKg in entrylist
-
-### Version 1.9.1
-
-* better default configuration
-* fixed exporting configuration if server name contains invalid characters for filenames
-
-### Version 1.9.0
-
-* added automatic generation of private/public token files
-* switched to yaml configuration instead of environment variables
-* new design
-
-### Version 1.8.0
-
-* minor changes to the global view
-* corrections of values for "formationLapType"
-* added parameter "simracerWeatherConditions" in event.json
-* added parameter "isFixedConditionQualification" in event.json
-* added "bop.json"
-* added "assistRules"
-
-IMPORTANT: You will have to delete the servers already created in order to create new ones!
+The new major version of accweb!
 
 ## Installation and configuration
 <a name="installation" />
