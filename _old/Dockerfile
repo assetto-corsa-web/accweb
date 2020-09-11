@@ -5,7 +5,7 @@ LABEL maintainer="Kugel" \
       version="latest" \
       description="Assetto Corsa Competizione Server Management Tool via Web Interface."
 
-COPY . /go/src/github.com/assetto-corsa-web/accweb
+COPY .. /go/src/github.com/assetto-corsa-web/accweb
 
 WORKDIR /go/src/github.com/assetto-corsa-web/accweb
 
