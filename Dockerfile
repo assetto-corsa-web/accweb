@@ -12,7 +12,7 @@ WORKDIR /go/src/github.com/assetto-corsa-web/accweb
 RUN apt update && \
 	apt upgrade -y && \
 	apt install curl  -y
-RUN curl -sL https://deb.nodesource.com/setup_13.x -o nodesource_setup.sh && bash nodesource_setup.sh
+RUN curl -sL https://deb.nodesource.com/setup_14.x -o nodesource_setup.sh && bash nodesource_setup.sh
 RUN apt-get install -y nodejs
 
 ENV GOPATH=/go
