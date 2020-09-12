@@ -43,7 +43,7 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 **When upgrading from a previous version, make sure you replace all true/false values with 1/0 for simracerWeatherConditions and isFixedConditionQualification in event JSON.**
 
 * fixed type of simracerWeatherConditions and isFixedConditionQualification
-* added tyreSetCount to reventRules.json
+* added tyreSetCount to eventRules.json
 
 ### 1.10.0
 
