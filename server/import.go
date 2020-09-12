@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"github.com/sirupsen/logrus"
 	"io"
 	"io/ioutil"
 )
@@ -9,31 +10,31 @@ import (
 func ImportServer(configuration, settings, event, eventRules, entrylist, bop, assistRules io.Reader) error {
 	server := new(ServerSettings)
 
-	if err := importFile(configuration, &server.Configuration); err != nil {
+	if err := importFile(configuration, &server.Configuration, configurationJsonName); err != nil {
 		return err
 	}
 
-	if err := importFile(settings, &server.Settings); err != nil {
+	if err := importFile(settings, &server.Settings, settingsJsonName); err != nil {
 		return err
 	}
 
-	if err := importFile(event, &server.Event); err != nil {
+	if err := importFile(event, &server.Event, eventJsonName); err != nil {
 		return err
 	}
 
-	if err := importFile(eventRules, &server.EventRules); err != nil {
+	if err := importFile(eventRules, &server.EventRules, eventRulesJsonName); err != nil {
 		return err
 	}
 
-	if err := importFile(entrylist, &server.Entrylist); err != nil {
+	if err := importFile(entrylist, &server.Entrylist, entrylistJsonName); err != nil {
 		return err
 	}
 
-	if err := importFile(bop, &server.Bop); err != nil {
+	if err := importFile(bop, &server.Bop, bopJsonName); err != nil {
 		return err
 	}
 
-	if err := importFile(assistRules, &server.AssistRules); err != nil {
+	if err := importFile(assistRules, &server.AssistRules, assistRulesJsonName); err != nil {
 		return err
 	}
 
@@ -44,14 +45,16 @@ func ImportServer(configuration, settings, event, eventRules, entrylist, bop, as
 	return nil
 }
 
-func importFile(reader io.Reader, config interface{}) error {
+func importFile(reader io.Reader, config interface{}, filename string) error {
 	data, err := ioutil.ReadAll(reader)
 
 	if err != nil {
+		logrus.WithError(err).WithField("file", filename).Error("Error reading configuration file JSON on import")
 		return err
 	}
 
 	if err := json.Unmarshal(data, config); err != nil {
+		logrus.WithError(err).WithField("file", filename).Error("Error unmarshalling configuration file JSON on import")
 		return err
 	}
 

@@ -90,6 +90,7 @@ func DeleteServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 
 func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenClaims) {
 	if err := r.ParseMultipartForm(maxMemory); err != nil {
+		logrus.WithError(err).Error("Form exceeds maximum memory")
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
@@ -98,6 +99,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 	configuration, configurationHeader, err := r.FormFile("configuration")
 
 	if err != nil || configurationHeader.Size == 0 {
+		logrus.WithError(err).WithField("size", configurationHeader.Size).Error("Error reading configuration form file")
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
@@ -111,6 +113,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 	settings, settingsHeader, err := r.FormFile("settings")
 
 	if err != nil || settingsHeader.Size == 0 {
+		logrus.WithError(err).WithField("size", settingsHeader.Size).Error("Error reading settings form file")
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
@@ -124,6 +127,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 	event, eventHeader, err := r.FormFile("event")
 
 	if err != nil || eventHeader.Size == 0 {
+		logrus.WithError(err).WithField("size", eventHeader.Size).Error("Error reading event form file")
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
@@ -137,6 +141,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 	eventRules, eventRulesHeader, err := r.FormFile("eventRules")
 
 	if err != nil || eventRulesHeader.Size == 0 {
+		logrus.WithError(err).WithField("size", eventRulesHeader.Size).Error("Error reading event rules form file")
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
@@ -150,6 +155,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 	entrylist, entrylistHeader, err := r.FormFile("entrylist")
 
 	if err != nil || entrylistHeader.Size == 0 {
+		logrus.WithError(err).WithField("size", entrylistHeader.Size).Error("Error reading entrylist form file")
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
@@ -163,6 +169,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 	bop, bopHeader, err := r.FormFile("bop")
 
 	if err != nil || bopHeader.Size == 0 {
+		logrus.WithError(err).WithField("size", bopHeader.Size).Error("Error reading bop form file")
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
@@ -176,6 +183,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 	assistRules, assistRulesHeader, err := r.FormFile("assistRules")
 
 	if err != nil || assistRulesHeader.Size == 0 {
+		logrus.WithError(err).WithField("size", assistRulesHeader.Size).Error("Error reading assist rules form file")
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
@@ -188,6 +196,7 @@ func ImportServerHandler(w http.ResponseWriter, r *http.Request, claims *TokenCl
 	}()
 
 	if err := server.ImportServer(configuration, settings, event, eventRules, entrylist, bop, assistRules); err != nil {
+		logrus.WithError(err).Error("Error importing server files")
 		w.WriteHeader(http.StatusBadRequest)
 		writeResponse(w, nil)
 		return
