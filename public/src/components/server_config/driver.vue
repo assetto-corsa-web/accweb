@@ -3,7 +3,7 @@
         <field type="text" :label="$t('firstname_label')" v-model="firstName"></field>
         <field type="text" :label="$t('lastname_label')" v-model="lastName"></field>
         <field type="text" :label="$t('shortname_label')" v-model="shortName"></field>
-        <field type="number" :label="$t('drivercategory_label')" v-model="driverCategory"></field>
+        <selection :label="$t('drivercategory_label')" :options="driverCategoryTypes" v-model="driverCategory"></selection>
         <field type="text" :label="$t('playerid_label')" v-model="playerID"></field>
         <field type="number" :label="$t('defaultgridposition_label')" v-model="defaultGridPosition"></field>
         <button v-on:click="$emit('remove', driver.index)">{{$t("remove_button")}}</button>
@@ -47,6 +47,12 @@ export default {
             firstName: "",
             lastName: "",
             shortName: "",
+            driverCategoryTypes: [
+              {value: 0, label: "Bronze"},
+              {value: 1, label: "Silver"},
+              {value: 2, label: "Gold"},
+              {value: 3, label: "Platinum"}
+            ],
             driverCategory: 0,
             playerID: "",
             defaultGridPosition: 0
