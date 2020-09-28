@@ -38,6 +38,10 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### 1.11.1
+
+* added selection dropdown view for DriverCategory and ForcedCarModel
+
 ### 1.11.0
 
 **When upgrading from a previous version, make sure you replace all true/false values with 1/0 for simracerWeatherConditions and isFixedConditionQualification in event JSON.**
