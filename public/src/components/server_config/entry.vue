@@ -1,7 +1,7 @@
 <template>
     <div class="box">
         <field type="number" :label="$t('racenumber_label')" v-model="entry.raceNumber"></field>
-        <field type="number" :label="$t('forcedcarmodel_label')" v-model="entry.forcedCarModel"></field>
+        <selection :label="$t('forcedcarmodel_label')" :options="entry.carModels" v-model="entry.forcedCarModel"></selection>
         <field type="number" :label="$t('overridedriverinfo_label')" v-model="entry.overrideDriverInfo"></field>
         <field type="number" :label="$t('isserveradmin_label')" v-model="entry.isServerAdmin"></field>
         <field type="text" :label="$t('customcar_label')" v-model="entry.customCar"></field>
