@@ -5,16 +5,16 @@
         <field type="text" :label="$t('shortname_label')" v-model="shortName"></field>
         <selection :label="$t('drivercategory_label')" :options="driverCategoryTypes" v-model="driverCategory"></selection>
         <field type="text" :label="$t('playerid_label')" v-model="playerID"></field>
-        <field type="number" :label="$t('defaultgridposition_label')" v-model="defaultGridPosition"></field>
         <button v-on:click="$emit('remove', driver.index)">{{$t("remove_button")}}</button>
     </div>
 </template>
 
 <script>
 import field from "../field.vue";
+import selection from "../selection.vue";
 
 export default {
-    components: {field},
+    components: {field, selection},
     props: ["driver"],
     watch: {
         firstName(value) {
@@ -36,10 +36,6 @@ export default {
         playerID(value) {
             this.driver.playerID = value;
             this.$emit("update", this.driver);
-        },
-        defaultGridPosition(value) {
-            this.driver.defaultGridPosition = parseInt(value);
-            this.$emit("update", this.driver);
         }
     },
     data() {
@@ -54,17 +50,15 @@ export default {
               {value: 3, label: "Platinum"}
             ],
             driverCategory: 0,
-            playerID: "",
-            defaultGridPosition: 0
+            playerID: ""
         };
     },
     mounted() {
         this.firstName = this.driver.firstName;
         this.lastName = this.driver.lastName;
         this.shortName = this.driver.shortName;
-        this.driverCategory = this.driver.driverCategory;
+        this.driverCategory = parseInt(this.driver.driverCategory);
         this.playerID = this.driver.playerID;
-        this.defaultGridPosition = this.driver.defaultGridPosition;
     }
 }
 </script>
@@ -77,7 +71,6 @@ export default {
         "shortname_label": "Short Name",
         "drivercategory_label": "Driver Category",
         "playerid_label": "PlayerID",
-        "defaultgridposition_label": "Default Grid Position",
         "remove_button": "Remove Driver"
     }
 }

@@ -33,10 +33,10 @@ type SettingsJson struct {
 	ServerName                 string `json:"serverName"`
 	Password                   string `json:"password"`
 	AdminPassword              string `json:"adminPassword"`
+	SpectatorPassword          string `json:"spectatorPassword"`
 	TrackMedalsRequirement     int    `json:"trackMedalsRequirement"`
 	SafetyRatingRequirement    int    `json:"safetyRatingRequirement"`
 	RacecraftRatingRequirement int    `json:"racecraftRatingRequirement"`
-	SpectatorPassword          string `json:"spectatorPassword"`
 	DumpLeaderboards           int    `json:"dumpLeaderboards"`
 	IsRaceLocked               int    `json:"isRaceLocked"`
 	RandomizeTrackWhenEmpty    int    `json:"randomizeTrackWhenEmpty"`
@@ -105,6 +105,7 @@ type EntrySettings struct {
 	OverrideCarModelForCustomCar int              `json:"overrideCarModelForCustomCar"`
 	BallastKg                    int              `json:"ballastKg"`
 	Restrictor                   int              `json:"restrictor"`
+	DefaultGridPosition 		 int    		  `json:"defaultGridPosition"`
 }
 
 type DriverSettings struct {
@@ -113,7 +114,6 @@ type DriverSettings struct {
 	ShortName           string `json:"shortName"`
 	DriverCategory      int    `json:"driverCategory"`
 	PlayerID            string `json:"playerID"`
-	DefaultGridPosition int    `json:"defaultGridPosition"`
 }
 
 type BopJson struct {

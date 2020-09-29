@@ -1,6 +1,6 @@
 <template>
     <collapsible :title="$t('title')">
-        <field type="number" :label="$t('qualifyStandingType_label')" v-model="qualifyStandingType"></field>
+        <selection :label="$t('qualifyStandingType_label')" :options="qualifyStandingTypes" v-model="qualifyStandingType"></selection>
         <field type="number" :label="$t('pitWindowLengthSec_label')" v-model="pitWindowLengthSec"></field>
         <field type="number" :label="$t('driverStintTimeSec_label')" v-model="driverStintTimeSec"></field>
         <field type="number" :label="$t('mandatoryPitstopCount_label')" v-model="mandatoryPitstopCount"></field>
@@ -19,24 +19,29 @@
 import collapsible from "../collapsible.vue";
 import field from "../field.vue";
 import checkbox from "../checkbox.vue";
+import selection from "../selection.vue";
 
 export default {
-    components: {collapsible, field, checkbox},
+    components: {collapsible, field, checkbox, selection},
     data() {
-        return {
-            qualifyStandingType: 1,
-            pitWindowLengthSec: -1,
-            driverStintTimeSec: -1,
-            mandatoryPitstopCount: 0,
-            maxTotalDrivingTime: -1,
-            maxDriversCount: 1,
-            tyreSetCount: 0,
-            isRefuellingAllowedInRace: true,
-            isRefuellingTimeFixed: false,
-            isMandatoryPitstopRefuellingRequired: false,
-            isMandatoryPitstopTyreChangeRequired: false,
-            isMandatoryPitstopSwapDriverRequired: false
-        };
+      return {
+        qualifyStandingTypes: [
+          {value: 1, label: "Fastest Lap"},
+          {value: 2, label: "Average Lap"}
+        ],
+        qualifyStandingType: 1,
+        pitWindowLengthSec: -1,
+        driverStintTimeSec: -1,
+        mandatoryPitstopCount: 0,
+        maxTotalDrivingTime: -1,
+        maxDriversCount: 1,
+        tyreSetCount: 0,
+        isRefuellingAllowedInRace: true,
+        isRefuellingTimeFixed: false,
+        isMandatoryPitstopRefuellingRequired: false,
+        isMandatoryPitstopTyreChangeRequired: false,
+        isMandatoryPitstopSwapDriverRequired: false
+      };
     },
     methods: {
         setData(data) {
