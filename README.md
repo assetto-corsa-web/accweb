@@ -38,6 +38,13 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### 1.11.2
+
+* converted bunch of number fields to check boxes, where applicable
+* fixed broken selection fields for entrylist
+* fixed defaultGridPosition being in the wrong location
+* fixed some inconsistent code formatting
+
 ### 1.11.1
 
 * added selection dropdown view for DriverCategory and ForcedCarModel
