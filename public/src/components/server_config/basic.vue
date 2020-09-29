@@ -3,24 +3,25 @@
         <field type="number" :label="$t('udp_label')" v-model="udpPort"></field>
         <field type="number" :label="$t('tcp_label')" v-model="tcpPort"></field>
         <field type="number" :label="$t('maxconnections_label')" v-model="maxConnections"></field>
-        <field type="number" :label="$t('registertolobby_label')" v-model="registerToLobby"></field>
-        <field type="number" :label="$t('landiscovery_label')" v-model="lanDiscovery"></field>
+        <checkbox :label="$t('registertolobby_label')" v-model="registerToLobby"></checkbox>
+        <checkbox :label="$t('landiscovery_label')" v-model="lanDiscovery"></checkbox>
     </collapsible>
 </template>
 
 <script>
 import collapsible from "../collapsible.vue";
 import field from "../field.vue";
+import checkbox from "../checkbox.vue";
 
 export default {
-    components: {collapsible, field},
+    components: {collapsible, field, checkbox},
     data() {
         return {
             udpPort: 9600,
             tcpPort: 9600,
             maxConnections: 10,
-            registerToLobby: 1,
-            lanDiscovery: 0
+            registerToLobby: true,
+            lanDiscovery: false
         };
     },
     methods: {
@@ -36,8 +37,8 @@ export default {
                 udpPort: parseInt(this.udpPort),
                 tcpPort: parseInt(this.tcpPort),
                 maxConnections: parseInt(this.maxConnections),
-                registerToLobby: parseInt(this.registerToLobby),
-                lanDiscovery: parseInt(this.lanDiscovery)
+                registerToLobby: this.registerToLobby ? 1 : 0,
+                lanDiscovery: this.lanDiscovery ? 1 : 0
             };
         }
     }

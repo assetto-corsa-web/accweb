@@ -9,8 +9,8 @@
         <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
         <field type="number" :label="$t('postqualyseconds_label')" v-model="postQualySeconds"></field>
         <field type="number" :label="$t('postraceseconds_label')" v-model="postRaceSeconds"></field>
-		<field type="number" :label="$t('simracerWeatherConditions_label')" v-model="simracerWeatherConditions"></field>
-        <field type="number" :label="$t('isFixedConditionQualification_label')" v-model="isFixedConditionQualification"></field>
+        <checkbox :label="$t('simracerWeatherConditions_label')" v-model="simracerWeatherConditions"></checkbox>
+        <checkbox :label="$t('isFixedConditionQualification_label')" v-model="isFixedConditionQualification"></checkbox>
         <session v-for="session in sessions"
             :key="session.index"
             :session="session"
@@ -24,69 +24,69 @@ import collapsible from "../collapsible.vue";
 import field from "../field.vue";
 import selection from "../selection.vue";
 import session from "./session.vue";
+import checkbox from "../checkbox.vue";
 
 export default {
-    components: {collapsible, field, selection, session},
+    components: {collapsible, field, selection, session, checkbox},
     data() {
     	return {
-    		tracks: [
-                {value: "misano", label: "Misano"},
-                {value: "paul_ricard", label: "Paul Ricard"},
-                {value: "nurburgring", label: "Nürburgring GP"},
-                {value: "hungaroring", label: "Hungaroring"},
-                {value: "zolder", label: "Zolder"},
-    			{value: "monza", label: "Monza"},
-                {value: "brands_hatch", label: "Brands Hatch"},
-                {value: "barcelona", label: "Barcelona"},
-                {value: "silverstone", label: "Silverstone"},
-                {value: "spa", label: "Spa"},
-                {value: "zandvoort", label: "Zandvoort"},
-                {value: "monza_2019", label: "Monza (2019)"},
-                {value: "zolder_2019", label: "Zolder (2019)"},
-                {value: "brands_hatch_2019", label: "Brands Hatch (2019)"},
-                {value: "silverstone_2019", label: "Silverstone (2019)"},
-                {value: "paul_ricard_2019", label: "Paul Ricard (2019)"},
-                {value: "misano_2019", label: "Misano (2019)"},
-                {value: "spa_2019", label: "Spa (2019)"},
-                {value: "nurburgring_2019", label: "Nürburgring (2019)"},
-                {value: "barcelona_2019", label: "Barcelona (2019)"},
-                {value: "hungaroring_2019", label: "Hungaroring (2019)"},
-                {value: "zandvoort_2019", label: "Zandvoort (2019)"},
-                {value: "kyalami_2019", label: "Kyalami (2019)"},
-                {value: "mount_panorama_2019", label: "Mount Panorama (2019)"},
-                {value: "suzuka_2019", label: "Suzuka (2019)"},
-                {value: "laguna_seca_2019", label: "Laguna Seca (2019)"}
-    		],
-
-    		track: "misano",
-			preRaceWaitingTimeSeconds: 15,
-			sessionOverTimeSeconds: 120,
-			ambientTemp: 26,
-			cloudLevel: 0.3,
-			rain: 0.0,
-			weatherRandomness: 1,
-            postQualySeconds: 0,
-            postRaceSeconds: 0,
-			simracerWeatherConditions: 0,
-			isFixedConditionQualification: 0,
-            sessionIndex: 0,
-            sessions: []
-    	};
+        tracks: [
+          {value: "misano", label: "Misano"},
+          {value: "paul_ricard", label: "Paul Ricard"},
+          {value: "nurburgring", label: "Nürburgring GP"},
+          {value: "hungaroring", label: "Hungaroring"},
+          {value: "zolder", label: "Zolder"},
+          {value: "monza", label: "Monza"},
+          {value: "brands_hatch", label: "Brands Hatch"},
+          {value: "barcelona", label: "Barcelona"},
+          {value: "silverstone", label: "Silverstone"},
+          {value: "spa", label: "Spa"},
+          {value: "zandvoort", label: "Zandvoort"},
+          {value: "monza_2019", label: "Monza (2019)"},
+          {value: "zolder_2019", label: "Zolder (2019)"},
+          {value: "brands_hatch_2019", label: "Brands Hatch (2019)"},
+          {value: "silverstone_2019", label: "Silverstone (2019)"},
+          {value: "paul_ricard_2019", label: "Paul Ricard (2019)"},
+          {value: "misano_2019", label: "Misano (2019)"},
+          {value: "spa_2019", label: "Spa (2019)"},
+          {value: "nurburgring_2019", label: "Nürburgring (2019)"},
+          {value: "barcelona_2019", label: "Barcelona (2019)"},
+          {value: "hungaroring_2019", label: "Hungaroring (2019)"},
+          {value: "zandvoort_2019", label: "Zandvoort (2019)"},
+          {value: "kyalami_2019", label: "Kyalami (2019)"},
+          {value: "mount_panorama_2019", label: "Mount Panorama (2019)"},
+          {value: "suzuka_2019", label: "Suzuka (2019)"},
+          {value: "laguna_seca_2019", label: "Laguna Seca (2019)"}
+        ],
+        track: "misano",
+        preRaceWaitingTimeSeconds: 15,
+        sessionOverTimeSeconds: 120,
+        ambientTemp: 26,
+        cloudLevel: 0.3,
+        rain: 0.0,
+        weatherRandomness: 1,
+        postQualySeconds: 0,
+        postRaceSeconds: 0,
+        simracerWeatherConditions: false,
+        isFixedConditionQualification: false,
+        sessionIndex: 0,
+        sessions: []
+      };
     },
     methods: {
         setData(data) {
-            this.track = data.track;
-            this.preRaceWaitingTimeSeconds = data.preRaceWaitingTimeSeconds;
-            this.sessionOverTimeSeconds = data.sessionOverTimeSeconds;
-            this.ambientTemp = data.ambientTemp;
-            this.cloudLevel = data.cloudLevel;
-            this.rain = data.rain;
-            this.weatherRandomness = data.weatherRandomness;
-            this.postQualySeconds = data.postQualySeconds;
-            this.postRaceSeconds = data.postRaceSeconds;
-			this.simracerWeatherConditions = data.simracerWeatherConditions;
-			this.isFixedConditionQualification = data.isFixedConditionQualification;
-            this.setSessionData(data.sessions);
+          this.track = data.track;
+          this.preRaceWaitingTimeSeconds = data.preRaceWaitingTimeSeconds;
+          this.sessionOverTimeSeconds = data.sessionOverTimeSeconds;
+          this.ambientTemp = data.ambientTemp;
+          this.cloudLevel = data.cloudLevel;
+          this.rain = data.rain;
+          this.weatherRandomness = data.weatherRandomness;
+          this.postQualySeconds = data.postQualySeconds;
+          this.postRaceSeconds = data.postRaceSeconds;
+          this.simracerWeatherConditions = data.simracerWeatherConditions;
+          this.isFixedConditionQualification = data.isFixedConditionQualification;
+          this.setSessionData(data.sessions);
         },
         setSessionData(data) {
             for(let i = 0; i < data.length; i++) {
@@ -103,19 +103,19 @@ export default {
         },
     	getData() {
     		return {
-				track: this.track,
-				preRaceWaitingTimeSeconds: parseInt(this.preRaceWaitingTimeSeconds),
-				sessionOverTimeSeconds: parseInt(this.sessionOverTimeSeconds),
-				ambientTemp: parseInt(this.ambientTemp),
-				cloudLevel: this.toFloat(this.cloudLevel),
-				rain: this.toFloat(this.rain),
-				weatherRandomness: parseInt(this.weatherRandomness),
-                postQualySeconds: parseInt(this.postQualySeconds),
-                postRaceSeconds: parseInt(this.postRaceSeconds),				
-				simracerWeatherConditions: parseInt(this.simracerWeatherConditions),
-				isFixedConditionQualification: parseInt(this.isFixedConditionQualification),
-                sessions: this.getSessionData()
-    		};
+          track: this.track,
+          preRaceWaitingTimeSeconds: parseInt(this.preRaceWaitingTimeSeconds),
+          sessionOverTimeSeconds: parseInt(this.sessionOverTimeSeconds),
+          ambientTemp: parseInt(this.ambientTemp),
+          cloudLevel: this.toFloat(this.cloudLevel),
+          rain: this.toFloat(this.rain),
+          weatherRandomness: parseInt(this.weatherRandomness),
+          postQualySeconds: parseInt(this.postQualySeconds),
+          postRaceSeconds: parseInt(this.postRaceSeconds),
+          simracerWeatherConditions: this.simracerWeatherConditions ? 1 : 0,
+          isFixedConditionQualification: this.isFixedConditionQualification ? 1 : 0,
+          sessions: this.getSessionData()
+        };
     	},
         getSessionData() {
             let sessions = [];
