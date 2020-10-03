@@ -44,4 +44,7 @@ chmod +x "$DIR/accweb.exe"
 chmod +x "$DIR/gen_rsa_keys.sh"
 chmod +x "$DIR/gen_rsa_keys.cmd"
 
+zip -r "$DIR.zip" "$DIR"
+rm -r $DIR
+
 echo "done"
