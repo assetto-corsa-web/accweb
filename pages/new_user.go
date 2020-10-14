@@ -8,6 +8,7 @@ import (
 )
 
 type UserPageData struct {
+	User          *auth.User
 	Username      string
 	Role          string
 	UsernameError string

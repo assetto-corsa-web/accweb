@@ -36,11 +36,15 @@ func TestUserList(t *testing.T) {
 		t.Fatalf("Entry must have been removed, but was: %v", len(user.user))
 	}
 
-	if list.Get("admin", "pwd1") == nil {
+	if list.GetForPassword("admin", "pwd1") == nil {
 		t.Fatal("admin must have been found for correct password")
 	}
 
-	if list.Get("admin", "incorrect") != nil {
+	if list.GetForPassword("admin", "incorrect") != nil {
 		t.Fatal("admin must not have been found for incorrect password")
+	}
+
+	if list.Get("admin") == nil {
+		t.Fatal("admin must have been found")
 	}
 }

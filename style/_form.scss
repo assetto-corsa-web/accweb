@@ -1,0 +1,71 @@
+@import "_vars";
+
+button, input[type~="submit"] {
+  width: auto;
+  border-width: 0;
+  font-size: $font_size;
+  font-family: $font_family;
+  background: $medium_blue;
+  color: $light_blue;
+  border-radius: 2px;
+  padding: 8px 12px;
+  margin: 4px 0;
+  cursor: pointer;
+
+  .fas {
+    margin-right: 6px;
+  }
+}
+
+input, select, textarea {
+  width: 100%;
+  font-size: $font_size;
+  font-family: $font_family;
+  background: $dark_blue;
+  color: $light_gray;
+  border: 1px solid $medium_blue;
+  border-radius: 1px;
+  padding: 6px;
+  margin: 4px 0;
+}
+
+input[type~="checkbox"] {
+  width: auto;
+  margin: 0 8px 0 0;
+}
+
+input[disabled] {
+  background: $dark_gray;
+}
+
+.checkbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 30px;
+
+  label {
+    font-size: $font_size;
+  }
+}
+
+label {
+  display: block;
+  width: 100%;
+  font-size: $font_size_small;
+  margin: 10px 0;
+
+  .error {
+    color: $red;
+  }
+}
+
+.primary {
+  background: $dark_green !important;
+  color: $green !important;
+}
+
+.delete {
+  background: $red !important;
+  color: #fff !important;
+}

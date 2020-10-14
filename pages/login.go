@@ -19,7 +19,7 @@ func Login(w http.ResponseWriter, r *http.Request) {
 
 		username := r.FormValue("username")
 		password := r.FormValue("password")
-		user := auth.GetUserList().Get(username, password)
+		user := auth.GetUserList().GetForPassword(username, password)
 
 		if user == nil {
 			w.WriteHeader(http.StatusBadRequest)

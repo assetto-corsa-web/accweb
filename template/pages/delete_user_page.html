@@ -1,0 +1,22 @@
+{{template "head.html"}}
+
+<div class="main main-small">
+    <img src="static/logo.png" alt="" class="logo" />
+    <div class="title">
+        <h1>Delete User</h1>
+        <div class="menu">
+            <a href="/user"><i class="fas fa-ban"></i> Cancel</a>
+        </div>
+    </div>
+    {{if .User}}
+        <p>Are you sure you would like to delete the user "{{.User.Username}}"?</p>
+        <form method="post">
+            <input type="hidden" name="username" value="{{.User.Username}}" />
+            <input type="submit" value="Yes, delete user" class="delete" />
+        </form>
+    {{else}}
+        <p>User not found.</p>
+    {{end}}
+</div>
+
+{{template "end.html"}}

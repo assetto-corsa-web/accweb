@@ -8,12 +8,13 @@
             {{if .IsAdmin}}
                 <a href="/user/new" class="primary"><i class="fas fa-plus"></i> Add User</a>
             {{end}}
-            <a href="/" class="primary"><i class="fas fa-arrow-left"></i> Back</a>
+            <a href="/"><i class="fas fa-arrow-left"></i> Back</a>
         </div>
     </div>
     <div>
+        {{$isAdmin := .IsAdmin}}
         {{range $user := .User}}
-            {{template "user.html" $user}}
+            {{template "user.html" dict "user" $user "admin" $isAdmin}}
         {{end}}
     </div>
 </div>

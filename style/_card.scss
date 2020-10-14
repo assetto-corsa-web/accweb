@@ -1,0 +1,61 @@
+@import "_vars";
+
+.card {
+  display: flex;
+  justify-content: space-between;
+  margin: 6px 0;
+  padding: 10px;
+  border: 1px solid $gray;
+  border-radius: 1px;
+
+  .name {
+    font-weight: bold;
+    margin: 0 0 6px 0;
+  }
+
+  .info {
+    color: $gray;
+  }
+
+  .icons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    a {
+      color: $font_color;
+    }
+
+    .fas {
+      margin: 0 4px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+  }
+
+  /*.start {
+    background: $dark-green;
+    color: $green;
+  }
+
+  .stop {
+    background: $dark-red;
+    color: $red;
+  }
+
+  .online {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 10px;
+    background: $green;
+  }
+
+  .offline {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 6px 10px;
+    background: $red;
+  }*/
+}

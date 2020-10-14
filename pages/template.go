@@ -20,7 +20,7 @@ var (
 
 // LoadTemplate loads the template files.
 func LoadTemplate() {
-	tpl = template.New("")
+	tpl = template.New("").Funcs(funcMap)
 	err := filepath.Walk(templateDir, func(path string, info os.FileInfo, err error) error {
 		if strings.Contains(path, ".html") {
 			if _, err := tpl.ParseFiles(path); err != nil {

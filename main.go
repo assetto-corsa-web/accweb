@@ -30,6 +30,8 @@ func getRouter() *mux.Router {
 	router.HandleFunc("/logout", pages.Logout)
 	router.Handle("/user", auth.Middleware(pages.User))
 	router.Handle("/user/new", auth.Middleware(pages.NewUser))
+	router.Handle("/user/edit", auth.Middleware(pages.EditUser))
+	router.Handle("/user/delete", auth.Middleware(pages.DeleteUser))
 	router.Handle("/server", auth.Middleware(pages.Server))
 	router.Handle("/logs", auth.Middleware(pages.Logs))
 	router.HandleFunc("/status", pages.Status)

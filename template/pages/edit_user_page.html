@@ -1,0 +1,56 @@
+{{template "head.html"}}
+
+<div class="main">
+    <img src="static/logo.png" alt="" class="logo" />
+    <div class="title">
+        <h1>Edit User</h1>
+        <div class="menu">
+            {{if .User}}
+                <button class="primary" id="submit"><i class="fas fa-save"></i> Save</button>
+            {{end}}
+            <a href="/user"><i class="fas fa-ban"></i> Cancel</a>
+        </div>
+    </div>
+    {{if .User}}
+        <form method="post" id="form">
+            <label>
+                Username
+                <input type="text" name="username" value="{{.User.Username}}" disabled />
+            </label>
+            <label>
+                Password (leave empty to keep)
+                <input type="password" name="password" />
+                <span class="error">{{.PasswordError}}</span>
+            </label>
+            <label>
+                Repeat Password
+                <input type="password" name="repeat_password" />
+            </label>
+            <label>
+                Role
+                <select name="role">
+                    <option value="read-only" {{if eq .User.Role "read-only"}}selected{{end}}>Read-Only</option>
+                    <option value="moderator" {{if eq .User.Role "moderator"}}selected{{end}}>Moderator</option>
+                    <option value="admin" {{if eq .User.Role "admin"}}selected{{end}}>Administrator</option>
+                </select>
+                <span class="error">{{.RoleError}}</span>
+            </label>
+            <input type="submit" value="Save" style="display: none" />
+        </form>
+    {{else}}
+        <p>User not found.</p>
+    {{end}}
+</div>
+
+<script type="text/javascript">
+    let form = document.getElementById("form");
+    let submit = document.getElementById("submit");
+
+    if(submit) {
+        submit.addEventListener("click", function () {
+            form.submit();
+        });
+    }
+</script>
+
+{{template "end.html"}}

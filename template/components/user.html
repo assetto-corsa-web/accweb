@@ -1,14 +1,19 @@
-<div class="server">
+{{$user := index . "user"}}
+{{$isAdmin := index . "admin"}}
+
+<div class="card">
     <div>
         <div class="name">
-            {{.Username}}
-            <span>
-                <i class="fas fa-cog"></i>
-                <i class="fas fa-trash"></i>
-            </span>
+            {{$user.Username}}
         </div>
         <div class="info">
-            {{.Role}}
+            Role: {{$user.Role}}
         </div>
     </div>
+    {{if $isAdmin}}
+        <div class="icons">
+            <a href="/user/edit?username={{$user.Username}}"><i class="fas fa-pen"></i></a>
+            <a href="/user/delete?username={{$user.Username}}"><i class="fas fa-trash"></i></a>
+        </div>
+    {{end}}
 </div>

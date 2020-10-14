@@ -40,8 +40,24 @@ func NewUserList() *UserList {
 	return list
 }
 
-// Get returns the user for given username and password (clear text) or nil if not found.
-func (list *UserList) Get(username, password string) *User {
+// Get returns the user for given username or nil if not found.
+func (list *UserList) Get(username string) *User {
+	list.m.Lock()
+	defer list.m.Unlock()
+	username = strings.ToLower(username)
+	logbuch.Debug("Getting user", logbuch.Fields{"username": username})
+
+	for _, u := range list.user {
+		if strings.ToLower(u.Username) == username {
+			return &u
+		}
+	}
+
+	return nil
+}
+
+// GetForPassword returns the user for given username and password (clear text) or nil if not found.
+func (list *UserList) GetForPassword(username, password string) *User {
 	list.m.Lock()
 	defer list.m.Unlock()
 	username = strings.ToLower(username)
