@@ -66,8 +66,8 @@ func configureCors(router *mux.Router) http.Handler {
 
 func createDataDirectory() {
 	if _, err := os.Stat(dataDir); err != nil {
-		if err := os.Mkdir(dataDir, 0755); err != nil {
-			logbuch.Fatal("Error creating data directory. Make sure the data directory can be created", logbuch.Fields{"err": err})
+		if err := os.Mkdir(dataDir, 0744); err != nil {
+			logbuch.Fatal("Error creating data directory. Make sure the data directory can be created", logbuch.Fields{"err": err, "path": dataDir})
 		}
 	}
 }

@@ -15,6 +15,10 @@ $font_size_small: 12px;
 $font_family: sans-serif;
 $font_color: $gray;
 
+* {
+	box-sizing: border-box;
+}
+
 html, body {
 	height: 100%;
 	margin: 0;
@@ -127,7 +131,7 @@ body {
 	margin: 20px 0 0 0;
 }
 
-.tabs {
+/*.tabs {
 	display: flex;
 	margin: 0 0 20px 0;
 	border-style: solid;
@@ -185,7 +189,7 @@ body {
 		color: $dark_gray;
 		padding: 10px;
 	}
-}
+}*/
 
 h1 {
 	display: flex;
@@ -216,7 +220,6 @@ button, input[type~="submit"] {
 
 input, select, textarea {
 	width: 100%;
-	box-sizing: border-box;
 	font-size: $font_size;
 	font-family: $font_family;
 	background: $dark_blue;
@@ -243,14 +246,15 @@ input[type~="checkbox"] {
 	}
 }
 
-select {
-	width: auto;
-}
-
 label {
+	display: block;
 	width: 100%;
-	box-sizing: border-box;
 	font-size: $font_size_small;
+	margin: 10px 0;
+
+	.error {
+		color: $red;
+	}
 }
 
 .primary {
@@ -258,23 +262,22 @@ label {
 	color: $green !important;
 }
 
-.error {
+/*.error {
 	color: #fff;
 	width: 100%;
-	box-sizing: border-box;
 	padding: 8px 6px;
 	margin: 10px 0;
 	background: $red;
 	border-radius: 1px;
-}
+}*/
 
 a {
 	color: $light_blue;
 	text-decoration: none;
 }
 
-@media (max-device-width: 700px) {
+@media (max-device-width: 900px) {
 	.main {
-		margin: 0 auto;
+		margin: 0;
 	}
 }

@@ -31,7 +31,7 @@ func getTokenFromCookie(r *http.Request) string {
 	cookie, err := r.Cookie(TokenCookie)
 
 	if err != nil {
-		logbuch.Debug("Error reading token cooke", logbuch.Fields{"err": err})
+		logbuch.Debug("Error reading token cookie", logbuch.Fields{"err": err})
 		return ""
 	}
 

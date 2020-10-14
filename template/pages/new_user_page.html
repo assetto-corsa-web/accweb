@@ -5,10 +5,45 @@
     <div class="title">
         <h1>Add User</h1>
         <div class="menu">
-            <button class="primary"><i class="fas fa-save"></i> Save</button>
+            <button class="primary" id="submit"><i class="fas fa-save"></i> Save</button>
             <a href="/user"><i class="fas fa-ban"></i> Cancel</a>
         </div>
     </div>
+    <form method="post" id="form">
+        <label>
+            Username
+            <input type="text" name="username" value="{{.Username}}" />
+            <span class="error">{{.UsernameError}}</span>
+        </label>
+        <label>
+            Password
+            <input type="password" name="password" />
+            <span class="error">{{.PasswordError}}</span>
+        </label>
+        <label>
+            Repeat Password
+            <input type="password" name="repeat_password" />
+        </label>
+        <label>
+            Role
+            <select name="role">
+                <option value="read-only" {{if eq .Role "read-only"}}selected{{end}}>Read-Only</option>
+                <option value="moderator" {{if eq .Role "moderator"}}selected{{end}}>Moderator</option>
+                <option value="admin" {{if eq .Role "admin"}}selected{{end}}>Administrator</option>
+            </select>
+            <span class="error">{{.RoleError}}</span>
+        </label>
+        <input type="submit" value="Save" style="display: none" />
+    </form>
 </div>
+
+<script type="text/javascript">
+    let form = document.getElementById("form");
+    let submit = document.getElementById("submit");
+
+    submit.addEventListener("click", function() {
+        form.submit();
+    })
+</script>
 
 {{template "end.html"}}

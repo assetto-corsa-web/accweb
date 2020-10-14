@@ -1,9 +1,6 @@
 package auth
 
 import (
-	"crypto/sha256"
-	"encoding/base64"
-	"github.com/assetto-corsa-web/accweb/config"
 	"github.com/emvi/logbuch"
 	"gopkg.in/yaml.v3"
 	"io/ioutil"
@@ -48,13 +45,18 @@ func (list *UserList) Get(username, password string) *User {
 	list.m.Lock()
 	defer list.m.Unlock()
 	username = strings.ToLower(username)
-	password = sha256base64(password)
-	logbuch.Debug("Getting user", logbuch.Fields{"username": username, "password": password})
+	logbuch.Debug("Getting user", logbuch.Fields{"username": username})
+	var user *User
 
 	for _, u := range list.user {
-		if strings.ToLower(u.Username) == username && u.Password == password {
-			return &u
+		if strings.ToLower(u.Username) == username {
+			user = &u
+			break
 		}
+	}
+
+	if user != nil && comparePassword(password, user.Password) {
+		return user
 	}
 
 	return nil
@@ -74,7 +76,7 @@ func (list *UserList) Set(username, password, role string) {
 	list.m.Lock()
 	defer list.m.Unlock()
 	username = strings.ToLower(username)
-	password = sha256base64(password)
+	password = hashPassword(password)
 	index := -1
 
 	for i, u := range list.user {
@@ -150,10 +152,4 @@ func (list *UserList) save() {
 	if err := ioutil.WriteFile(userListFile, out, 0755); err != nil {
 		logbuch.Fatal("Error saving user list", logbuch.Fields{"err": err})
 	}
-}
-
-func sha256base64(password string) string {
-	h := sha256.New()
-	h.Write([]byte(password + config.Get().Auth.Salt))
-	return base64.StdEncoding.EncodeToString(h.Sum(nil))
 }

@@ -4,7 +4,8 @@ style/node_modules/
 secrets/
 data/
 auth/data/
+public/
 static/main.css
-main
+./main
 main.exe
 user.yml
