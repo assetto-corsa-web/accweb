@@ -11,7 +11,7 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 1. [Features](#features)
 2. [Changelog](#changelog)
 3. [Installation](#installation)
-4. [Docker](#docker)
+4. ~~[Docker](#docker)~~
 5. [Backup](#backup)
 6. [Contribute and support](#support)
 7. [Build release](#release)
@@ -114,6 +114,8 @@ You can also use an online service which generates RSA key pairs (search for "ge
 
 ## Docker
 <a name="docker" />
+
+**Docker is not supported at the moment, you can try using the image, but I highly recommend waiting for v2 to be finished (which will have a new image).**
 
 Keep in mind that this docker image doesn't include accserver.exe file, you will have to copy it manually to the /accserver directory inside the container after it started. Check the volumes section for details.
 
