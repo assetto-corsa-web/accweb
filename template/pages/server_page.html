@@ -13,6 +13,32 @@
             {{end}}
         </div>
     </div>
+    <div>
+        {{.Form}}
+    </div>
 </div>
+
+<script type="text/javascript">
+    let groups = document.getElementsByClassName("group");
+
+    for(let i = 0; i < groups.length; i++) {
+        let title = groups[i].querySelector(".group-title");
+        let content = groups[i].querySelector(".group-content");
+        let icon = title.querySelector(".fas");
+
+        title.addEventListener("click", () => {
+            if(icon.classList.contains("fa-chevron-down")) {
+                icon.classList.remove("fa-chevron-down");
+                icon.classList.add("fa-chevron-up");
+                content.style.height = "auto";
+            }
+            else {
+                icon.classList.remove("fa-chevron-up");
+                icon.classList.add("fa-chevron-down");
+                content.style.height = "0";
+            }
+        });
+    }
+</script>
 
 {{template "end.html"}}

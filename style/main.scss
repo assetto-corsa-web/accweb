@@ -91,7 +91,8 @@ a {
 	}
 }
 
-/*.tabs {
+/* TODO clean up
+.tabs {
 	display: flex;
 	margin: 0 0 20px 0;
 	border-style: solid;
@@ -109,31 +110,6 @@ a {
 		background: $dark_green;
 		color: $green;
 	}
-}
-
-.collapsible {
-	margin: 10px 0;
-
-	.collapsible-title {
-		display: flex;
-		justify-content: space-between;
-		border-style: solid;
-		border-color: $medium_blue;
-		border-width: 0 0 1px 0;
-		padding: 10px 6px;
-		cursor: pointer;
-	}
-
-	.collapsible-content {
-		padding: 20px 6px 6px 6px;
-	}
-}
-
-.box {
-	border: 1px solid $gray;
-	border-radius: 1px;
-	padding: 20px;
-	margin: 10px 0;
 }
 
 .error-toast {

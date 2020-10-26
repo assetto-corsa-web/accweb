@@ -69,3 +69,30 @@ label {
   background: $red !important;
   color: #fff !important;
 }
+
+.group {
+  margin: 20px 0;
+
+  &-title {
+    display: flex;
+    justify-content: space-between;
+    border-style: solid;
+    border-color: $medium_blue;
+    border-width: 0 0 1px 0;
+    padding: 10px 6px;
+    cursor: pointer;
+  }
+
+  &-content {
+    padding: 20px 6px 6px 6px;
+    height: 0;
+    overflow: hidden;
+  }
+}
+
+fieldset {
+  border: 1px solid $gray;
+  border-radius: 1px;
+  padding: 20px;
+  margin: 20px 0;
+}
