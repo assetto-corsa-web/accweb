@@ -57,7 +57,7 @@ func renderLogin(w http.ResponseWriter, message string) {
 		message,
 	}
 
-	if err := executeTemplate(w, "login_page.html", data); err != nil {
+	if err := executeTemplate(w, "login.html", data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

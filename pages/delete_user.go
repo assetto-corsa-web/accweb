@@ -21,7 +21,7 @@ func DeleteUser(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims
 		return
 	}
 
-	if err := executeTemplate(w, "delete_user_page.html", data); err != nil {
+	if err := executeTemplate(w, "delete_user.html", data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

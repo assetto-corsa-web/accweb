@@ -39,7 +39,7 @@ func EditUser(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims) 
 		}
 	}
 
-	if err := executeTemplate(w, "edit_user_page.html", data); err != nil {
+	if err := executeTemplate(w, "edit_user.html", data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

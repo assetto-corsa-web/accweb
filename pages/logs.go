@@ -12,7 +12,7 @@ func Logs(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims) {
 		"TODO servername", // TODO
 	}
 
-	if err := executeTemplate(w, "logs_page.html", data); err != nil {
+	if err := executeTemplate(w, "logs.html", data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

@@ -12,7 +12,7 @@ func Overview(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims) 
 		claims.IsAdmin,
 	}
 
-	if err := executeTemplate(w, "overview_page.html", data); err != nil {
+	if err := executeTemplate(w, "overview.html", data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

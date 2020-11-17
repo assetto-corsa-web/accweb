@@ -26,7 +26,7 @@ func Server(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims) {
 		}),
 	}
 
-	if err := executeTemplate(w, "server_page.html", data); err != nil {
+	if err := executeTemplate(w, "server.html", data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

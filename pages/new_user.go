@@ -45,7 +45,7 @@ func NewUser(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims) {
 		}
 	}
 
-	if err := executeTemplate(w, "new_user_page.html", data); err != nil {
+	if err := executeTemplate(w, "new_user.html", data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }

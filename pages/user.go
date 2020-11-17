@@ -14,7 +14,7 @@ func User(w http.ResponseWriter, r *http.Request, claims *auth.TokenClaims) {
 		auth.GetUserList().GetAll(),
 	}
 
-	if err := executeTemplate(w, "user_page.html", data); err != nil {
+	if err := executeTemplate(w, "user.html", data); err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 	}
 }
