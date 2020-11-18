@@ -38,6 +38,11 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### 1.12.0
+
+* added 2020 cars and tracks
+* fixed error starting accweb due to incompatible clib on Linux
+
 ### 1.11.2
 
 * converted bunch of number fields to check boxes, where applicable
