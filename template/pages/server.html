@@ -6,7 +6,7 @@
         <h1>Server</h1>
         <div class="menu">
             {{if .IsAdmin}}
-                <button class="primary"><i class="fas fa-save"></i> Save</button>
+                <button class="primary" id="submit"><i class="fas fa-save"></i> Save</button>
                 <a href="/"><i class="fas fa-ban"></i> Cancel</a>
             {{else}}
                 <a href="/" class="primary"><i class="fas fa-arrow-left"></i> Back</a>
@@ -14,7 +14,10 @@
         </div>
     </div>
     <div>
-        {{.Form}}
+        <form method="post" id="form">
+            {{.Form}}
+            <input type="submit" value="Save" style="visibility: hidden;" />
+        </form>
     </div>
 </div>
 
@@ -39,6 +42,13 @@
             }
         });
     }
+
+    let form = document.getElementById("form");
+    let submit = document.getElementById("submit");
+
+    submit.addEventListener("click", () => {
+        form.submit();
+    });
 </script>
 
 {{template "end.html"}}

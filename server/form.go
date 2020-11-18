@@ -16,11 +16,11 @@ type selectOption struct {
 // Form generates the HTML form for given server configuration.
 func Form(cfg *Server) template.HTML {
 	var sb strings.Builder
-	sb.WriteString(iterateStruct(cfg.ConfigurationJSON))
+	sb.WriteString(iterateStruct(cfg.ConfigurationJSON, "", -1))
 	return template.HTML(sb.String())
 }
 
-func iterateStruct(s interface{}) string {
+func iterateStruct(s interface{}, group string, index int) string {
 	var sb strings.Builder
 	t := reflect.TypeOf(s)
 	v := reflect.ValueOf(s)
@@ -43,18 +43,22 @@ func iterateStruct(s interface{}) string {
 
 		switch field.Type.Kind() {
 		case reflect.Int:
-			sb.WriteString(input("number", label, name, getOptions(options), value))
+			sb.WriteString(input(group, index, "number", label, name, getOptions(options), value))
 		case reflect.Bool:
-			sb.WriteString(checkbox(label, name, value))
+			sb.WriteString(checkbox(group, index, label, name, value))
 		case reflect.String:
-			sb.WriteString(input("text", label, name, getOptions(options), value))
+			sb.WriteString(input(group, index, "text", label, name, getOptions(options), value))
 		case reflect.Struct:
-			sb.WriteString(fmt.Sprintf(`<div class="group"><div class="group-title">%s<i class="fas fa-chevron-down"></i></div><div class="group-content">%s</div></div>`, label, iterateStruct(value.Interface())))
+			if group != "" {
+				group += "."
+			}
+
+			sb.WriteString(fmt.Sprintf(`<div class="group"><div class="group-title">%s<i class="fas fa-chevron-down"></i></div><div class="group-content">%s</div></div>`,
+				label, iterateStruct(value.Interface(), fmt.Sprintf("%s%s", group, name), -1)))
 		case reflect.Slice:
-			// TODO group form fields: group[index][name]
 			for j := 0; j < value.Len(); j++ {
 				sb.WriteString("<fieldset>")
-				sb.WriteString(iterateStruct(value.Index(j).Interface()))
+				sb.WriteString(iterateStruct(value.Index(j).Interface(), group, j))
 				sb.WriteString("</fieldset>")
 			}
 		default:
@@ -65,15 +69,15 @@ func iterateStruct(s interface{}) string {
 	return sb.String()
 }
 
-func input(t, label, name string, options []selectOption, value reflect.Value) string {
+func input(group string, index int, t, label, name string, options []selectOption, value reflect.Value) string {
 	// regular input field
 	if len(options) == 0 {
-		return fmt.Sprintf(`<label>%s<input type="%s" name="%s" value="%v" /></label>`, label, t, name, value)
+		return fmt.Sprintf(`<label>%s<input type="%s" name="%s%s%s" value="%v" /></label>`, label, t, group, getIndex(index, group), name, value)
 	}
 
 	// select field with options
 	var sb strings.Builder
-	sb.WriteString(fmt.Sprintf(`<label>%s<select type="%s" name="%s">`, label, t, name))
+	sb.WriteString(fmt.Sprintf(`<label>%s<select type="%s" name="%s%s%s">`, label, t, group, getIndex(index, group), name))
 	strValue := fmt.Sprintf("%v", value) // allow string comparison
 
 	for _, opt := range options {
@@ -90,14 +94,14 @@ func input(t, label, name string, options []selectOption, value reflect.Value) s
 	return sb.String()
 }
 
-func checkbox(label, name string, value reflect.Value) string {
+func checkbox(group string, index int, label, name string, value reflect.Value) string {
 	checked := ""
 
 	if value.Bool() {
 		checked = "checked"
 	}
 
-	return fmt.Sprintf(`<label><input type="checkbox" name="%s" %s />%s</label>`, name, checked, label)
+	return fmt.Sprintf(`<label><input type="checkbox" name="%s%s%s" %s />%s</label>`, group, getIndex(index, group), name, checked, label)
 }
 
 func getOptions(tag string) []selectOption {
@@ -116,4 +120,16 @@ func getOptions(tag string) []selectOption {
 	}
 
 	return options
+}
+
+func getIndex(i int, group string) string {
+	if i > -1 {
+		return fmt.Sprintf("[%d].", i)
+	}
+
+	if group == "" {
+		return ""
+	}
+
+	return "."
 }
