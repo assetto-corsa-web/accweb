@@ -38,6 +38,10 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### 1.12.1
+
+* fixed tracks in event configuration
+
 ### 1.12.0
 
 * added 2020 cars and tracks
