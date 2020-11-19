@@ -68,10 +68,6 @@ export default {
           {value: "barcelona_2020", label: "Barcelona (2020)"},
           {value: "hungaroring_2020", label: "Hungaroring (2020)"},
           {value: "zandvoort_2020", label: "Zandvoort (2020)"},
-          {value: "kyalami_2020", label: "Kyalami (2020)"},
-          {value: "mount_panorama_2020", label: "Mount Panorama (2020)"},
-          {value: "suzuka_2020", label: "Suzuka (2020)"},
-          {value: "laguna_seca_2020", label: "Laguna Seca (2020)"},
           {value: "imola_2020", label: "Imola (2020)"}
         ],
         track: "misano",
