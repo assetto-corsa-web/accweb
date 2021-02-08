@@ -38,6 +38,11 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### 1.12.3
+
+* added missing tracks
+* updated dependencies
+
 ### 1.12.2
 
 * add track and cars for 2020 DLC to BOP
