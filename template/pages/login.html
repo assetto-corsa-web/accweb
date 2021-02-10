@@ -1,26 +1,27 @@
 {{template "head.html"}}
 
-<div class="main main-small">
-    <img src="static/logo.png" alt="" class="logo" />
-    <div class="title">
-        <h1>Login</h1>
-    </div>
-    {{if .Message}}
-        <div class="error">{{.Message}}</div>
-    {{end}}
-    <form method="post">
-        <label>
-            Username
-            <input type="text" name="username" />
-        </label>
-        <label>
-            Password
-            <input type="password" name="password" />
-        </label>
-        <input class="primary" type="submit" value="Login" />
-    </form>
-    <div class="end">
-        <a href="https://github.com/assetto-corsa-web/accweb" target="_blank">accweb Version 2.0.0</a>
+<div class="main">
+    <div class="main-small">
+        <div class="title">
+            <img src="static/accweb_white.svg" alt="" />
+        </div>
+        <form method="post">
+            <label>
+                Username
+                <input type="text" name="username" />
+                {{if .Message}}
+                    <div class="error">{{.Message}}</div>
+                {{end}}
+            </label>
+            <label>
+                Password
+                <input type="password" name="password" />
+            </label>
+            <input class="primary" type="submit" value="Login" />
+        </form>
+        <div class="main-small-end">
+            <a href="https://github.com/assetto-corsa-web/accweb" target="_blank">accweb Version 2.0.0</a>
+        </div>
     </div>
 </div>
 

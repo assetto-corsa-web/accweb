@@ -5,7 +5,7 @@
 }
 
 html, body {
-	min-height: 100%;
+	height: 100%;
 	margin: 0;
 	padding: 0;
 	font-size: $font_size;
@@ -15,7 +15,7 @@ html, body {
 }
 
 html {
-	margin-right: calc(-100vw + 100%); /* Fix for scroll-bar jump */
+	margin-right: calc(-100vw + 100%); /* fix for scroll-bar jump */
 	background: $background;
 }
 
@@ -23,106 +23,52 @@ body {
 	overflow-x: hidden;
 }
 
-.logo {
-	float: left;
-	margin: 0 6px 0 0;
-	max-height: 40px;
-}
-
 .main {
-	max-width: 900px;
-	margin: 40px auto;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 	padding: 20px;
-	background: $dark-gray;
-	border: 1px solid $medium_blue;
-	border-radius: 8px;
 
-	.title {
-		display: flex;
-		justify-content: space-between;
-		margin: 0 0 20px 0;
+	&-small {
+		width: 100%;
+		max-width: 320px;
+		border-radius: 1px;
+		background: $foreground;
+		padding: 20px;
+		box-shadow: $shadow;
 
-		.menu {
+		.title {
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			height: 40px;
+			margin: 0 0 10px 0;
 
-			a, button {
-				display: block;
-				margin: 0 2px;
-				padding: 8px 12px;
+			img {
+				max-height: 48px;
 			}
+		}
+
+		&-end {
+			text-align: center;
+			font-size: $font_size_small;
+			padding: 20px 0 0 0;
 		}
 	}
 }
 
-.main-small {
-	max-width: 450px;
-}
-
-.end {
+.error {
 	font-size: $font_size_small;
-	text-align: center;
-	margin: 20px 0 0 0;
-}
-
-h1 {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	height: 40px;
-	font-size: 20px;
-	font-weight: normal;
-	margin: 0 0 0 6px;
+	color: $highlight;
 }
 
 a {
-	color: $light_blue;
+	color: $light_gray;
 	text-decoration: none;
+
+	&:hover {
+		color: $highlight;
+	}
 }
 
-@import "_card";
 @import "_form";
-
-@media (max-device-width: 900px) {
-	.main {
-		margin: 0;
-	}
-}
-
-/* TODO clean up
-.tabs {
-	display: flex;
-	margin: 0 0 20px 0;
-	border-style: solid;
-	border-color: $dark_green;
-	border-width: 0 0 1px 0;
-
-	.tab {
-		padding: 10px 12px;
-		margin: 0 2px 0 0;
-		border-radius: 2px 2px 0 0;
-		cursor: pointer;
-	}
-
-	.tab-active {
-		background: $dark_green;
-		color: $green;
-	}
-}
-
-.error-toast {
-	position: absolute;
-	left: 50%;
-	top: 20px;
-
-	.error-content {
-		position: relative;
-		left: -50%;
-		border-radius: 1px;
-		background: $red;
-		color: $dark_gray;
-		padding: 10px;
-	}
-}*/

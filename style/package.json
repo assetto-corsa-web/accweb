@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "style": "node-sass -w --output-style compressed ./main.scss -o ../static/",
+    "watch": "node-sass -w --output-style compressed ./main.scss -o ../static/",
     "build": "node-sass --output-style compressed ./main.scss -o ../static/"
   },
   "author": "",

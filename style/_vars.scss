@@ -1,16 +1,11 @@
-$dark_gray: #171a21;
-$gray: #c7d5e0;
-$light_gray: #f2f2f2;
-$dark_red: #7e1313;
-$red: #d85d5d;
-$green: #a4d007;
-$dark_green: #4c6b22;
-$dark_blue: #1b2838;
-$medium_blue: #233D51;
-$light_blue: #67c1f5;
-$background: linear-gradient(0deg, $dark_blue 0%, $medium_blue 100%) no-repeat;
-
 $font_size: 14px;
 $font_size_small: 12px;
 $font_family: sans-serif;
 $font_color: #fff;
+
+$background: #1c1d1e;
+$foreground: #2a2d2e;
+$light_gray: #bcbcbc;
+$highlight: #e40514;
+
+$shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);

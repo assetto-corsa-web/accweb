@@ -1,98 +1,24 @@
 @import "_vars";
 
-button, input[type~="submit"] {
-  width: auto;
-  border-width: 0;
-  font-size: $font_size;
-  font-family: $font_family;
-  background: $medium_blue;
-  color: $light_blue;
-  border-radius: 2px;
-  padding: 8px 12px;
-  margin: 4px 0;
-  cursor: pointer;
-
-  .fas {
-    margin-right: 6px;
-  }
-}
-
-input, select, textarea {
-  width: 100%;
-  font-size: $font_size;
-  font-family: $font_family;
-  background: $dark_blue;
-  color: $light_gray;
-  border: 1px solid $medium_blue;
-  border-radius: 1px;
-  padding: 6px;
-  margin: 4px 0;
-}
-
-input[type~="checkbox"] {
-  width: auto;
-  margin: 0 8px 0 0;
-}
-
-input[disabled] {
-  background: $dark_gray;
-}
-
-.checkbox {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 30px;
-
-  label {
-    font-size: $font_size;
-  }
-}
-
 label {
   display: block;
-  width: 100%;
+  padding: 5px 0;
   font-size: $font_size_small;
-  margin: 10px 0;
-
-  .error {
-    color: $red;
-  }
+  color: $light_gray;
 }
 
-.primary {
-  background: $dark_green !important;
-  color: $green !important;
-}
-
-.delete {
-  background: $red !important;
-  color: #fff !important;
-}
-
-.group {
-  margin: 20px 0;
-
-  &-title {
-    display: flex;
-    justify-content: space-between;
-    border-style: solid;
-    border-color: $medium_blue;
-    border-width: 0 0 1px 0;
-    padding: 10px 6px;
-    cursor: pointer;
-  }
-
-  &-content {
-    padding: 20px 6px 6px 6px;
-    height: 0;
-    overflow: hidden;
-  }
-}
-
-fieldset {
-  border: 1px solid $gray;
+input, submit, button {
+  width: 100%;
+  padding: 5px 10px;
+  margin: 5px 0;
+  background: #ffffff;
+  border-width: 0;
   border-radius: 1px;
-  padding: 20px;
-  margin: 20px 0;
+}
+
+[type~="submit"], button {
+  background: $highlight;
+  color: $font_color;
+  width: auto;
+  cursor: pointer;
 }
