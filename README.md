@@ -38,6 +38,10 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 ## Changelog
 <a name="changelog" />
 
+### 1.13.0
+
+* added tracks from the British GT DLC
+
 ### 1.12.3
 
 * added missing tracks
