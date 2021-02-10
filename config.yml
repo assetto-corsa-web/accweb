@@ -1,4 +1,4 @@
-# This configuration is for development only!
+# This configuration is for development purposes only!
 # If you're looking for an example configuration, take a look at the sample_config.yml.
 
 loglevel: debug
