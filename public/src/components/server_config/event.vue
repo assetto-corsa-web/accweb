@@ -57,6 +57,9 @@ export default {
           {value: "mount_panorama_2019", label: "Mount Panorama (2019)"},
           {value: "suzuka_2019", label: "Suzuka (2019)"},
           {value: "laguna_seca_2019", label: "Laguna Seca (2019)"},
+          {value: "snetterton_2019", label: "Snetterton (2019)"},
+          {value: "oulton_park_2019", label: "Oulton Park (2019)"},
+          {value: "donington_2019", label: "Donington (2019)"},
           {value: "monza_2020", label: "Monza (2020)"},
           {value: "zolder_2020", label: "Zolder (2020)"},
           {value: "brands_hatch_2020", label: "Brands Hatch (2020)"},
@@ -70,7 +73,10 @@ export default {
           {value: "zandvoort_2020", label: "Zandvoort (2020)"},
 	  {value: "kyalami_2020", label: "Kyalami (2020)"},
 	  {value: "mount_panorama_2020", label: "Mount Panorama (2020)"},
-          {value: "imola_2020", label: "Imola (2020)"}
+          {value: "imola_2020", label: "Imola (2020)"},
+	  {value: "snetterton_2020", label: "Snetterton (2020)"},
+          {value: "oulton_park_2020", label: "Oulton Park (2020)"},
+          {value: "donington_2020", label: "Donington (2020)"}
         ],
         track: "misano",
         preRaceWaitingTimeSeconds: 15,
