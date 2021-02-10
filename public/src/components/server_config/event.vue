@@ -59,7 +59,7 @@ export default {
           {value: "laguna_seca_2019", label: "Laguna Seca (2019)"},
           {value: "snetterton_2019", label: "Snetterton (2019)"},
           {value: "oulton_park_2019", label: "Oulton Park (2019)"},
-          {value: "donington_2019", label: Donington (2019)"},
+          {value: "donington_2019", label: "Donington (2019)"},
           {value: "monza_2020", label: "Monza (2020)"},
           {value: "zolder_2020", label: "Zolder (2020)"},
           {value: "brands_hatch_2020", label: "Brands Hatch (2020)"},
