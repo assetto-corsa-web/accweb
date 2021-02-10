@@ -73,7 +73,10 @@ export default {
           {value: "zandvoort_2020", label: "Zandvoort (2020)"},
 	  {value: "kyalami_2020", label: "Kyalami (2020)"},
 	  {value: "mount_panorama_2020", label: "Mount Panorama (2020)"},
-          {value: "imola_2020", label: "Imola (2020)"}
+          {value: "imola_2020", label: "Imola (2020)"},
+	  {value: "snetterton_2020", label: "Snetterton (2020)"},
+          {value: "oulton_park_2020", label: "Oulton Park (2020)"},
+          {value: "donington_2020", label: "Donington (2020)"}
         ],
         track: "misano",
         preRaceWaitingTimeSeconds: 15,
