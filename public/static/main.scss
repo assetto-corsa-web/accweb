@@ -8,7 +8,7 @@ $dark_green: #4c6b22;
 $dark_blue: #1b2838;
 $medium_blue: #233D51;
 $light_blue: #67c1f5;
-$background: linear-gradient(0deg, $dark_blue 0%, $medium_blue 100%);
+$background: $dark_blue;
 
 $font_size: 14px;
 $font_size_small: 12px;

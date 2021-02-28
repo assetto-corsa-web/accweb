@@ -7,6 +7,7 @@
         <field type="number" :label="$t('trackmedalsrequirement_label')" v-model="trackMedalsRequirement"></field>
         <field type="number" :label="$t('safetyratingrequirement_label')" v-model="safetyRatingRequirement"></field>
         <field type="number" :label="$t('racecraftratingrequirement_label')" v-model="racecraftRatingRequirement"></field>
+        <field type="number" :label="$t('ignorePrematureDisconnects_label')" v-model="ignorePrematureDisconnects"></field>
         <checkbox :label="$t('dumpleaderboards_label')" v-model="dumpLeaderboards"></checkbox>
         <checkbox :label="$t('isracelocked_label')" v-model="isRaceLocked"></checkbox>
         <checkbox :label="$t('randomizetrackwhenempty_label')" v-model="randomizeTrackWhenEmpty"></checkbox>
@@ -29,78 +30,81 @@ import checkbox from "../checkbox.vue";
 export default {
     components: {collapsible, field, selection, checkbox},
     data() {
-      return {
-        serverName: "Servername",
-        password: "",
-        adminPassword: "",
-        spectatorPassword: "",
-        trackMedalsRequirement: -1,
-        safetyRatingRequirement: -1,
-        racecraftRatingRequirement: -1,
-        dumpLeaderboards: false,
-        isRaceLocked: false,
-        randomizeTrackWhenEmpty: false,
-        maxCarSlots: 30,
-        centralEntryListPath: "",
-        shortFormationLap: false,
-        allowAutoDQ: false,
-        dumpEntryList: false,
-        formationLapTypes: [
-          {value: 0, label: "Old with limiter"},
-          {value: 1, label: "Free No Limiter"},
-          {value: 3, label: "New Position control and UI"},
-        ],
-        formationLapType: 3,
-        carGroups: [
-          {value: "FreeForAll", label: "Mode FreeForAll"},
-          {value: "GT3", label: "Mode GT3"},
-          {value: "GT4", label: "Mode GT4"},
-          {value: "Cup", label: "Mode CUP"},
-          {value: "ST", label: "Mode ST"}
-        ],
-        carGroup: "FreeForAll"
-      };
+        return {
+            serverName: "Servername",
+            password: "",
+            adminPassword: "",
+            spectatorPassword: "",
+            trackMedalsRequirement: 0,
+            safetyRatingRequirement: -1,
+            racecraftRatingRequirement: -1,
+            ignorePrematureDisconnects: 1,
+            dumpLeaderboards: false,
+            isRaceLocked: false,
+            randomizeTrackWhenEmpty: false,
+            maxCarSlots: 30,
+            centralEntryListPath: "",
+            shortFormationLap: false,
+            allowAutoDQ: false,
+            dumpEntryList: false,
+            formationLapTypes: [
+                {value: 0, label: "Old with limiter"},
+                {value: 1, label: "Free No Limiter"},
+                {value: 3, label: "New Position control and UI"},
+            ],
+            formationLapType: 3,
+            carGroups: [
+                {value: "FreeForAll", label: "Mode FreeForAll"},
+                {value: "GT3", label: "Mode GT3"},
+                {value: "GT4", label: "Mode GT4"},
+                {value: "Cup", label: "Mode CUP"},
+                {value: "ST", label: "Mode ST"}
+            ],
+            carGroup: "FreeForAll"
+        };
     },
     methods: {
         setData(data) {
-          this.serverName = data.serverName;
-          this.password = data.password;
-          this.adminPassword = data.adminPassword;
-          this.spectatorPassword = data.spectatorPassword;
-          this.trackMedalsRequirement = data.trackMedalsRequirement;
-          this.safetyRatingRequirement = data.safetyRatingRequirement;
-          this.racecraftRatingRequirement = data.racecraftRatingRequirement;
-          this.dumpLeaderboards = data.dumpLeaderboards;
-          this.isRaceLocked = data.isRaceLocked;
-          this.randomizeTrackWhenEmpty = data.randomizeTrackWhenEmpty;
-          this.maxCarSlots = data.maxCarSlots;
-          this.centralEntryListPath = data.centralEntryListPath;
-          this.shortFormationLap = data.shortFormationLap;
-          this.allowAutoDQ = data.allowAutoDQ;
-          this.dumpEntryList = data.dumpEntryList;
-          this.formationLapType = data.formationLapType;
-          this.carGroup = data.carGroup;
+            this.serverName = data.serverName;
+            this.password = data.password;
+            this.adminPassword = data.adminPassword;
+            this.spectatorPassword = data.spectatorPassword;
+            this.trackMedalsRequirement = data.trackMedalsRequirement;
+            this.safetyRatingRequirement = data.safetyRatingRequirement;
+            this.racecraftRatingRequirement = data.racecraftRatingRequirement;
+            this.ignorePrematureDisconnects = data.ignorePrematureDisconnects;
+            this.dumpLeaderboards = data.dumpLeaderboards;
+            this.isRaceLocked = data.isRaceLocked;
+            this.randomizeTrackWhenEmpty = data.randomizeTrackWhenEmpty;
+            this.maxCarSlots = data.maxCarSlots;
+            this.centralEntryListPath = data.centralEntryListPath;
+            this.shortFormationLap = data.shortFormationLap;
+            this.allowAutoDQ = data.allowAutoDQ;
+            this.dumpEntryList = data.dumpEntryList;
+            this.formationLapType = data.formationLapType;
+            this.carGroup = data.carGroup;
         },
         getData() {
-          return {
-            serverName: this.serverName,
-            password: this.password,
-            adminPassword: this.adminPassword,
-            spectatorPassword: this.spectatorPassword,
-            trackMedalsRequirement: parseInt(this.trackMedalsRequirement),
-            safetyRatingRequirement: parseInt(this.safetyRatingRequirement),
-            racecraftRatingRequirement: parseInt(this.racecraftRatingRequirement),
-            dumpLeaderboards: this.dumpLeaderboards ? 1 : 0,
-            isRaceLocked: this.isRaceLocked ? 1 : 0,
-            randomizeTrackWhenEmpty: this.randomizeTrackWhenEmpty ? 1 : 0,
-            maxCarSlots: parseInt(this.maxCarSlots),
-            centralEntryListPath: this.centralEntryListPath,
-            shortFormationLap: this.shortFormationLap ? 1 : 0,
-            allowAutoDQ: this.allowAutoDQ ? 1 : 0,
-            dumpEntryList: this.dumpEntryList ? 1 : 0,
-            formationLapType: parseInt(this.formationLapType),
-            carGroup: this.carGroup
-          };
+            return {
+                serverName: this.serverName,
+                password: this.password,
+                adminPassword: this.adminPassword,
+                spectatorPassword: this.spectatorPassword,
+                trackMedalsRequirement: parseInt(this.trackMedalsRequirement),
+                safetyRatingRequirement: parseInt(this.safetyRatingRequirement),
+                racecraftRatingRequirement: parseInt(this.racecraftRatingRequirement),
+                ignorePrematureDisconnects: parseInt(this.ignorePrematureDisconnects),
+                dumpLeaderboards: this.dumpLeaderboards ? 1 : 0,
+                isRaceLocked: this.isRaceLocked ? 1 : 0,
+                randomizeTrackWhenEmpty: this.randomizeTrackWhenEmpty ? 1 : 0,
+                maxCarSlots: parseInt(this.maxCarSlots),
+                centralEntryListPath: this.centralEntryListPath,
+                shortFormationLap: this.shortFormationLap ? 1 : 0,
+                allowAutoDQ: this.allowAutoDQ ? 1 : 0,
+                dumpEntryList: this.dumpEntryList ? 1 : 0,
+                formationLapType: parseInt(this.formationLapType),
+                carGroup: this.carGroup
+            };
         }
     }
 }
@@ -117,6 +121,7 @@ export default {
         "trackmedalsrequirement_label": "Track medals requirement (-1 - 3)",
         "safetyratingrequirement_label": "Safety rating requirement (-1 - 99)",
         "racecraftratingrequirement_label": "Racecraft Training Requirement (-1 - 99)",
+        "ignorePrematureDisconnects_label": "Ignore Premature Disconnects (set to 0 on Linux)",
         "dumpleaderboards_label": "Dump Leaderboards",
         "isracelocked_label": "Is Race Locked",
         "randomizetrackwhenempty_label": "Randomize Track When Empty",
