@@ -198,7 +198,7 @@ export default {
         "preracewaitingtimeseconds_label": "Pre race waiting time seconds",
         "sessionovertimeseconds_label": "Session overtime seconds",
         "ambienttemp_label": "Ambient temp",
-        "tracktemp_label": "Track temp",
+        "tracktemp_label": "Track temp (empty to omit)",
         "cloudlevel_label": "Cloud level",
         "rain_label": "Rain",
         "weatherrandomness_label": "Weather randomness",

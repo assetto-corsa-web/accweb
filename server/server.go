@@ -56,7 +56,7 @@ type EventJson struct {
 	PreRaceWaitingTimeSeconds     int               `json:"preRaceWaitingTimeSeconds"`
 	SessionOverTimeSeconds        int               `json:"sessionOverTimeSeconds"`
 	AmbientTemp                   int               `json:"ambientTemp"`
-	TrackTemp	                  int               `json:"trackTemp"`
+	TrackTemp	                  int               `json:"trackTemp,omitempty"`
 	CloudLevel                    float64           `json:"cloudLevel"`
 	Rain                          float64           `json:"rain"`
 	WeatherRandomness             int               `json:"weatherRandomness"`
