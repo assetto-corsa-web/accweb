@@ -4,6 +4,7 @@
         <field type="number" :label="$t('preracewaitingtimeseconds_label')" v-model="preRaceWaitingTimeSeconds"></field>
         <field type="number" :label="$t('sessionovertimeseconds_label')" v-model="sessionOverTimeSeconds"></field>
         <field type="number" :label="$t('ambienttemp_label')" v-model="ambientTemp"></field>
+        <field type="number" :label="$t('tracktemp_label')" v-model="trackTemp"></field>
         <field type="number" :label="$t('cloudlevel_label')" :step="0.01" v-model="cloudLevel"></field>
         <field type="number" :label="$t('rain_label')" :step="0.01" v-model="rain"></field>
         <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
@@ -84,6 +85,7 @@ export default {
         preRaceWaitingTimeSeconds: 15,
         sessionOverTimeSeconds: 120,
         ambientTemp: 26,
+        trackTemp: 26,
         cloudLevel: 0.3,
         rain: 0.0,
         weatherRandomness: 1,
@@ -101,6 +103,7 @@ export default {
           this.preRaceWaitingTimeSeconds = data.preRaceWaitingTimeSeconds;
           this.sessionOverTimeSeconds = data.sessionOverTimeSeconds;
           this.ambientTemp = data.ambientTemp;
+          this.trackTemp = data.trackTemp;
           this.cloudLevel = data.cloudLevel;
           this.rain = data.rain;
           this.weatherRandomness = data.weatherRandomness;
@@ -129,6 +132,7 @@ export default {
           preRaceWaitingTimeSeconds: parseInt(this.preRaceWaitingTimeSeconds),
           sessionOverTimeSeconds: parseInt(this.sessionOverTimeSeconds),
           ambientTemp: parseInt(this.ambientTemp),
+          trackTemp: parseInt(this.trackTemp),
           cloudLevel: this.toFloat(this.cloudLevel),
           rain: this.toFloat(this.rain),
           weatherRandomness: parseInt(this.weatherRandomness),
@@ -194,6 +198,7 @@ export default {
         "preracewaitingtimeseconds_label": "Pre race waiting time seconds",
         "sessionovertimeseconds_label": "Session overtime seconds",
         "ambienttemp_label": "Ambient temp",
+        "tracktemp_label": "Track temp (empty to omit)",
         "cloudlevel_label": "Cloud level",
         "rain_label": "Rain",
         "weatherrandomness_label": "Weather randomness",
