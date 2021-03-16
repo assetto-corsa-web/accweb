@@ -2,9 +2,9 @@
 
 echo Download necessary components
 mkdir tmp
-powershell -Command "& {$client = new-object System.Net.WebClient; $client.DownloadFile('https://bintray.com/vszakats/generic/download_file?file_path=openssl-1.1.1d-win64-mingw.zip','openssl.zip');}"
+powershell -Command "& {$client = new-object System.Net.WebClient; $client.DownloadFile('https://curl.se/windows/dl-7.75.0_4/openssl-1.1.1j_4-win64-mingw.zip','openssl.zip');}"
 powershell -Command "& {Add-Type -AssemblyName System.IO.Compression.FileSystem; [System.IO.Compression.ZipFile]::ExtractToDirectory('openssl.zip', 'tmp');}"
-move tmp\openssl-1.1.1d-win64-mingw tmp\openssl >NUL
+move tmp\openssl-1.1.1j-win64-mingw tmp\openssl >NUL
 
 echo Creating secrets directory and keys
 rd /S /Q secrets >NUL
