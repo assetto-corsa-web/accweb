@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.13.3
+
+* added trackTemp support
+* fixed openssl download link on Windows
+
 ## 1.13.2
 
 * changed default for trackMedalsRequirement from -1 to 0
