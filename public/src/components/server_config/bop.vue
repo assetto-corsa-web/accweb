@@ -26,7 +26,7 @@ export default {
         setData(data) {
             this.track = data.track;
             this.carModel = data.carModel;
-            this.ballast = data.ballast;
+            this.ballastKg = data.ballastKg;
             this.restrictor = data.restrictor;
             this.setEntryData(data.entries);
         },
@@ -36,7 +36,7 @@ export default {
                     index: this.entryIndex,
                     track: data[i].track,
                     carModel: data[i].carModel,
-                    ballast: data[i].ballast,
+                    ballastKg: data[i].ballastKg,
                     restrictor: data[i].restrictor                    
                 });
                 this.entryIndex++;
@@ -46,7 +46,7 @@ export default {
     		return {
 				track: this.track,
 				carModel: parseInt(this.carModel),
-				ballast: parseInt(this.ballast),
+				ballastKg: parseInt(this.ballastKg),
 				restrictor: parseInt(this.restrictor),				
                 entries: this.getEntryData()
     		};
@@ -58,7 +58,7 @@ export default {
                 entries.push({
                     track: this.entries[i].track,
                     carModel: parseInt(this.entries[i].carModel),
-                    ballast: parseInt(this.entries[i].ballast),
+                    ballastKg: parseInt(this.entries[i].ballastKg),
 					restrictor: parseInt(this.entries[i].restrictor)
                 });
             }
@@ -70,7 +70,7 @@ export default {
                 index: this.entryIndex,
                 track: "",
                 carModel: 99,
-                ballast: 0,
+                ballastKg: 0,
                 restrictor: 0
             });
             this.entryIndex++;
