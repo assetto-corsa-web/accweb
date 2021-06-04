@@ -126,7 +126,7 @@ type BopJson struct {
 type BopSettings struct {
 	Track      string `json:"track"`
 	CarModel   int    `json:"carModel"`
-	Ballast    int    `json:"ballastKg"`
+	BallastKg    int    `json:"ballastKg"`
 	Restrictor int    `json:"restrictor"`
 }
 

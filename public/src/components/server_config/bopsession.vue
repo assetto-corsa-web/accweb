@@ -2,7 +2,7 @@
     <div class="box">
         <selection :label="$t('track_label')" :options="tracks" v-model="entry.track"></selection>
         <selection :label="$t('carModel_label')" :options="carModels" v-model="entry.carModel"></selection>
-        <field type="number" :label="$t('ballast_label')" v-model="entry.ballast"></field>
+        <field type="number" :label="$t('ballast_label')" v-model="entry.ballastKg"></field>
         <field type="number" :label="$t('restrictor_label')" v-model="entry.restrictor"></field>
         <button v-on:click="$emit('remove', entry.index)">{{$t("remove_button")}}</button>
     </div>
@@ -102,7 +102,7 @@ export default {
           {value: 61, label: "Porsche 718 Cayman GT4"}
         ],
         carModel: 0,
-        ballast: 0,
+        ballastKg: 0,
         restrictor: 0
       };
     }
