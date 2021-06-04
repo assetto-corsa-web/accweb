@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.13.4
+
+* fixed ballast -> ballastKg in bop.json
+* updated dependencies
+
 ## 1.13.3
 
 * added trackTemp support
