@@ -2,15 +2,17 @@ package server
 
 import (
 	"errors"
-	"github.com/assetto-corsa-web/accweb/cfg"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
 	"os/exec"
 	"path/filepath"
+	"regexp"
 	"runtime"
 	"strconv"
 	"time"
+
+	"github.com/assetto-corsa-web/accweb/cfg"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -96,7 +98,10 @@ func createLogFile(server *ServerSettings) (*os.File, error) {
 		return nil, err
 	}
 
-	filename := logFilename + time.Now().Format(logTimeFormat) + "_" + strconv.Itoa(server.Id) + "_" + server.Settings.ServerName + logExt
+	var re = regexp.MustCompile(`[^a-zA-Z0-9_-]+`)
+	serverName := re.ReplaceAllString(server.Settings.ServerName, "_")
+
+	filename := logFilename + time.Now().Format(logTimeFormat) + "_" + strconv.Itoa(server.Id) + "_" + serverName + logExt
 	logfile, err := os.Create(filepath.Join(dir, logDir, filename))
 
 	return logfile, nil
