@@ -56,7 +56,7 @@ type EventJson struct {
 	PreRaceWaitingTimeSeconds     int               `json:"preRaceWaitingTimeSeconds"`
 	SessionOverTimeSeconds        int               `json:"sessionOverTimeSeconds"`
 	AmbientTemp                   int               `json:"ambientTemp"`
-	TrackTemp	                  int               `json:"trackTemp,omitempty"`
+	TrackTemp                     int               `json:"trackTemp,omitempty"`
 	CloudLevel                    float64           `json:"cloudLevel"`
 	Rain                          float64           `json:"rain"`
 	WeatherRandomness             int               `json:"weatherRandomness"`
@@ -126,7 +126,7 @@ type BopJson struct {
 type BopSettings struct {
 	Track      string `json:"track"`
 	CarModel   int    `json:"carModel"`
-	BallastKg    int    `json:"ballastKg"`
+	BallastKg  int    `json:"ballastKg"`
 	Restrictor int    `json:"restrictor"`
 }
 
