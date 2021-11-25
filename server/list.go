@@ -2,17 +2,22 @@ package server
 
 import (
 	"encoding/json"
-	"github.com/assetto-corsa-web/accweb/cfg"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"strconv"
 	"sync"
+
+	"github.com/assetto-corsa-web/accweb/cfg"
+	"github.com/sirupsen/logrus"
+	"golang.org/x/text/encoding/unicode"
+	"golang.org/x/text/transform"
 )
 
 var (
-	serverList []ServerSettings
-	m          sync.Mutex
+	serverList    []ServerSettings
+	m             sync.Mutex
+	utf16Encoding = unicode.UTF16(unicode.LittleEndian, unicode.UseBOM)
 )
 
 func LoadServerList() {
@@ -80,13 +85,19 @@ func parseServerId(name string) int {
 }
 
 func loadConfigFromFile(config interface{}, path string) error {
-	data, err := ioutil.ReadFile(path)
+	f, err := os.Open(path)
 
 	if err != nil {
 		return err
 	}
 
-	if err := json.Unmarshal(data, config); err != nil {
+	r := transform.NewReader(f, utf16Encoding.NewDecoder().Transformer)
+
+	if err != nil {
+		return err
+	}
+
+	if err := json.NewDecoder(r).Decode(config); err != nil {
 		return err
 	}
 

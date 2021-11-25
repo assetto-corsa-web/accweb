@@ -2,13 +2,14 @@ package server
 
 import (
 	"encoding/json"
-	"github.com/assetto-corsa-web/accweb/cfg"
-	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strconv"
 	"time"
+
+	"github.com/assetto-corsa-web/accweb/cfg"
+	"github.com/sirupsen/logrus"
 )
 
 const (
@@ -103,14 +104,21 @@ func saveConfigToFile(config interface{}, dir, name string) error {
 	data, err := json.Marshal(config)
 
 	if err != nil {
-		logrus.WithField("err", err).Error("Error marshalling server configuration")
+		logrus.WithError(err).Error("Error marshalling server configuration")
+		return err
+	}
+
+	encodedData, err := utf16Encoding.NewEncoder().Bytes(data)
+
+	if err != nil {
+		logrus.WithError(err).Error("Error encoding to UTF16")
 		return err
 	}
 
 	path := filepath.Join(dir, name)
 	logrus.WithField("path", path).Debug("Saving server configuration file")
 
-	if err := ioutil.WriteFile(path, data, 0655); err != nil {
+	if err := ioutil.WriteFile(path, encodedData, 0655); err != nil {
 		logrus.WithField("err", err).Error("Error saving server configuration file")
 		return err
 	}
