@@ -40,6 +40,7 @@ export default {
             {value: "kyalami", label: "Kyalami"},
             {value: "laguna_seca", label: "Laguna Seca"},
             {value: "misano", label: "Misano"},
+            {value: "monza", label: "Monza"},
             {value: "mount_panorama", label: "Mount Panorama"},
             {value: "nurburgring", label: "Nürburgring GP"},
             {value: "oulton_park", label: "Outlon Park"},
