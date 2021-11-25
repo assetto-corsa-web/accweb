@@ -57,8 +57,8 @@ export default {
                 {value: "FreeForAll", label: "Mode FreeForAll"},
                 {value: "GT3", label: "Mode GT3"},
                 {value: "GT4", label: "Mode GT4"},
-                {value: "Cup", label: "Mode CUP"},
-                {value: "ST", label: "Mode ST"}
+                {value: "GTC", label: "Mode GTC"},
+
             ],
             carGroup: "FreeForAll"
         };
