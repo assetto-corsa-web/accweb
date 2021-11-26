@@ -93,10 +93,6 @@ func loadConfigFromFile(config interface{}, path string) error {
 
 	r := transform.NewReader(f, utf16Encoding.NewDecoder().Transformer)
 
-	if err != nil {
-		return err
-	}
-
 	if err := json.NewDecoder(r).Decode(config); err != nil {
 		return err
 	}

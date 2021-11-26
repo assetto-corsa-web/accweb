@@ -2,9 +2,10 @@ package server
 
 import (
 	"encoding/json"
-	"github.com/sirupsen/logrus"
 	"io"
-	"io/ioutil"
+
+	"github.com/sirupsen/logrus"
+	"golang.org/x/text/transform"
 )
 
 func ImportServer(configuration, settings, event, eventRules, entrylist, bop, assistRules io.Reader) error {
@@ -46,15 +47,12 @@ func ImportServer(configuration, settings, event, eventRules, entrylist, bop, as
 }
 
 func importFile(reader io.Reader, config interface{}, filename string) error {
-	data, err := ioutil.ReadAll(reader)
+	r := transform.NewReader(reader, utf16Encoding.NewDecoder().Transformer)
 
-	if err != nil {
-		logrus.WithError(err).WithField("file", filename).Error("Error reading configuration file JSON on import")
-		return err
-	}
-
-	if err := json.Unmarshal(data, config); err != nil {
-		logrus.WithError(err).WithField("file", filename).Error("Error unmarshalling configuration file JSON on import")
+	if err := json.NewDecoder(r).Decode(config); err != nil {
+		logrus.WithError(err).
+			WithField("file", filename).
+			Error("Error unmarshalling configuration file JSON on import")
 		return err
 	}
 
