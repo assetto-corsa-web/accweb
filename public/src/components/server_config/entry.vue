@@ -59,6 +59,7 @@ export default {
               {value: 23, label: "Porsche 911 II GT3 R (2019)"},
               {value: 24, label: "Ferrari 488 GT3 Evo 2020"},
               {value: 25, label: "Mercedes-AMG GT3 2020"},
+              {value: 30, label: "BMW M4 GT3"},              
               {value: 50, label: "Alpine A1110 GT4"},
               {value: 51, label: "Aston Martin Vantage GT4"},
               {value: 52, label: "Audi R8 LMS GT4"},
