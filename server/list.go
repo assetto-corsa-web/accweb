@@ -2,6 +2,7 @@ package server
 
 import (
 	"encoding/json"
+	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -94,7 +95,16 @@ func loadConfigFromFile(config interface{}, path string) error {
 	r := transform.NewReader(f, utf16Encoding.NewDecoder().Transformer)
 
 	if err := json.NewDecoder(r).Decode(config); err != nil {
-		return err
+		if _, er := f.Seek(0, io.SeekStart); er != nil {
+			return er
+		}
+
+		// trying decode non ut16 content
+		if err2 := json.NewDecoder(f).Decode(config); err2 != nil {
+			return err2
+		} else {
+			return nil
+		}
 	}
 
 	return nil
