@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.14.2
+* Update js libraries versionss
+* Fix build script to force linux OS build
+
+## 1.14.1
+* fixed import servers with old encoding charset
+
+## 1.14.0
+* fixed server names with character "/"
+* fixed OpenSSL download url
+* ACC v1.8 update
+
 ## 1.13.4
 
 * fixed ballast -> ballastKg in bop.json

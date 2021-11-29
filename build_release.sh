@@ -18,7 +18,7 @@ npm run build
 
 # build backend (Windows and Linux)
 cd ..
-CGO_ENABLED=0 go build -ldflags "-s -w" main.go
+CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" main.go
 CGO_ENABLED=0 GOOS=windows go build -ldflags "-s -w" main.go
 
 # copy files
