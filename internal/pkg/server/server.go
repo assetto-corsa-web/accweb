@@ -3,6 +3,7 @@ package server
 import (
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"path"
 	"time"
@@ -12,7 +13,6 @@ import (
 
 var (
 	ErrServerCantBeRunning = errors.New("server instance cant be running to perform this action")
-	ErrServerIsNotRunning  = errors.New("server is not running")
 	ErrServerDirIsInvalid  = errors.New("server directory is invalid")
 )
 
@@ -42,8 +42,15 @@ func (s *Server) Start() error {
 
 func (s *Server) Stop() error {
 	if !s.isRunning() {
-		return ErrServerIsNotRunning
+		return nil
 	}
+
+	if err := s.cmd.Process.Signal(os.Interrupt); err != nil {
+		if err := s.cmd.Process.Kill(); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 
@@ -103,6 +110,38 @@ func (s *Server) CheckDirectory() error {
 	}
 
 	return nil
+}
+
+func (s *Server) CheckServerExeMd5Sum() error {
+	sum, err := helper.CheckMd5Sum(path.Join(s.Path, accDedicatedServerFile))
+	if err != nil {
+		return err
+	}
+
+	if s.Cfg.Md5Sum != sum {
+		s.Cfg.Md5Sum = sum
+		s.Cfg.UpdatedAt = time.Now().UTC()
+	}
+
+	return nil
+}
+
+func (s *Server) UpdateAccServerExe(srcFile string) error {
+	if s.isRunning() {
+		return ErrServerCantBeRunning
+	}
+
+	localFile := path.Join(s.Path, accDedicatedServerFile)
+
+	if helper.Exists(localFile) {
+		os.Remove(localFile)
+	}
+
+	if err := helper.Copy(srcFile, localFile); err != nil {
+		return err
+	}
+
+	return s.CheckServerExeMd5Sum()
 }
 
 func (s *Server) isRunning() bool {
