@@ -2,7 +2,6 @@ package server
 
 import (
 	"errors"
-	"path"
 	"path/filepath"
 	"syscall"
 	"time"
@@ -49,22 +48,6 @@ func LoadServerFromPath(baseDir string) (*Server, error) {
 		}
 	}
 
-	setConfigVersion(&s.AccCfg)
-
-	sum, err := helper.CheckMd5Sum(path.Join(baseDir, accDedicatedServerFile))
-	if err != nil {
-		return nil, err
-	}
-
-	if s.Cfg.Md5Sum != sum {
-		s.Cfg.Md5Sum = sum
-		s.Cfg.UpdatedAt = time.Now().UTC()
-
-		if err := helper.SaveToPath(baseDir, accwebConfigJsonName, s.Cfg); err != nil {
-			return nil, err
-		}
-	}
-
 	return s, nil
 }
 
@@ -88,7 +71,7 @@ func loadAccWebConfig(baseDir string) (*AccWebConfigJson, error) {
 	return &cfg, nil
 }
 
-func setConfigVersion(settings *AccConfigFiles) {
+func SetConfigVersion(settings *AccConfigFiles) {
 	settings.Configuration.ConfigVersion = configVersion
 	settings.Settings.ConfigVersion = configVersion
 	settings.Event.ConfigVersion = configVersion
