@@ -2,7 +2,7 @@ package server
 
 import "time"
 
-type accConfigFiles struct {
+type AccConfigFiles struct {
 	Configuration ConfigurationJson
 	Settings      SettingsJson
 	Event         EventJson
@@ -13,7 +13,7 @@ type accConfigFiles struct {
 }
 
 type AccWebConfigJson struct {
-	ID        int       `json:"id"`
+	ID        string    `json:"id"`
 	Md5Sum    string    `json:"md5Sum"`
 	AutoStart bool      `json:"autoStart"`
 	CreatedAt time.Time `json:"createdAt"`
