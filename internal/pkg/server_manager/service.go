@@ -2,12 +2,10 @@ package server_manager
 
 import (
 	"errors"
-	"fmt"
 	"io/ioutil"
-	"os"
 	"path"
-	"syscall"
 
+	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server"
 )
 
@@ -16,37 +14,67 @@ var (
 )
 
 type Config struct {
-	ConfigDir string
+	ConfigBaseDir string
+	AccServerPath string
+	AccServerExe  string
 }
 
 type Service struct {
 	config  *Config
-	servers map[int]*server.Server
+	servers map[string]*server.Server
 }
 
 // LoadAll .
 func (s *Service) LoadAll() error {
-	dir, err := ioutil.ReadDir(s.config.ConfigDir)
+	if err := helper.CreateIfNotExists(s.config.ConfigBaseDir, 0755); err != nil {
+		return helper.WrapErrors(ErrCantCreateConfigDir, err)
+	}
+
+	dir, err := ioutil.ReadDir(s.config.ConfigBaseDir)
 	if err != nil {
-		if errors.Is(err, syscall.ENOENT) {
-			if err := os.MkdirAll(s.config.ConfigDir, 0755); err != nil {
-				return fmt.Errorf("%e (err: %w)", ErrCantCreateConfigDir, err)
-			}
-		}
 		return err
 	}
+
+	// reset servers attribute
+	s.servers = make(map[string]*server.Server, len(dir))
 
 	for _, entry := range dir {
 		if !entry.IsDir() {
 			continue
 		}
 
-		srv, err := server.LoadServerFromPath(path.Join(s.config.ConfigDir, entry.Name()))
+		srv, err := server.LoadServerFromPath(path.Join(s.config.ConfigBaseDir, entry.Name()))
 		if err != nil {
 			return err
 		}
 
-		s.servers[srv.ID] = srv
+		s.servers[srv.GetID()] = srv
+	}
+
+	return nil
+}
+
+func (s *Service) AutoStart() error {
+	for _, s := range s.servers {
+		if !s.Cfg.AutoStart {
+			continue
+		}
+
+		if err := s.Start(); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *Service) Bootstrap() error {
+	if err := s.LoadAll(); err != nil {
+		return err
+	}
+
+	if err := s.AutoStart(); err != nil {
+		return err
 	}
 
 	return nil
