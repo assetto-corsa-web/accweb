@@ -6,9 +6,17 @@ import (
 	"os"
 	"os/exec"
 	"path"
-	"time"
+	"path/filepath"
+	"runtime"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
+)
+
+const (
+	accDedicatedServerFile = "accServer.exe"
+	accCfgDir              = "cfg"
 )
 
 var (
@@ -37,6 +45,53 @@ func (s *Server) Start() error {
 		return err
 	}
 
+	// Copy config files to cfg dir
+	if err := helper.CreateIfNotExists(path.Join(s.Path, accCfgDir), 0755); err != nil {
+		return err
+	}
+
+	fileList := []string{
+		configurationJsonName,
+		settingsJsonName,
+		eventJsonName,
+		eventRulesJsonName,
+		entrylistJsonName,
+		bopJsonName,
+		assistRulesJsonName,
+	}
+
+	for _, name := range fileList {
+		if err := helper.Copy(path.Join(s.Path, name), path.Join(s.Path, accCfgDir, name)); err != nil {
+			return err
+		}
+	}
+
+	command := "." + string(filepath.Separator) + accDedicatedServerFile
+	var args []string
+
+	if runtime.GOOS == "linux" {
+		command = "wine"
+		args = []string{"accDedicatedServerFile"}
+	}
+
+	cmd := exec.Command(command, args...)
+	cmd.Dir = s.Path
+
+	s.cmd = cmd
+
+	if err := s.cmd.Start(); err != nil {
+		return err
+	}
+
+	logrus.WithField("server_id", s.GetID()).WithField("pid", s.GetProcessID()).Info("acc server started")
+
+	go func(cmd *exec.Cmd) {
+		// wait for shutdown or crash
+		if err := cmd.Wait(); err != nil {
+			logrus.WithError(err).Error("Error when server stopped")
+		}
+	}(cmd)
+
 	return nil
 }
 
@@ -50,6 +105,7 @@ func (s *Server) Stop() error {
 			return err
 		}
 	}
+	logrus.WithField("server_id", s.GetID()).Info("acc server stopped")
 
 	return nil
 }
@@ -66,8 +122,6 @@ func (s *Server) Save() error {
 	if s.isRunning() {
 		return ErrServerCantBeRunning
 	}
-
-	s.Cfg.UpdatedAt = time.Now().UTC()
 
 	fileList := map[string]interface{}{
 		accwebConfigJsonName:  &s.Cfg,
@@ -112,23 +166,26 @@ func (s *Server) CheckDirectory() error {
 	return nil
 }
 
-func (s *Server) CheckServerExeMd5Sum() error {
+func (s *Server) CheckServerExeMd5Sum() (bool, error) {
 	sum, err := helper.CheckMd5Sum(path.Join(s.Path, accDedicatedServerFile))
 	if err != nil {
-		return err
+		return false, err
 	}
+
+	r := false
 
 	if s.Cfg.Md5Sum != sum {
 		s.Cfg.Md5Sum = sum
-		s.Cfg.UpdatedAt = time.Now().UTC()
+		s.Cfg.SetUpdateAt()
+		r = true
 	}
 
-	return nil
+	return r, nil
 }
 
-func (s *Server) UpdateAccServerExe(srcFile string) error {
+func (s *Server) UpdateAccServerExe(srcFile string) (bool, error) {
 	if s.isRunning() {
-		return ErrServerCantBeRunning
+		return false, ErrServerCantBeRunning
 	}
 
 	localFile := path.Join(s.Path, accDedicatedServerFile)
@@ -138,7 +195,11 @@ func (s *Server) UpdateAccServerExe(srcFile string) error {
 	}
 
 	if err := helper.Copy(srcFile, localFile); err != nil {
-		return err
+		return false, err
+	}
+
+	if err := os.Chmod(localFile, 0755); err != nil {
+		return false, err
 	}
 
 	return s.CheckServerExeMd5Sum()

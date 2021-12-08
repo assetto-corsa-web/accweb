@@ -121,6 +121,7 @@ func Copy(srcFile, dstFile string) error {
 	return nil
 }
 
+// CreateIfNotExists creates a new directory if not exists
 func CreateIfNotExists(dir string, perm os.FileMode) error {
 	if Exists(dir) {
 		return nil

@@ -15,7 +15,7 @@ auth:
   moderator_password: mod
   read_only_password: ro
 acc:
-  server_path: "/home/marvin/.steam/steam/steamapps/common/Assetto Corsa Competizione/server"
+  server_path: "main"
   server_exe: accServer.exe
 
 config_path: config/
