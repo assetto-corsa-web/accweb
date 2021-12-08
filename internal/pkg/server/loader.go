@@ -9,19 +9,6 @@ import (
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
 )
 
-const (
-	accwebConfigJsonName   = "accwebConfig.json"
-	configurationJsonName  = "configuration.json"
-	settingsJsonName       = "settings.json"
-	eventJsonName          = "event.json"
-	eventRulesJsonName     = "eventRules.json"
-	entrylistJsonName      = "entrylist.json"
-	bopJsonName            = "bop.json"
-	assistRulesJsonName    = "assistRules.json"
-	configVersion          = 1
-	accDedicatedServerFile = "accServer.exe"
-)
-
 // LoadServerFromPath load the server configuration data based on baseDir and returns a Server instance
 func LoadServerFromPath(baseDir string) (*Server, error) {
 	s := &Server{Path: baseDir}

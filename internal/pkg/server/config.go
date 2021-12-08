@@ -2,6 +2,18 @@ package server
 
 import "time"
 
+const (
+	accwebConfigJsonName  = "accwebConfig.json"
+	configurationJsonName = "configuration.json"
+	settingsJsonName      = "settings.json"
+	eventJsonName         = "event.json"
+	eventRulesJsonName    = "eventRules.json"
+	entrylistJsonName     = "entrylist.json"
+	bopJsonName           = "bop.json"
+	assistRulesJsonName   = "assistRules.json"
+	configVersion         = 1
+)
+
 type AccConfigFiles struct {
 	Configuration ConfigurationJson
 	Settings      SettingsJson
@@ -18,6 +30,10 @@ type AccWebConfigJson struct {
 	AutoStart bool      `json:"autoStart"`
 	CreatedAt time.Time `json:"createdAt"`
 	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+func (a *AccWebConfigJson) SetUpdateAt() {
+	a.UpdatedAt = time.Now().UTC()
 }
 
 type ConfigurationJson struct {

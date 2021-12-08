@@ -5,7 +5,11 @@ import (
 	"io/ioutil"
 	"os"
 	"path"
+	"strconv"
+	"sync"
 	"time"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server"
@@ -26,6 +30,14 @@ type Config struct {
 type Service struct {
 	config  *Config
 	servers map[string]*server.Server
+}
+
+func New(baseDir, accServerPath, accServerExe string) *Service {
+	return &Service{config: &Config{
+		ConfigBaseDir: baseDir,
+		AccServerPath: accServerPath,
+		AccServerExe:  accServerExe,
+	}}
 }
 
 // LoadAll .
@@ -72,6 +84,22 @@ func (s *Service) AutoStart() error {
 	return nil
 }
 
+func (s *Service) StopAll() error {
+	var wg sync.WaitGroup
+	for _, s := range s.servers {
+		wg.Add(1)
+		go func(s *server.Server, wg *sync.WaitGroup) {
+			defer wg.Done()
+			if err := s.Stop(); err != nil {
+				logrus.WithError(err).Error("server stopped with an error")
+			}
+		}(s, &wg)
+	}
+	wg.Wait()
+
+	return nil
+}
+
 func (s *Service) GetAccServerExeMd5Sum() error {
 	sum, err := helper.CheckMd5Sum(path.Join(s.config.AccServerPath, s.config.AccServerExe))
 	if err != nil {
@@ -91,8 +119,14 @@ func (s *Service) UpdateServersServerExeFile() error {
 			continue
 		}
 
-		if err := srv.UpdateAccServerExe(path.Join(s.config.AccServerPath, s.config.AccServerExe)); err != nil {
+		if ok, err := srv.UpdateAccServerExe(path.Join(s.config.AccServerPath, s.config.AccServerExe)); err != nil {
 			return err
+		} else if ok {
+			srv.Cfg.SetUpdateAt()
+
+			if err := srv.Save(); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -127,7 +161,7 @@ func (s *Service) GetServerByID(id string) (*server.Server, error) {
 }
 
 func (s *Service) Create(accConfig *server.AccConfigFiles) (*server.Server, error) {
-	id := string(time.Now().Unix())
+	id := strconv.FormatInt(time.Now().Unix(), 10)
 	baseDir := path.Join(s.config.ConfigBaseDir, id)
 
 	if err := helper.CreateIfNotExists(baseDir, 0755); err != nil {
@@ -144,7 +178,7 @@ func (s *Service) Create(accConfig *server.AccConfigFiles) (*server.Server, erro
 		AccCfg: *accConfig,
 	}
 
-	if err := srv.UpdateAccServerExe(path.Join(s.config.AccServerPath, s.config.AccServerExe)); err != nil {
+	if _, err := srv.UpdateAccServerExe(path.Join(s.config.AccServerPath, s.config.AccServerExe)); err != nil {
 		return nil, err
 	}
 
