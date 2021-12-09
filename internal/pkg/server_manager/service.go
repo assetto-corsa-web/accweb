@@ -18,6 +18,7 @@ import (
 var (
 	ErrCantCreateConfigDir = errors.New("cant create accweb config dir")
 	ErrServerNotFound      = errors.New("server not found")
+	ErrServerAlreadyExists = errors.New("server already exists")
 )
 
 type Config struct {
@@ -30,6 +31,7 @@ type Config struct {
 type Service struct {
 	config  *Config
 	servers map[string]*server.Server
+	lock    sync.Mutex
 }
 
 func New(baseDir, accServerPath, accServerExe string) *Service {
@@ -137,18 +139,46 @@ func (s *Service) Bootstrap() error {
 	if err := s.GetAccServerExeMd5Sum(); err != nil {
 		return err
 	}
+	logrus.WithField("md5sum", s.config.AccServerMd5Sum).Info("boot: checking acc server md5sum")
 
 	if err := s.LoadAll(); err != nil {
 		return err
 	}
+	logrus.WithField("total", len(s.servers)).Info("boot: loading all configured acc servers")
 
+	logrus.Info("boot: checking for outdated servers")
 	if err := s.UpdateServersServerExeFile(); err != nil {
 		return err
 	}
 
+	logrus.Info("boot: autostarting acc servers")
 	if err := s.AutoStart(); err != nil {
 		return err
 	}
+
+	return nil
+}
+
+func (s *Service) addServer(srv *server.Server) error {
+	if _, ok := s.servers[srv.GetID()]; ok {
+		return ErrServerAlreadyExists
+	}
+
+	s.lock.Lock()
+	s.servers[srv.GetID()] = srv
+	s.lock.Unlock()
+
+	return nil
+}
+
+func (s *Service) delServer(srv *server.Server) error {
+	if _, ok := s.servers[srv.GetID()]; !ok {
+		return ErrServerNotFound
+	}
+
+	s.lock.Lock()
+	delete(s.servers, srv.GetID())
+	s.lock.Unlock()
 
 	return nil
 }
@@ -186,7 +216,9 @@ func (s *Service) Create(accConfig *server.AccConfigFiles) (*server.Server, erro
 		return nil, err
 	}
 
-	s.servers[id] = &srv
+	if err := s.addServer(&srv); err != nil {
+		return nil, err
+	}
 
 	return &srv, nil
 }
@@ -205,7 +237,9 @@ func (s *Service) Delete(id string) error {
 		return err
 	}
 
-	delete(s.servers, id)
+	if err := s.delServer(srv); err != nil {
+		return err
+	}
 
 	return nil
 }
