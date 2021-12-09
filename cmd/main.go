@@ -1,8 +1,7 @@
 package main
 
 import (
-	"time"
-
+	"github.com/assetto-corsa-web/accweb/internal/app"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
 	"github.com/sirupsen/logrus"
@@ -20,8 +19,6 @@ func main() {
 		logrus.WithError(err).Fatal("failed to bootstrap accweb")
 	}
 
-	time.Sleep(10 * time.Second)
-	if err := sM.StopAll(); err != nil {
-		logrus.WithError(err).Fatal("failed to stop all acc servers")
-	}
+	logrus.WithField("addr", c.Webserver.Host).Info("initializing web server")
+	app.StartServer(c, sM)
 }

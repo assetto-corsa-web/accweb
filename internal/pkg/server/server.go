@@ -37,7 +37,7 @@ func (s *Server) GetID() string {
 }
 
 func (s *Server) Start() error {
-	if s.isRunning() {
+	if s.IsRunning() {
 		return ErrServerCantBeRunning
 	}
 
@@ -96,7 +96,7 @@ func (s *Server) Start() error {
 }
 
 func (s *Server) Stop() error {
-	if !s.isRunning() {
+	if !s.IsRunning() {
 		return nil
 	}
 
@@ -111,7 +111,7 @@ func (s *Server) Stop() error {
 }
 
 func (s *Server) GetProcessID() int {
-	if s.isRunning() {
+	if s.IsRunning() {
 		return s.cmd.Process.Pid
 	}
 
@@ -119,7 +119,7 @@ func (s *Server) GetProcessID() int {
 }
 
 func (s *Server) Save() error {
-	if s.isRunning() {
+	if s.IsRunning() {
 		return ErrServerCantBeRunning
 	}
 
@@ -184,7 +184,7 @@ func (s *Server) CheckServerExeMd5Sum() (bool, error) {
 }
 
 func (s *Server) UpdateAccServerExe(srcFile string) (bool, error) {
-	if s.isRunning() {
+	if s.IsRunning() {
 		return false, ErrServerCantBeRunning
 	}
 
@@ -205,6 +205,6 @@ func (s *Server) UpdateAccServerExe(srcFile string) (bool, error) {
 	return s.CheckServerExeMd5Sum()
 }
 
-func (s *Server) isRunning() bool {
-	return s.cmd != nil && s.cmd.Process != nil && s.cmd.Process.Pid != 0
+func (s *Server) IsRunning() bool {
+	return s.cmd != nil && s.cmd.Process != nil && s.cmd.Process.Pid > 0 && s.cmd.ProcessState == nil
 }
