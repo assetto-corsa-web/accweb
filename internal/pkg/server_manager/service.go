@@ -183,6 +183,10 @@ func (s *Service) delServer(srv *server.Server) error {
 	return nil
 }
 
+func (s *Service) GetServers() map[string]*server.Server {
+	return s.servers
+}
+
 func (s *Service) GetServerByID(id string) (*server.Server, error) {
 	if srv, ok := s.servers[id]; ok {
 		return srv, nil

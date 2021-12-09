@@ -18,12 +18,10 @@ type Config struct {
 }
 
 type Webserver struct {
-	Host         string `yaml:"host"`
-	WriteTimeout int    `yaml:"write_timeout"`
-	ReadTimeout  int    `yaml:"read_timeout"`
-	TLS          bool   `yaml:"tls"`
-	Cert         string `yaml:"cert"`
-	PrivateKey   string `yaml:"private_key"`
+	Host       string `yaml:"host"`
+	TLS        bool   `yaml:"tls"`
+	Cert       string `yaml:"cert"`
+	PrivateKey string `yaml:"private_key"`
 }
 
 type CORS struct {
