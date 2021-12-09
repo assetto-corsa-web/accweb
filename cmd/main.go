@@ -15,6 +15,7 @@ func main() {
 
 	sM := server_manager.New(c.ConfigPath, c.ACC.ServerPath, c.ACC.ServerExe)
 
+	logrus.Info("initializing accweb")
 	if err := sM.Bootstrap(); err != nil {
 		logrus.WithError(err).Fatal("failed to bootstrap accweb")
 	}
