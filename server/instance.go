@@ -10,6 +10,7 @@ import (
 	"runtime"
 	"strconv"
 	"time"
+	"strings"
 
 	"github.com/assetto-corsa-web/accweb/cfg"
 	"github.com/sirupsen/logrus"
@@ -81,6 +82,62 @@ func StartServer(id int) error {
 
 	server.start(cmd)
 	setServer(server)
+	
+	if runtime.GOOS == "windows" {
+		if server.Configuration.Affinity != "" {
+			logrus.Info("Parsing Affinity...")
+			numCPU := runtime.NumCPU()
+			affinityMask := make([]byte, numCPU)
+			for i := range affinityMask {
+				affinityMask[i] = '0'
+			}
+			
+			cores := strings.Split(server.Configuration.Affinity, ",")
+			for _, core := range cores {
+				coreInt64, coreErr := strconv.ParseInt(core, 10, 0)
+				coreInt := int(coreInt64)
+				if coreErr == nil {
+					if coreInt > 0 && coreInt <= numCPU {
+						affinityMask[len(affinityMask)-int(coreInt)] = '1'
+					} else {
+						logrus.WithField("Core", core).Warning("Core out of Range")
+					}
+				} else {
+					logrus.WithField("Core", core).WithError(coreErr).Error("Core Parse Error")
+				}
+			}
+			logrus.Info("Parsed Affinity, generating Hex...")
+			affinityMaskInt, affinityMaskErr := strconv.ParseInt(string(affinityMask), 2, 0)
+			if affinityMaskErr == nil {
+				affinityArgs := []string{"$Process = Get-Process -Id " + strconv.Itoa(server.PID) + "; $Process.ProcessorAffinity=" + strconv.FormatInt(affinityMaskInt, 10)}
+				affinityCmd := exec.Command("PowerShell", affinityArgs...)
+				affinityCmd.Stdout = logfile
+				affinityCmd.Stderr = logfile
+				affinityErr := affinityCmd.Start()
+				if affinityErr != nil {
+					logrus.WithError(affinityErr).Error("Error set affinity")
+				} else {
+					logrus.WithField("Command", affinityCmd.String()).Info("affinity set")
+				}
+			} else {
+				logrus.WithError(affinityMaskErr).Error("AffinityMask Parse Error")
+			}
+		}
+
+		logrus.WithField("Prio", server.Configuration.Priority).Info("Prio get")
+		prioArgs := []string{"process", "where", "ProcessId=" + strconv.Itoa(server.PID), "call", "setpriority", strconv.Itoa(server.Configuration.Priority)}
+		prioCmd := exec.Command("wmic", prioArgs...)
+		prioCmd.Stdout = logfile
+		prioCmd.Stderr = logfile
+		prioErr := prioCmd.Start()
+		if prioErr != nil {
+			logrus.WithError(prioErr).Error("Error set priority")
+		} else {
+			logrus.WithField("PID", prioCmd.Process.Pid).Info("Prio set")
+			logrus.WithField("Command", prioCmd.String()).Info("Prio set")
+		}
+	}
+	
 	logrus.WithField("PID", server.PID).Info("Server started")
 	go observeProcess(server, logfile)
 

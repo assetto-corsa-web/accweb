@@ -20,6 +20,8 @@ type ServerSettings struct {
 }
 
 type ConfigurationJson struct {
+	Priority        int `json:"priority"`
+	Affinity        string `json:"coreAffinity"`
 	ConfigVersion   int `json:"configVersion"`
 	UdpPort         int `json:"udpPort"`
 	TcpPort         int `json:"tcpPort"`
