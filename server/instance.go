@@ -136,6 +136,31 @@ func StartServer(id int) error {
 			logrus.WithField("PID", prioCmd.Process.Pid).Info("Prio set")
 			logrus.WithField("Command", prioCmd.String()).Info("Prio set")
 		}
+		
+		logrus.Info("Add Firewall Rules")
+		fwTcpArgs := []string{"advfirewall", "firewall", "add", "rule", "name=\"ACCSERVER_" + strconv.Itoa(server.Id) + "\"", "dir=in", "action=allow", "protocol=TCP", "localport=" + strconv.Itoa(server.Configuration.TcpPort)}
+		fwTcpCmd := exec.Command("netsh", fwTcpArgs...)
+		fwTcpCmd.Stdout = logfile
+		fwTcpCmd.Stderr = logfile
+		fwTcpErr := fwTcpCmd.Start()
+		if fwTcpErr != nil {
+			logrus.WithError(fwTcpErr).Error("Error opening TCP Port")
+		} else {
+			logrus.Info("Opened TCP Port " + strconv.Itoa(server.Configuration.TcpPort))
+			logrus.WithField("Command", fwTcpCmd.String()).Info("Opened TCP Port")
+		}
+		
+		fwUdpArgs := []string{"advfirewall", "firewall", "add", "rule", "name=\"ACCSERVER_" + strconv.Itoa(server.Id) + "\"", "dir=in", "action=allow", "protocol=UDP", "localport=" + strconv.Itoa(server.Configuration.UdpPort)}
+		fwUdpCmd := exec.Command("netsh", fwUdpArgs...)
+		fwUdpCmd.Stdout = logfile
+		fwUdpCmd.Stderr = logfile
+		fwUdpErr := fwUdpCmd.Start()
+		if fwUdpErr != nil {
+			logrus.WithError(fwUdpErr).Error("Error opening UDP Port")
+		} else {
+			logrus.Info("Opened UDP Port " + strconv.Itoa(server.Configuration.UdpPort))
+			logrus.WithField("Command", fwUdpCmd.String()).Info("Opened UDP Port")
+		}
 	}
 	
 	logrus.WithField("PID", server.PID).Info("Server started")
@@ -290,6 +315,35 @@ func StopServer(id int) error {
 		if err := server.Cmd.Process.Kill(); err != nil {
 			logrus.WithError(err).Error("Error stopping instance sending kill signal")
 			return err
+		}
+	}
+	
+	logfile, _ := createLogFile(server)
+	
+	if runtime.GOOS == "windows" {		
+		logrus.Info("Remove Firewall Rules")
+		fwTcpArgs := []string{"advfirewall", "firewall", "del", "rule", "name=\"ACCSERVER_" + strconv.Itoa(server.Id) + "\""}
+		fwTcpCmd := exec.Command("netsh", fwTcpArgs...)
+		fwTcpCmd.Stdout = logfile
+		fwTcpCmd.Stderr = logfile
+		fwTcpErr := fwTcpCmd.Start()
+		if fwTcpErr != nil {
+			logrus.WithError(fwTcpErr).Error("Error closing TCP Port")
+		} else {
+			logrus.Info("Closed TCP Port " + strconv.Itoa(server.Configuration.TcpPort))
+			logrus.WithField("Command", fwTcpCmd.String()).Info("Closed TCP Port")
+		}
+		
+		fwUdpArgs := []string{"advfirewall", "firewall", "del", "rule", "name=\"ACCSERVER_" + strconv.Itoa(server.Id) + "\""}
+		fwUdpCmd := exec.Command("netsh", fwUdpArgs...)
+		fwUdpCmd.Stdout = logfile
+		fwUdpCmd.Stderr = logfile
+		fwUdpErr := fwUdpCmd.Start()
+		if fwUdpErr != nil {
+			logrus.WithError(fwUdpErr).Error("Error closing UDP Port")
+		} else {
+			logrus.Info("Closed UDP Port " + strconv.Itoa(server.Configuration.UdpPort))
+			logrus.WithField("Command", fwUdpCmd.String()).Info("Closed UDP Port")
 		}
 	}
 
