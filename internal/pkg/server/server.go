@@ -17,6 +17,10 @@ import (
 const (
 	accDedicatedServerFile = "accServer.exe"
 	accCfgDir              = "cfg"
+	accServerLogDir        = "log"
+	accServerErrorLogDir   = "error"
+	accServerLogFile       = "server.log"
+	accServerErrorLogFile  = "error.log"
 )
 
 var (
@@ -207,4 +211,13 @@ func (s *Server) UpdateAccServerExe(srcFile string) (bool, error) {
 
 func (s *Server) IsRunning() bool {
 	return s.cmd != nil && s.cmd.Process != nil && s.cmd.Process.Pid > 0 && s.cmd.ProcessState == nil
+}
+
+func (s *Server) GetAccServerLogs() ([]byte, error) {
+	logFilePath := path.Join(s.Path, accServerLogDir, accServerLogFile)
+	if !helper.Exists(logFilePath) {
+		return nil, errors.New("server log file doesn't exists")
+	}
+
+	return os.ReadFile(logFilePath)
 }

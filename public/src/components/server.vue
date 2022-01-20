@@ -2,7 +2,7 @@
     <div class="server">
         <div>
             <div class="name">
-                {{server.settings.serverName}}
+                {{server.name}}
                 <span v-if="!ro">
                     <i class="fas fa-cog" v-on:click="edit" :title="$t('change_config')"></i>
                     <i class="fas fa-terminal" v-on:click="logs" :title="$t('view_logs')"></i>
@@ -13,9 +13,9 @@
             </div>
             <div class="info">
                 <span v-if="server.pid">PID: {{server.pid}}</span>
-                UDP: {{server.basic.udpPort}} &bull;
-                TCP: {{server.basic.tcpPort}} &bull;
-                Track: {{server.event.track}}
+                UDP: {{server.udpPort}} &bull;
+                TCP: {{server.tcpPort}} &bull;
+                Track: {{server.track}}
                 <span v-if="!ro">&bull; Config Dir: {{server.id}}</span>
             </div>
         </div>
@@ -50,7 +50,7 @@ export default {
         exportConfig() {
             // replace everything that's not a "normal" character or number so we export using a valid filename
             // in case it's empty afterwards, set a default filename
-            let filename = this.server.settings.serverName.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+            let filename = this.server.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
             
             if(!filename.length) {
                 filename = "server";
