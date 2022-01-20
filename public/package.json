@@ -5,9 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack --mode=production && node-sass static/ -o dist/",
+    "build": "webpack --mode=production && node-sass src/ -o dist/",
     "dev": "webpack --watch",
-    "style": "node-sass -w static/ -o dist/"
+    "style": "node-sass -w src/ -o dist/"
   },
   "author": "Marvin Blum",
   "license": "MIT",

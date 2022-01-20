@@ -48,7 +48,7 @@ export default {
 			}
 
 			setTimeout(() => {
-				axios.get("/api/server")
+				axios.get("/api/servers")
 				.then(r => {
 					this.server = r.data;
 				})
@@ -61,7 +61,7 @@ export default {
 			this.loadServer();
 			setTimeout(() => {
 				this.refreshList();
-			}, 5000);
+			}, 10000);
 		}
 	}
 }

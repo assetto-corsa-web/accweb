@@ -3,17 +3,26 @@ package app
 import (
 	"net/http"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/gin-gonic/gin"
 )
 
 type ListServerItem struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
-	IsRunning bool   `json:"is_running"`
-	ProcessID int    `json:"process_id"`
+	IsRunning bool   `json:"isRunning"`
+	ProcessID int    `json:"pid"`
+	UdpPort   int    `json:"udpPort"`
+	TcpPort   int    `json:"tcpPort"`
+	Track     string `json:"track"`
 }
 
 func (h *Handler) ListServers(c *gin.Context) {
+	u := GetUserFromClaims(c)
+
+	logrus.WithField("foo", u).Info("aeeew")
+
 	list := h.sm.GetServers()
 	res := []ListServerItem{}
 	for id, srv := range list {
@@ -22,6 +31,9 @@ func (h *Handler) ListServers(c *gin.Context) {
 			Name:      srv.AccCfg.Settings.ServerName,
 			IsRunning: srv.IsRunning(),
 			ProcessID: srv.GetProcessID(),
+			UdpPort:   srv.AccCfg.Configuration.UdpPort,
+			TcpPort:   srv.AccCfg.Configuration.TcpPort,
+			Track:     srv.AccCfg.Event.Track,
 		})
 	}
 

@@ -4,7 +4,7 @@ import Vuex from "vuex";
 import VueI18n from "vue-i18n";
 import axios from "axios";
 
-import "../static/main.scss";
+import "./main.scss";
 import NewStore from "./store/store.js";
 import * as pages from "./pages";
 import {getLocale} from "./util/locale.js";

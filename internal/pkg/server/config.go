@@ -15,13 +15,13 @@ const (
 )
 
 type AccConfigFiles struct {
-	Configuration ConfigurationJson
-	Settings      SettingsJson
-	Event         EventJson
-	EventRules    EventRulesJson
-	Entrylist     EntrylistJson
-	Bop           BopJson
-	AssistRules   AssistRulesJson
+	Configuration ConfigurationJson `json:"configuration"`
+	Settings      SettingsJson      `json:"settings"`
+	Event         EventJson         `json:"event"`
+	EventRules    EventRulesJson    `json:"eventRules"`
+	Entrylist     EntrylistJson     `json:"entrylist"`
+	Bop           BopJson           `json:"bop"`
+	AssistRules   AssistRulesJson   `json:"assistRules"`
 }
 
 type AccWebConfigJson struct {

@@ -234,7 +234,7 @@ func (s *Service) Delete(id string) error {
 	}
 
 	if err := srv.Stop(); err != nil {
-		return nil
+		return err
 	}
 
 	if err := os.RemoveAll(srv.Path); err != nil {
