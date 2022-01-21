@@ -194,7 +194,7 @@ func (s *Service) GetServerByID(id string) (*instance.Instance, error) {
 	return nil, ErrServerNotFound
 }
 
-func (s *Service) Create(accConfig *instance.AccConfigFiles) (*instance.Instance, error) {
+func (s *Service) Create(accConfig *instance.AccConfigFiles, autoStart bool) (*instance.Instance, error) {
 	id := strconv.FormatInt(time.Now().Unix(), 10)
 	baseDir := path.Join(s.config.ConfigBaseDir, id)
 
@@ -206,6 +206,7 @@ func (s *Service) Create(accConfig *instance.AccConfigFiles) (*instance.Instance
 		Path: baseDir,
 		Cfg: instance.AccWebConfigJson{
 			ID:        id,
+			AutoStart: autoStart,
 			CreatedAt: time.Now().UTC(),
 			UpdatedAt: time.Now().UTC(),
 		},
@@ -257,5 +258,5 @@ func (s *Service) Duplicate(srcId string) (*instance.Instance, error) {
 	cfg := srcSrv.AccCfg
 	cfg.Settings.ServerName += " (COPY)"
 
-	return s.Create(&cfg)
+	return s.Create(&cfg, srcSrv.Cfg.AutoStart)
 }
