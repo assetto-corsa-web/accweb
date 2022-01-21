@@ -1,6 +1,6 @@
 <template>
     <collapsible :title="$t('title')">
-		<selection :label="$t('priority_label')" :options="priorities" v-model="priority"></selection>
+        <selection :label="$t('priority_label')" :options="priorities" v-model="priority"></selection>
         <field type="text" :label="$t('affinty_label')" v-model="coreAffinity"></field>
         <field type="number" :label="$t('udp_label')" v-model="udpPort"></field>
         <field type="number" :label="$t('tcp_label')" v-model="tcpPort"></field>
@@ -20,7 +20,7 @@ export default {
     components: {collapsible, field, selection, checkbox},
     data() {
         return {
-			priorities: [
+            priorities: [
                 {value: 256, label: "Realtime"},
                 {value: 128, label: "High"},
                 {value: 32768, label: "Above Normal	"},
@@ -39,7 +39,7 @@ export default {
     },
     methods: {
         setData(data) {
-			this.priority = data.priority;
+            this.priority = data.priority;
             this.coreAffinity = data.coreAffinity;
             this.udpPort = data.udpPort;
             this.tcpPort = data.tcpPort;
@@ -49,7 +49,7 @@ export default {
         },
         getData() {
             return {
-				priority: parseInt(this.priority),
+                priority: parseInt(this.priority),
                 coreAffinity: this.coreAffinity,
                 udpPort: parseInt(this.udpPort),
                 tcpPort: parseInt(this.tcpPort),
@@ -66,7 +66,7 @@ export default {
 {
     "en": {
         "title": "Basic configuration",
-		"priority_label": "Process priority",
+        "priority_label": "Process priority",
         "affinty_label": "Core affinity (leave blank if you don't know what to do)",
         "udp_label": "UDP port",
         "tcp_label": "TCP port",
