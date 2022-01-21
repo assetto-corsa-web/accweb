@@ -40,13 +40,13 @@ export default {
     },
     methods: {
         loadServer() {
-            axios.get("/api/server", {params: {id: this.id}})
+            axios.get(`/api/instance/${this.id}`)
             .then(r => {
-                this.servername = r.data.settings.serverName;
+                this.servername = r.data.acc.settings.serverName;
             });
         },
         loadLogs() {
-            axios.get("/api/instance", {params: {id: this.id}})
+            axios.get(`/api/instance/${this.id}/logs`)
             .then(r => {
                 this.logs = r.data.logs;
             })

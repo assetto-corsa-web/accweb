@@ -37,17 +37,24 @@ func (f *myFS) Open(name string) (http.File, error) {
 }
 
 func StartServer(config *cfg.Config, sM *server_manager.Service) {
-	r := gin.Default()
+	r := gin.New()
 	_ = r.SetTrustedProxies(nil)
 
 	if !config.Dev {
+		r.Use(gin.Recovery())
 		gin.SetMode(gin.ReleaseMode)
+	} else {
+		r = gin.Default()
 	}
 
 	// setup CORS
 	corsConfig := cors.DefaultConfig()
 	corsConfig.AllowOrigins = []string{config.CORS.Origins}
 	r.Use(cors.New(corsConfig))
+
+	r.NoRoute(func(c *gin.Context) {
+		c.Redirect(http.StatusFound, "/")
+	})
 
 	// setup routers
 	setupRouters(r, sM, config)
@@ -68,7 +75,7 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 	h := Handler{sm: sM}
 
 	if config.Dev {
-		basedir := "/Users/pedro/workspace/pedrofaria/accweb/public"
+		basedir := "public"
 		r.StaticFile("/", basedir+"/xindex.html")
 		r.Static("/static", basedir+"/static")
 		r.Static("/dist", basedir+"/dist")
@@ -114,6 +121,7 @@ type User struct {
 func setupAuthRouters(r *gin.Engine, config *cfg.Config) *jwt.GinJWTMiddleware {
 	// the jwt middleware
 	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
+		TokenLookup:      "header:Authorization,query:token",
 		Realm:            "test zone",
 		SigningAlgorithm: "RS256",
 		PrivKeyFile:      config.Auth.PrivateKeyPath,
@@ -151,21 +159,26 @@ func setupAuthRouters(r *gin.Engine, config *cfg.Config) *jwt.GinJWTMiddleware {
 
 			var u *User
 
-			if password == config.Auth.AdminPassword {
-				u = &User{
-					UserName: "admin",
-					Admin:    true,
-					Mod:      false,
-					ReadOnly: false,
-				}
-				c.Set(identityKey, u)
-				return u, nil
+			isAdmin := password == config.Auth.AdminPassword
+			isMod := password == config.Auth.ModeratorPassword || isAdmin
+			isRO := password == config.Auth.ReadOnlyPassword || isMod
+
+			if !isAdmin && !isMod && !isRO {
+				return nil, jwt.ErrFailedAuthentication
 			}
 
-			return nil, jwt.ErrFailedAuthentication
+			u = &User{
+				UserName: "username",
+				Admin:    isAdmin,
+				Mod:      isMod,
+				ReadOnly: isRO,
+			}
+			c.Set(identityKey, u)
+
+			return u, nil
 		},
 		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*User); ok && v.UserName == "admin" {
+			if v, ok := data.(*User); ok && (v.Admin || v.Mod || v.ReadOnly) {
 				return true
 			}
 
@@ -216,7 +229,6 @@ func setupAuthRouters(r *gin.Engine, config *cfg.Config) *jwt.GinJWTMiddleware {
 }
 
 func GetUserFromClaims(c *gin.Context) *User {
-	//claims := jwt.ExtractClaims(c)
 	if user, ok := c.Get(identityKey); ok {
 		return user.(*User)
 	} else {

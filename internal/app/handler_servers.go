@@ -3,9 +3,8 @@ package app
 import (
 	"net/http"
 
-	"github.com/sirupsen/logrus"
-
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type ListServerItem struct {
@@ -19,10 +18,6 @@ type ListServerItem struct {
 }
 
 func (h *Handler) ListServers(c *gin.Context) {
-	u := GetUserFromClaims(c)
-
-	logrus.WithField("foo", u).Info("aeeew")
-
 	list := h.sm.GetServers()
 	res := []ListServerItem{}
 	for id, srv := range list {
@@ -42,7 +37,7 @@ func (h *Handler) ListServers(c *gin.Context) {
 
 func (h *Handler) StopAllServers(c *gin.Context) {
 	if err := h.sm.StopAll(); err != nil {
-		// todo
+		logrus.WithError(err).Error("failed during stoping all servers")
 	}
 
 	c.JSON(http.StatusOK, nil)

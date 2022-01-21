@@ -1,6 +1,6 @@
 <template>
     <div class="end">
-        <a href="https://github.com/assetto-corsa-web/accweb" target="_blank">accweb Version 1.14.2</a>
+        <a href="https://github.com/assetto-corsa-web/accweb" target="_blank">accweb Version 1.15.0</a>
     </div>
 </template>
 
