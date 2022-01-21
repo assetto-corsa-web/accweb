@@ -1,4 +1,4 @@
-package server
+package instance
 
 import (
 	"errors"
@@ -9,9 +9,9 @@ import (
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
 )
 
-// LoadServerFromPath load the server configuration data based on baseDir and returns a Server instance
-func LoadServerFromPath(baseDir string) (*Server, error) {
-	s := &Server{Path: baseDir}
+// LoadServerFromPath load the server configuration data based on baseDir and returns a Instance instance
+func LoadServerFromPath(baseDir string) (*Instance, error) {
+	s := &Instance{Path: baseDir}
 
 	if cfg, err := loadAccWebConfig(baseDir); err != nil {
 		return nil, err

@@ -12,7 +12,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
-	"github.com/assetto-corsa-web/accweb/internal/pkg/server"
+	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
 )
 
 var (
@@ -30,7 +30,7 @@ type Config struct {
 
 type Service struct {
 	config  *Config
-	servers map[string]*server.Server
+	servers map[string]*instance.Instance
 	lock    sync.Mutex
 }
 
@@ -54,14 +54,14 @@ func (s *Service) LoadAll() error {
 	}
 
 	// reset servers attribute
-	s.servers = make(map[string]*server.Server, len(dir))
+	s.servers = make(map[string]*instance.Instance, len(dir))
 
 	for _, entry := range dir {
 		if !entry.IsDir() {
 			continue
 		}
 
-		srv, err := server.LoadServerFromPath(path.Join(s.config.ConfigBaseDir, entry.Name()))
+		srv, err := instance.LoadServerFromPath(path.Join(s.config.ConfigBaseDir, entry.Name()))
 		if err != nil {
 			return err
 		}
@@ -90,7 +90,7 @@ func (s *Service) StopAll() error {
 	var wg sync.WaitGroup
 	for _, s := range s.servers {
 		wg.Add(1)
-		go func(s *server.Server, wg *sync.WaitGroup) {
+		go func(s *instance.Instance, wg *sync.WaitGroup) {
 			defer wg.Done()
 			if err := s.Stop(); err != nil {
 				logrus.WithError(err).Error("server stopped with an error")
@@ -159,7 +159,7 @@ func (s *Service) Bootstrap() error {
 	return nil
 }
 
-func (s *Service) addServer(srv *server.Server) error {
+func (s *Service) addServer(srv *instance.Instance) error {
 	if _, ok := s.servers[srv.GetID()]; ok {
 		return ErrServerAlreadyExists
 	}
@@ -171,7 +171,7 @@ func (s *Service) addServer(srv *server.Server) error {
 	return nil
 }
 
-func (s *Service) delServer(srv *server.Server) error {
+func (s *Service) delServer(srv *instance.Instance) error {
 	if _, ok := s.servers[srv.GetID()]; !ok {
 		return ErrServerNotFound
 	}
@@ -183,18 +183,18 @@ func (s *Service) delServer(srv *server.Server) error {
 	return nil
 }
 
-func (s *Service) GetServers() map[string]*server.Server {
+func (s *Service) GetServers() map[string]*instance.Instance {
 	return s.servers
 }
 
-func (s *Service) GetServerByID(id string) (*server.Server, error) {
+func (s *Service) GetServerByID(id string) (*instance.Instance, error) {
 	if srv, ok := s.servers[id]; ok {
 		return srv, nil
 	}
 	return nil, ErrServerNotFound
 }
 
-func (s *Service) Create(accConfig *server.AccConfigFiles) (*server.Server, error) {
+func (s *Service) Create(accConfig *instance.AccConfigFiles) (*instance.Instance, error) {
 	id := strconv.FormatInt(time.Now().Unix(), 10)
 	baseDir := path.Join(s.config.ConfigBaseDir, id)
 
@@ -202,9 +202,9 @@ func (s *Service) Create(accConfig *server.AccConfigFiles) (*server.Server, erro
 		return nil, err
 	}
 
-	srv := server.Server{
+	srv := instance.Instance{
 		Path: baseDir,
-		Cfg: server.AccWebConfigJson{
+		Cfg: instance.AccWebConfigJson{
 			ID:        id,
 			CreatedAt: time.Now().UTC(),
 			UpdatedAt: time.Now().UTC(),
@@ -248,7 +248,7 @@ func (s *Service) Delete(id string) error {
 	return nil
 }
 
-func (s *Service) Duplicate(srcId string) (*server.Server, error) {
+func (s *Service) Duplicate(srcId string) (*instance.Instance, error) {
 	srcSrv, err := s.GetServerByID(srcId)
 	if err != nil {
 		return nil, err

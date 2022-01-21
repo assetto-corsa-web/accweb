@@ -1,4 +1,4 @@
-package server
+package instance
 
 import (
 	"archive/zip"
@@ -28,7 +28,7 @@ var (
 	ErrServerDirIsInvalid  = errors.New("server directory is invalid")
 )
 
-type Server struct {
+type Instance struct {
 	Path   string
 	Cfg    AccWebConfigJson
 	AccCfg AccConfigFiles
@@ -36,11 +36,11 @@ type Server struct {
 	cmd *exec.Cmd
 }
 
-func (s *Server) GetID() string {
+func (s *Instance) GetID() string {
 	return s.Cfg.ID
 }
 
-func (s *Server) Start() error {
+func (s *Instance) Start() error {
 	if s.IsRunning() {
 		return ErrServerCantBeRunning
 	}
@@ -99,7 +99,7 @@ func (s *Server) Start() error {
 	return nil
 }
 
-func (s *Server) Stop() error {
+func (s *Instance) Stop() error {
 	if !s.IsRunning() {
 		return nil
 	}
@@ -114,7 +114,7 @@ func (s *Server) Stop() error {
 	return nil
 }
 
-func (s *Server) GetProcessID() int {
+func (s *Instance) GetProcessID() int {
 	if s.IsRunning() {
 		return s.cmd.Process.Pid
 	}
@@ -122,7 +122,7 @@ func (s *Server) GetProcessID() int {
 	return 0
 }
 
-func (s *Server) Save() error {
+func (s *Instance) Save() error {
 	if s.IsRunning() {
 		return ErrServerCantBeRunning
 	}
@@ -147,7 +147,7 @@ func (s *Server) Save() error {
 	return nil
 }
 
-func (s *Server) CheckDirectory() error {
+func (s *Instance) CheckDirectory() error {
 	fileList := []string{
 		accwebConfigJsonName,
 		configurationJsonName,
@@ -170,7 +170,7 @@ func (s *Server) CheckDirectory() error {
 	return nil
 }
 
-func (s *Server) CheckServerExeMd5Sum() (bool, error) {
+func (s *Instance) CheckServerExeMd5Sum() (bool, error) {
 	sum, err := helper.CheckMd5Sum(path.Join(s.Path, accDedicatedServerFile))
 	if err != nil {
 		return false, err
@@ -187,7 +187,7 @@ func (s *Server) CheckServerExeMd5Sum() (bool, error) {
 	return r, nil
 }
 
-func (s *Server) UpdateAccServerExe(srcFile string) (bool, error) {
+func (s *Instance) UpdateAccServerExe(srcFile string) (bool, error) {
 	if s.IsRunning() {
 		return false, ErrServerCantBeRunning
 	}
@@ -209,11 +209,11 @@ func (s *Server) UpdateAccServerExe(srcFile string) (bool, error) {
 	return s.CheckServerExeMd5Sum()
 }
 
-func (s *Server) IsRunning() bool {
+func (s *Instance) IsRunning() bool {
 	return s.cmd != nil && s.cmd.Process != nil && s.cmd.Process.Pid > 0 && s.cmd.ProcessState == nil
 }
 
-func (s *Server) GetAccServerLogs() ([]byte, error) {
+func (s *Instance) GetAccServerLogs() ([]byte, error) {
 	logFilePath := path.Join(s.Path, accServerLogDir, accServerLogFile)
 	if !helper.Exists(logFilePath) {
 		return nil, errors.New("server log file doesn't exists")
@@ -222,7 +222,7 @@ func (s *Server) GetAccServerLogs() ([]byte, error) {
 	return os.ReadFile(logFilePath)
 }
 
-func (s *Server) ExportConfigFilesToZip() ([]byte, error) {
+func (s *Instance) ExportConfigFilesToZip() ([]byte, error) {
 	fileList := map[string]interface{}{
 		configurationJsonName: &s.AccCfg.Configuration,
 		settingsJsonName:      &s.AccCfg.Settings,
