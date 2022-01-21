@@ -13,6 +13,7 @@
             <div v-bind:class="{tab: true, 'tab-active': activeTab === 1}" v-on:click="activeTab = 1" v-if="is_admin && !id">{{$t("import_server")}}</div>
         </div>
         <div v-show="activeTab === 0">
+            <accweb ref="accweb"></accweb>
             <basic ref="basic"></basic>
             <settings ref="settings"></settings>
             <event ref="event"></event>
@@ -46,10 +47,10 @@
 
 <script>
 import axios from "axios";
-import {layout, end, basic, settings, event, eventrules, entrylist, bop, assistrules} from "../components";
+import {layout, end, accweb, basic, settings, event, eventrules, entrylist, bop, assistrules} from "../components";
 
 export default {
-    components: {layout, end, basic, settings, event, eventrules, entrylist, bop, assistrules},
+    components: {layout, end, accweb, basic, settings, event, eventrules, entrylist, bop, assistrules},
     data() {
         return {
             activeTab: 0,
@@ -60,8 +61,8 @@ export default {
             eventJson: null,
             eventRulesJson: null,
             entrylistJson: null,
-			bopJson: null,
-			assistRulesJson: null
+            bopJson: null,
+            assistRulesJson: null
         };
     },
     mounted() {
@@ -76,16 +77,18 @@ export default {
             axios.get("/api/instance/"+this.id)
             .then(r => {
                 this.servername = r.data.acc.settings.serverName;
+                this.$refs.accweb.setData(r.data.accWeb)
                 this.$refs.basic.setData(r.data.acc.configuration);
                 this.$refs.settings.setData(r.data.acc.settings);
                 this.$refs.event.setData(r.data.acc.event);
                 this.$refs.eventrules.setData(r.data.acc.eventRules);
                 this.$refs.entrylist.setData(r.data.acc.entrylist);
-				this.$refs.bop.setData(r.data.acc.bop);
-				this.$refs.assistrules.setData(r.data.acc.assistRules);
+                this.$refs.bop.setData(r.data.acc.bop);
+                this.$refs.assistrules.setData(r.data.acc.assistRules);
             });
         },
         save() {
+            let accWeb = this.$refs.accweb.getData();
             let configuration = this.$refs.basic.getData();
             let settings = this.$refs.settings.getData();
             let event = this.$refs.event.getData();
@@ -94,7 +97,7 @@ export default {
 			      let bop = this.$refs.bop.getData();
 			      let assistrules = this.$refs.assistrules.getData();
             let data = {
-                accWeb: {}, // TODO
+                accWeb,
                 acc: {
                     configuration,
                     settings,

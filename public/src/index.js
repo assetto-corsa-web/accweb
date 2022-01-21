@@ -15,7 +15,7 @@ Vue.use(VueI18n);
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
-// reponse error handler
+// response error handler
 axios.interceptors.response.use(undefined, err => {
 	if(err.response.data.error){
 		console.log(err.response.data.error);
