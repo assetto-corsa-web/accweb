@@ -9,7 +9,7 @@
 				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
 		</div>
-		<server v-for="s in server"
+		<server v-for="s in orderedServers"
 			:key="s.id"
 			:server="s"
 			:ro="!is_mod && !is_admin"
@@ -17,26 +17,30 @@
 			v-on:deleted="loadServer"
 			v-on:started="loadServer"
 			v-on:stopped="loadServer"></server>
-		<p v-if="!server || !server.length">No servers found.</p>
+		<p v-if="!servers || !servers.length">No servers found.</p>
 	</layout>
 </template>
 
 <script>
 import axios from "axios";
 import {layout, server, end} from "../components";
+import _ from "lodash";
 
 export default {
 	components: {layout, server, end},
 	data() {
 		return {
       stopAllRunning: false,
-			server: []
+			servers: []
 		};
 	},
 	mounted() {
 		this.refreshList();
 	},
   computed: {
+    orderedServers: function () {
+      return _.orderBy(this.servers, 'name')
+    },
     stopAllClass: function () {
       return {
         disabled: this.stopAllRunning
@@ -52,17 +56,17 @@ export default {
 			let timeout = 0;
 
 			if(refresh) {
-				this.server = [];
+				this.servers = [];
 				timeout = 100;
 			}
 
 			setTimeout(() => {
 				axios.get("/api/servers")
 				.then(r => {
-					this.server = r.data;
+					this.servers = r.data;
 				})
 				.catch(e => {
-					this.$store.commit("toast", this.$t("stop_all_error"))
+					this.$store.commit("toast", this.$t("receive_server_list_error"))
 				});
 			}, timeout);
 		},
@@ -74,7 +78,7 @@ export default {
             this.stopAllRunning = false
           })
           .catch(e => {
-            this.$store.commit("toast", this.$t("receive_server_list_error"))
+            this.$store.commit("toast", this.$t("stop_all_error"))
             this.stopAllRunning = false
           });
     },
