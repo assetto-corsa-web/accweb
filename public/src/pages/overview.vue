@@ -4,7 +4,7 @@
 			<h1>{{$t("title")}}</h1>
 			<div class="menu">
 				<button class="primary" v-on:click="$router.push('/server')" v-if="is_admin"><i class="fas fa-plus"></i> {{$t("add_new")}}</button>
-				<button v-bind:class="classObject" v-on:click="stopAllServers" v-if="is_mod || is_admin"><i class="fas fa-stop"></i> {{$t("stop_all")}}</button>
+				<button v-bind:class="stopAllClass" v-on:click="stopAllServers" v-if="is_mod || is_admin"><i class="fas fa-stop"></i> {{$t("stop_all")}}</button>
 				<button v-on:click="loadServer(true)"><i class="fas fa-sync"></i> {{$t("refresh")}}</button>
 				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
@@ -37,7 +37,7 @@ export default {
 		this.refreshList();
 	},
   computed: {
-    classObject: function () {
+    stopAllClass: function () {
       return {
         disabled: this.stopAllRunning
       }
