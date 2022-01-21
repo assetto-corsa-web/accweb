@@ -5,26 +5,26 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/assetto-corsa-web/accweb/internal/pkg/server"
+	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
 	"github.com/gin-gonic/gin"
 )
 
 type InstancePayload struct {
-	ID          string                  `json:"id"`
-	Path        string                  `json:"path"`
-	IsRunning   bool                    `json:"is_running"`
-	PID         int                     `json:"pid"`
-	Settings    server.AccWebConfigJson `json:"accWeb"`
-	AccSettings server.AccConfigFiles   `json:"acc"`
+	ID          string                    `json:"id"`
+	Path        string                    `json:"path"`
+	IsRunning   bool                      `json:"is_running"`
+	PID         int                       `json:"pid"`
+	Settings    instance.AccWebConfigJson `json:"accWeb"`
+	AccSettings instance.AccConfigFiles   `json:"acc"`
 }
 
 type SaveInstancePayload struct {
-	AccWeb server.AccWebConfigJson `json:"accWeb"`
-	Acc    server.AccConfigFiles   `json:"acc"`
+	AccWeb instance.AccWebConfigJson `json:"accWeb"`
+	Acc    instance.AccConfigFiles   `json:"acc"`
 }
 
-func NewInstancePayload(srv *server.Server) InstancePayload {
+func NewInstancePayload(srv *instance.Instance) InstancePayload {
 	return InstancePayload{
 		ID:          srv.GetID(),
 		Path:        srv.Path,
@@ -137,7 +137,7 @@ func (h *Handler) StartInstance(c *gin.Context) {
 	}
 
 	if err := srv.Start(); err != nil {
-		if errors.Is(err, server.ErrServerCantBeRunning) {
+		if errors.Is(err, instance.ErrServerCantBeRunning) {
 			c.JSON(http.StatusBadRequest, nil)
 			return
 		}
