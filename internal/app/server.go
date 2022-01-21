@@ -95,6 +95,8 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 	api.GET("/servers", h.ListServers)
 	api.POST("/servers/stopall", h.StopAllServers)
 
+	// TODO
+	//api.POST("/import-instance", h.ImportNewInstance)
 	api.POST("/instance", h.NewInstance)
 
 	api.GET("/instance/:id", h.GetInstance)
@@ -104,7 +106,7 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 	api.POST("/instance/:id/stop", h.StopInstance)
 	api.POST("/instance/:id/clone", h.CloneInstance)
 	api.GET("/instance/:id/logs", h.GetInstanceLogs)
-	//api.GET("/instance/:id/export", h.ExportInstance)
+	api.GET("/instance/:id/export", h.ExportInstance)
 }
 
 type LoginPayload struct {

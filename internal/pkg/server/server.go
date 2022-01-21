@@ -1,6 +1,8 @@
 package server
 
 import (
+	"archive/zip"
+	"bytes"
 	"errors"
 	"fmt"
 	"os"
@@ -18,9 +20,7 @@ const (
 	accDedicatedServerFile = "accServer.exe"
 	accCfgDir              = "cfg"
 	accServerLogDir        = "log"
-	accServerErrorLogDir   = "error"
 	accServerLogFile       = "server.log"
-	accServerErrorLogFile  = "error.log"
 )
 
 var (
@@ -195,7 +195,7 @@ func (s *Server) UpdateAccServerExe(srcFile string) (bool, error) {
 	localFile := path.Join(s.Path, accDedicatedServerFile)
 
 	if helper.Exists(localFile) {
-		os.Remove(localFile)
+		_ = os.Remove(localFile)
 	}
 
 	if err := helper.Copy(srcFile, localFile); err != nil {
@@ -220,4 +220,47 @@ func (s *Server) GetAccServerLogs() ([]byte, error) {
 	}
 
 	return os.ReadFile(logFilePath)
+}
+
+func (s *Server) ExportConfigFilesToZip() ([]byte, error) {
+	fileList := map[string]interface{}{
+		configurationJsonName: &s.AccCfg.Configuration,
+		settingsJsonName:      &s.AccCfg.Settings,
+		eventJsonName:         &s.AccCfg.Event,
+		eventRulesJsonName:    &s.AccCfg.EventRules,
+		entrylistJsonName:     &s.AccCfg.Entrylist,
+		bopJsonName:           &s.AccCfg.Bop,
+		assistRulesJsonName:   &s.AccCfg.AssistRules,
+	}
+
+	buf := new(bytes.Buffer)
+	archive := zip.NewWriter(buf)
+
+	for filename, obj := range fileList {
+		l := logrus.WithField("filename", filename)
+
+		contentData, err := helper.Encode(obj)
+		if err != nil {
+			l.WithError(err).Error("Error encoding config information")
+			return nil, err
+		}
+
+		file, err := archive.Create(filename)
+		if err != nil {
+			l.WithError(err).Error("Error creating zip file")
+			return nil, err
+		}
+
+		if _, err := file.Write(contentData); err != nil {
+			l.WithError(err).Error("Error writing zip file")
+			return nil, err
+		}
+	}
+
+	if err := archive.Close(); err != nil {
+		logrus.WithError(err).Error("Error closing zip file")
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
 }
