@@ -330,8 +330,7 @@ func StopServer(id int) error {
 		if fwTcpErr != nil {
 			logrus.WithError(fwTcpErr).Error("Error closing TCP Port")
 		} else {
-			logrus.Info("Closed TCP Port " + strconv.Itoa(server.Configuration.TcpPort))
-			logrus.WithField("Command", fwTcpCmd.String()).Info("Closed TCP Port")
+			logrus.WithField("Command", fwTcpCmd.String()).WithField("Port", server.Configuration.TcpPort).Info("Closed TCP Port")
 		}
 		
 		fwUdpArgs := []string{"advfirewall", "firewall", "del", "rule", "name=\"ACCSERVER_" + strconv.Itoa(server.Id) + "\""}
