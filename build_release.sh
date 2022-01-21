@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 VERSION=$1
 
@@ -18,25 +18,15 @@ npm run build
 
 # build backend (Windows and Linux)
 cd ..
-CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" main.go
-CGO_ENABLED=0 GOOS=windows go build -ldflags "-s -w" main.go
+CGO_ENABLED=0 GOOS=linux go build -ldflags "-s -w" -o $DIR/accweb cmd/main.go
+CGO_ENABLED=0 GOOS=windows go build -ldflags "-s -w" -o $DIR/accweb.exe cmd/main.go
 
 # copy files
-mv main "$DIR/accweb"
-mv main.exe "$DIR/accweb.exe"
 cp gen_rsa_keys.sh "$DIR/gen_rsa_keys.sh"
 cp gen_rsa_keys.cmd "$DIR/gen_rsa_keys.cmd"
 cp LICENSE "$DIR/LICENSE"
 cp README.md "$DIR/README.md"
 cp sample_config.yml "$DIR/config.yml"
-cp -r public "$DIR/public"
-rm -rf "$DIR/public/node_modules"
-rm -r "$DIR/public/src"
-rm "$DIR/public/.gitignore"
-rm "$DIR/public/package.json"
-rm "$DIR/public/package-lock.json"
-rm "$DIR/public/webpack.config.js"
-rm "$DIR/public/static/main.scss"
 
 # make scripts and accweb executable
 chmod +x "$DIR/accweb"

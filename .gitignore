@@ -4,3 +4,6 @@ config/
 accweb_*/
 main
 main.exe
+accweb
+accweb.exe
+config.yml

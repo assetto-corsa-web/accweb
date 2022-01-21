@@ -10,12 +10,17 @@ import (
 )
 
 type InstancePayload struct {
-	ID          string
-	Path        string
-	IsRunning   bool
-	PID         int
-	Settings    server.AccWebConfigJson
-	AccSettings server.AccConfigFiles
+	ID          string                  `json:"id"`
+	Path        string                  `json:"path"`
+	IsRunning   bool                    `json:"is_running"`
+	PID         int                     `json:"pid"`
+	Settings    server.AccWebConfigJson `json:"accWeb"`
+	AccSettings server.AccConfigFiles   `json:"acc"`
+}
+
+type SaveInstancePayload struct {
+	AccWeb server.AccWebConfigJson `json:"accWeb"`
+	Acc    server.AccConfigFiles   `json:"acc"`
 }
 
 func NewInstancePayload(srv *server.Server) InstancePayload {
@@ -48,13 +53,13 @@ func (h *Handler) GetInstance(c *gin.Context) {
 }
 
 func (h *Handler) NewInstance(c *gin.Context) {
-	var json server.AccConfigFiles
+	var json SaveInstancePayload
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	srv, err := h.sm.Create(&json)
+	srv, err := h.sm.Create(&json.Acc)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -63,11 +68,6 @@ func (h *Handler) NewInstance(c *gin.Context) {
 	res := NewInstancePayload(srv)
 
 	c.JSON(http.StatusCreated, res)
-}
-
-type SaveInstancePayload struct {
-	AccWeb server.AccWebConfigJson `json:"accWeb"`
-	Acc    server.AccConfigFiles   `json:"acc"`
 }
 
 func (h *Handler) SaveInstance(c *gin.Context) {
@@ -198,5 +198,5 @@ func (h *Handler) GetInstanceLogs(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": srv.GetID(), "content": string(data)})
+	c.JSON(http.StatusOK, gin.H{"id": srv.GetID(), "logs": string(data)})
 }

@@ -1,10 +1,13 @@
 # Changelog
 
-## 1.14.3
-* Update js libraries versions
+## 1.15.0
+* Reorganization of the codebase
+* added server instance auto start
+* added stop all instances
+* embeding web client public files
 
 ## 1.14.2
-* Update js libraries versions
+* Update js libraries versionss
 * Fix build script to force linux OS build
 
 ## 1.14.1

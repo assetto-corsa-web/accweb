@@ -39,7 +39,7 @@ export default {
             this.$router.push(`/logs?id=${this.server.id}`);
         },
         copyConfig() {
-            axios.put("/api/server", {id: this.server.id})
+            axios.post(`/api/instance/${this.server.id}/clone`)
             .then(() => {
                 this.$emit("copied");
             })
@@ -48,23 +48,15 @@ export default {
             });
         },
         exportConfig() {
-            // replace everything that's not a "normal" character or number so we export using a valid filename
-            // in case it's empty afterwards, set a default filename
-            let filename = this.server.name.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-            
-            if(!filename.length) {
-                filename = "server";
-            }
-            
             let link = document.createElement("a");
             link.setAttribute("type", "hidden");
-            link.href = `/api/server/export/${this.server.id}_${filename}.zip?id=${this.server.id}&token=${this.$store.state.auth.token}`;
+            link.href = `/api/instance/${this.server.id}/export?token=${this.$store.state.auth.token}`;
             document.body.appendChild(link);
             link.click();
             link.remove();
         },
         deleteServer() {
-            axios.delete("/api/server", {params: {id: this.server.id}})
+            axios.delete(`/api/instance/${this.server.id}`)
             .then(() => {
                 this.$emit("deleted");
             })
@@ -73,7 +65,7 @@ export default {
             });
         },
         start() {
-            axios.post("/api/instance", {id: this.server.id})
+            axios.post(`/api/instance/${this.server.id}/start`)
             .then(() => {
                 this.$emit("started");
             })
@@ -82,7 +74,7 @@ export default {
             });
         },
         stop() {
-            axios.delete("/api/instance", {params: {id: this.server.id}})
+            axios.post(`/api/instance/${this.server.id}/stop`)
             .then(() => {
                 this.$emit("stopped");
             })

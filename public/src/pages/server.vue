@@ -73,20 +73,20 @@ export default {
     },
     methods: {
         loadServer() {
-            axios.get("/api/server", {params: {id: this.id}})
+            axios.get("/api/instance/"+this.id)
             .then(r => {
-                this.servername = r.data.settings.serverName;
-                this.$refs.basic.setData(r.data.basic);
-                this.$refs.settings.setData(r.data.settings);
-                this.$refs.event.setData(r.data.event);
-                this.$refs.eventrules.setData(r.data.eventRules);
-                this.$refs.entrylist.setData(r.data.entrylist);
-				this.$refs.bop.setData(r.data.bop);
-				this.$refs.assistrules.setData(r.data.assistRules);
+                this.servername = r.data.acc.settings.serverName;
+                this.$refs.basic.setData(r.data.acc.configuration);
+                this.$refs.settings.setData(r.data.acc.settings);
+                this.$refs.event.setData(r.data.acc.event);
+                this.$refs.eventrules.setData(r.data.acc.eventRules);
+                this.$refs.entrylist.setData(r.data.acc.entrylist);
+				this.$refs.bop.setData(r.data.acc.bop);
+				this.$refs.assistrules.setData(r.data.acc.assistRules);
             });
         },
         save() {
-            let basic = this.$refs.basic.getData();
+            let configuration = this.$refs.basic.getData();
             let settings = this.$refs.settings.getData();
             let event = this.$refs.event.getData();
             let eventRules = this.$refs.eventrules.getData();
@@ -94,17 +94,25 @@ export default {
 			let bop = this.$refs.bop.getData();
 			let assistrules = this.$refs.assistrules.getData();			
             let data = {
-                id: parseInt(this.id),
-                basic,
-                settings,
-                event,
-                eventRules,
-                entrylist,
-				bop,
-				assistrules
+                accWeb: {}, // TODO
+                acc: {
+                    configuration,
+                    settings,
+                    event,
+                    eventRules,
+                    entrylist,
+                    bop,
+                    assistrules
+                }
             };
 
-            axios.post("/api/server", data)
+            let url = "/api/instance"
+
+            if (this.id) {
+                url += "/" + this.id
+            }
+
+            axios.post(url, data)
             .then(() => {
                 this.$router.push("/");
             })

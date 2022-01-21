@@ -9,7 +9,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"syscall"
 
 	"golang.org/x/text/encoding/unicode"
 	"golang.org/x/text/transform"
@@ -108,7 +107,8 @@ func Copy(srcFile, dstFile string) error {
 	defer out.Close()
 
 	in, err := os.Open(srcFile)
-	defer in.Close()
+	defer func() { _ = in.Close() }()
+
 	if err != nil {
 		return err
 	}
@@ -148,11 +148,6 @@ func CopyDirectory(scrDir, dest string) error {
 			return err
 		}
 
-		stat, ok := fileInfo.Sys().(*syscall.Stat_t)
-		if !ok {
-			return fmt.Errorf("failed to get raw syscall.Stat_t data for '%s'", sourcePath)
-		}
-
 		switch fileInfo.Mode() & os.ModeType {
 		case os.ModeDir:
 			if err := CreateIfNotExists(destPath, 0755); err != nil {
@@ -165,10 +160,6 @@ func CopyDirectory(scrDir, dest string) error {
 			if err := Copy(sourcePath, destPath); err != nil {
 				return err
 			}
-		}
-
-		if err := os.Lchown(destPath, int(stat.Uid), int(stat.Gid)); err != nil {
-			return err
 		}
 
 		if err := os.Chmod(destPath, entry.Mode()); err != nil {
