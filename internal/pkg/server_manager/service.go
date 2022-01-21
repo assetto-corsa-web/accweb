@@ -259,7 +259,3 @@ func (s *Service) Duplicate(srcId string) (*server.Server, error) {
 
 	return s.Create(&cfg)
 }
-
-func (s *Service) Export() {
-
-}

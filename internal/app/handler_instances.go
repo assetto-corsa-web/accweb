@@ -2,6 +2,7 @@ package app
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server"
@@ -199,4 +200,23 @@ func (h *Handler) GetInstanceLogs(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{"id": srv.GetID(), "logs": string(data)})
+}
+
+func (h *Handler) ExportInstance(c *gin.Context) {
+	id := c.Param("id")
+
+	srv, err := h.sm.GetServerByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, nil)
+		return
+	}
+
+	data, err := srv.ExportConfigFilesToZip()
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, nil)
+		return
+	}
+
+	c.Writer.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"accweb_%s_cfg.zip\"", id))
+	c.Data(http.StatusOK, "application/zip", data)
 }

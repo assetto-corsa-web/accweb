@@ -23,6 +23,15 @@ var (
 	ErrInvalidJsonFileFormat = errors.New("invalid json file")
 )
 
+func Encode(obj interface{}) ([]byte, error) {
+	data, err := json.Marshal(obj)
+	if err != nil {
+		return nil, err
+	}
+
+	return utf16Encoding.NewEncoder().Bytes(data)
+}
+
 func LoadFromPath(baseDir, filename string, obj interface{}) error {
 	path := filepath.Join(baseDir, filename)
 	f, err := os.Open(path)
@@ -54,12 +63,7 @@ func LoadFromPath(baseDir, filename string, obj interface{}) error {
 }
 
 func SaveToPath(baseDir, filename string, obj interface{}) error {
-	data, err := json.Marshal(obj)
-	if err != nil {
-		return err
-	}
-
-	encodedData, err := utf16Encoding.NewEncoder().Bytes(data)
+	encodedData, err := Encode(obj)
 	if err != nil {
 		return err
 	}

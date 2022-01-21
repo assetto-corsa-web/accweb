@@ -91,8 +91,8 @@ export default {
             let event = this.$refs.event.getData();
             let eventRules = this.$refs.eventrules.getData();
             let entrylist = this.$refs.entrylist.getData();
-			let bop = this.$refs.bop.getData();
-			let assistrules = this.$refs.assistrules.getData();			
+			      let bop = this.$refs.bop.getData();
+			      let assistrules = this.$refs.assistrules.getData();
             let data = {
                 accWeb: {}, // TODO
                 acc: {
@@ -135,25 +135,25 @@ export default {
         entrylistJsonListener(e) {
             this.entrylistJson = e.target.files[0];
         },
-		bopJsonListener(e) {
+        bopJsonListener(e) {
             this.bopJson = e.target.files[0];
         },
-		assistRulesJsonListener(e) {
+        assistRulesJsonListener(e) {
             this.assistRulesJson = e.target.files[0];
         },
-		importServer() {
+		    importServer() {
             let data = new FormData();
             data.append("configuration", this.configurationJson);
             data.append("settings", this.settingsJson);
             data.append("event", this.eventJson);
             data.append("eventRules", this.eventRulesJson);
             data.append("entrylist", this.entrylistJson);
-			data.append("bop", this.bopJson);
-			data.append("assistRules", this.assistRulesJson);
+			      data.append("bop", this.bopJson);
+		      	data.append("assistRules", this.assistRulesJson);
 
             let headers = {headers: {"Content-Type": "multipart/form-data"}};
 
-            axios.post("/api/server/import", data, headers)
+            axios.post("/api/import-instance", data, headers)
             .then(() => {
                 this.$router.push("/");
             })
