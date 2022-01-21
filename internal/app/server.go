@@ -93,7 +93,7 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 	api.Use(authMW.MiddlewareFunc())
 
 	api.GET("/servers", h.ListServers)
-	api.POST("/servers/stopall", h.StopAllServers)
+	api.POST("/servers/stop-all", h.StopAllServers)
 
 	// TODO
 	//api.POST("/import-instance", h.ImportNewInstance)
