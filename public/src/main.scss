@@ -256,6 +256,11 @@ label {
 	color: $green !important;
 }
 
+.disabled {
+	background: $gray !important;
+	color: $dark_gray !important;
+}
+
 .error {
 	color: $red;
 	width: 100%;

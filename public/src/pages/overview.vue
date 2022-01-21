@@ -4,6 +4,7 @@
 			<h1>{{$t("title")}}</h1>
 			<div class="menu">
 				<button class="primary" v-on:click="$router.push('/server')" v-if="is_admin"><i class="fas fa-plus"></i> {{$t("add_new")}}</button>
+				<button v-bind:class="classObject" v-on:click="stopAllServers" v-if="is_mod || is_admin"><i class="fas fa-stop"></i> {{$t("stop_all")}}</button>
 				<button v-on:click="loadServer(true)"><i class="fas fa-sync"></i> {{$t("refresh")}}</button>
 				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
@@ -28,12 +29,20 @@ export default {
 	components: {layout, server, end},
 	data() {
 		return {
+      stopAllRunning: false,
 			server: []
 		};
 	},
 	mounted() {
 		this.refreshList();
 	},
+  computed: {
+    classObject: function () {
+      return {
+        disabled: this.stopAllRunning
+      }
+    }
+  },
 	methods: {
 		logout() {
 			this.$store.commit("logout");
@@ -53,10 +62,22 @@ export default {
 					this.server = r.data;
 				})
 				.catch(e => {
-					this.$store.commit("toast", this.$t("receive_server_list_error"))
+					this.$store.commit("toast", this.$t("stop_all_error"))
 				});
 			}, timeout);
 		},
+    stopAllServers() {
+      this.stopAllRunning = true;
+      axios.post("/api/servers/stop-all")
+          .then(d => {
+            this.loadServer(false);
+            this.stopAllRunning = false
+          })
+          .catch(e => {
+            this.$store.commit("toast", this.$t("receive_server_list_error"))
+            this.stopAllRunning = false
+          });
+    },
 		refreshList() {
 			this.loadServer();
 			setTimeout(() => {
@@ -78,8 +99,10 @@ export default {
 	"en": {
 		"title": "Servers",
 		"add_new": "Add Server",
+    "stop_all": "Stop All Servers",
 		"refresh": "Refresh",
-		"receive_server_list_error": "Error receiving server list."
+		"receive_server_list_error": "Error receiving server list.",
+    "stop_all_error": "Error while stopping all servers"
 	}
 }
 </i18n>
