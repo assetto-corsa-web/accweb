@@ -34,9 +34,9 @@
                 <input type="file" name="eventRules.json" v-on:change="eventRulesJsonListener" />
                 <label>entrylist.json</label>
                 <input type="file" name="entrylist.json" v-on:change="entrylistJsonListener" />
-				<label>bop.json</label>
+				        <label>bop.json</label>
                 <input type="file" name="bop.json" v-on:change="bopJsonListener" />
-				<label>assistRules.json</label>
+				        <label>assistRules.json</label>
                 <input type="file" name="assistRules.json" v-on:change="assistRulesJsonListener" />				
                 <input class="primary" type="submit" :value="$t('import_button')" />
             </form>
