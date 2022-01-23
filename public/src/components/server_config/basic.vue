@@ -23,7 +23,7 @@ export default {
             priorities: [
                 {value: 256, label: "Realtime"},
                 {value: 128, label: "High"},
-                {value: 32768, label: "Above Normal	"},
+                {value: 32768, label: "Above Normal"},
                 {value: 32, label: "Normal"},
                 {value: 16384, label: "Below Normal"},
                 {value: 64, label: "Low"},
