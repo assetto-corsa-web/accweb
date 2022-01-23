@@ -136,22 +136,22 @@ func (s *Service) UpdateServersServerExeFile() error {
 }
 
 func (s *Service) Bootstrap() error {
+	logrus.WithField("md5sum", s.config.AccServerMd5Sum).Info("boot: checking acc server md5sum")
 	if err := s.GetAccServerExeMd5Sum(); err != nil {
 		return err
 	}
-	logrus.WithField("md5sum", s.config.AccServerMd5Sum).Info("boot: checking acc server md5sum")
 
+	logrus.WithField("total", len(s.servers)).Info("boot: loading all configured acc servers")
 	if err := s.LoadAll(); err != nil {
 		return err
 	}
-	logrus.WithField("total", len(s.servers)).Info("boot: loading all configured acc servers")
 
-	logrus.Info("boot: checking for outdated servers")
+	logrus.Info("boot: checking for outdated acc server instances")
 	if err := s.UpdateServersServerExeFile(); err != nil {
 		return err
 	}
 
-	logrus.Info("boot: autostarting acc servers")
+	logrus.Info("boot: auto starting acc server instances")
 	if err := s.AutoStart(); err != nil {
 		return err
 	}
