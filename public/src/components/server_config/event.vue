@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')">
+    <collapsible :title="$t('title')" with-import="true" import-filename="event.json" @load="setData">
         <selection :label="$t('track_label')" :options="tracks" v-model="track"></selection>
         <field type="number" :label="$t('preracewaitingtimeseconds_label')" v-model="preRaceWaitingTimeSeconds"></field>
         <field type="number" :label="$t('sessionovertimeseconds_label')" v-model="sessionOverTimeSeconds"></field>

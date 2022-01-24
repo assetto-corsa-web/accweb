@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')">
+    <collapsible :title="$t('title')" with-import="true" import-filename="entrylist.json" @load="setData">
         <entry v-for="entry in entries"
             :key="entry.index"
             :entry="entry"

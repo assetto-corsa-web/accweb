@@ -4,7 +4,8 @@
 * Reorganization of the codebase
 * added server instance auto start
 * added stop all instances
-* embeding web client public files
+* embedding web client public files
+* simplified file import
 
 ## 1.14.2
 * Update js libraries versionss

@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')">
+    <collapsible :title="$t('title')" with-import="true" import-filename="eventRules.json" @load="setData">
         <selection :label="$t('qualifyStandingType_label')" :options="qualifyStandingTypes" v-model="qualifyStandingType"></selection>
         <field type="number" :label="$t('pitWindowLengthSec_label')" v-model="pitWindowLengthSec"></field>
         <field type="number" :label="$t('driverStintTimeSec_label')" v-model="driverStintTimeSec"></field>

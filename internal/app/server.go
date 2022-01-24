@@ -95,10 +95,7 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 	api.GET("/servers", h.ListServers)
 	api.POST("/servers/stop-all", h.StopAllServers)
 
-	// TODO
-	//api.POST("/import-instance", h.ImportNewInstance)
 	api.POST("/instance", h.NewInstance)
-
 	api.GET("/instance/:id", h.GetInstance)
 	api.POST("/instance/:id", h.SaveInstance)
 	api.DELETE("/instance/:id", h.DeleteInstance)

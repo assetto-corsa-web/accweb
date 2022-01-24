@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')">
+    <collapsible :title="$t('title')" with-import="true" import-filename="assistRules.json" @load="setData">
         <field type="number" :label="$t('stabilityControlLevelMax_label')" v-model="stabilityControlLevelMax"></field>
         <checkbox :label="$t('disableAutosteer_label')" v-model="disableAutosteer"></checkbox>
         <checkbox :label="$t('disableAutoLights_label')" v-model="disableAutoLights"></checkbox>
