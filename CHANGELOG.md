@@ -1,7 +1,10 @@
 # Changelog
 
+## 1.14.3
+* Update js libraries versions
+
 ## 1.14.2
-* Update js libraries versionss
+* Update js libraries versions
 * Fix build script to force linux OS build
 
 ## 1.14.1
