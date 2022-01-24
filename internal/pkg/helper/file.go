@@ -32,20 +32,7 @@ func Encode(obj interface{}) ([]byte, error) {
 	return utf16Encoding.NewEncoder().Bytes(data)
 }
 
-func LoadFromPath(baseDir, filename string, obj interface{}) error {
-	path := filepath.Join(baseDir, filename)
-	f, err := os.Open(path)
-	if err != nil {
-		if errors.Is(err, os.ErrNotExist) {
-			return WrapErrors(ErrFileNotFound, err)
-		}
-
-		return err
-	}
-	defer func(f *os.File) {
-		_ = f.Close()
-	}(f)
-
+func Decode(f io.ReadSeeker, obj interface{}) error {
 	r := transform.NewReader(f, utf16Encoding.NewDecoder().Transformer)
 
 	if err := json.NewDecoder(r).Decode(obj); err != nil {
@@ -60,6 +47,23 @@ func LoadFromPath(baseDir, filename string, obj interface{}) error {
 	}
 
 	return nil
+}
+
+func LoadFromPath(baseDir, filename string, obj interface{}) error {
+	path := filepath.Join(baseDir, filename)
+	f, err := os.Open(path)
+	if err != nil {
+		if errors.Is(err, os.ErrNotExist) {
+			return WrapErrors(ErrFileNotFound, err)
+		}
+
+		return err
+	}
+	defer func(f *os.File) {
+		_ = f.Close()
+	}(f)
+
+	return Decode(f, obj)
 }
 
 func SaveToPath(baseDir, filename string, obj interface{}) error {

@@ -6,8 +6,7 @@ jobs:
     working_directory: /go/src/github.com/assetto-corsa-web/accweb
     steps:
       - checkout
-      - run: go test .
-      - run: go build .
+      - run: go test ./...
   frontend:
     docker:
       - image: node

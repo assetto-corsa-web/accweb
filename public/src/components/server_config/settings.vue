@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')">
+    <collapsible :title="$t('title')" with-import="true" import-filename="settings.json" @load="setData">
         <field :label="$t('servername_label')" v-model="serverName"></field>
         <field type="password" :label="$t('password_label')" v-model="password"></field>
         <field type="password" :label="$t('adminpassword_label')" v-model="adminPassword"></field>

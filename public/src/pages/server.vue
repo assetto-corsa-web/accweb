@@ -10,7 +10,6 @@
         </div>
         <div class="tabs">
             <div v-bind:class="{tab: true, 'tab-active': activeTab === 0}" v-on:click="activeTab = 0">{{$t("server_config")}}</div>
-            <div v-bind:class="{tab: true, 'tab-active': activeTab === 1}" v-on:click="activeTab = 1" v-if="is_admin && !id">{{$t("import_server")}}</div>
         </div>
         <div v-show="activeTab === 0">
             <accweb ref="accweb"></accweb>
@@ -21,26 +20,6 @@
             <entrylist ref="entrylist"></entrylist>
 			<bop ref="bop"></bop>
 			<assistrules ref="assistrules"></assistrules>
-        </div>
-        <div v-show="activeTab === 1">
-            <p>{{$t("upload_hint")}}</p>
-            <form v-on:submit.prevent="importServer">
-                <label>configuration.json</label>
-                <input type="file" name="configuration.json" v-on:change="configurationJsonListener" />
-                <label>settings.json</label>
-                <input type="file" name="settings.json" v-on:change="settingsJsonListener" />
-                <label>event.json</label>
-                <input type="file" name="event.json" v-on:change="eventJsonListener" />
-                <label>eventRules.json</label>
-                <input type="file" name="eventRules.json" v-on:change="eventRulesJsonListener" />
-                <label>entrylist.json</label>
-                <input type="file" name="entrylist.json" v-on:change="entrylistJsonListener" />
-				        <label>bop.json</label>
-                <input type="file" name="bop.json" v-on:change="bopJsonListener" />
-				        <label>assistRules.json</label>
-                <input type="file" name="assistRules.json" v-on:change="assistRulesJsonListener" />				
-                <input class="primary" type="submit" :value="$t('import_button')" />
-            </form>
         </div>
     </layout>
 </template>
@@ -122,47 +101,6 @@ export default {
             .catch(e => {
                 this.$store.commit("toast", this.$t("save_error"))
             });
-        },
-        configurationJsonListener(e) {
-            this.configurationJson = e.target.files[0];
-        },
-        settingsJsonListener(e) {
-            this.settingsJson = e.target.files[0];
-        },
-        eventJsonListener(e) {
-            this.eventJson = e.target.files[0];
-        },
-        eventRulesJsonListener(e) {
-            this.eventRulesJson = e.target.files[0];
-        },
-        entrylistJsonListener(e) {
-            this.entrylistJson = e.target.files[0];
-        },
-        bopJsonListener(e) {
-            this.bopJson = e.target.files[0];
-        },
-        assistRulesJsonListener(e) {
-            this.assistRulesJson = e.target.files[0];
-        },
-		    importServer() {
-            let data = new FormData();
-            data.append("configuration", this.configurationJson);
-            data.append("settings", this.settingsJson);
-            data.append("event", this.eventJson);
-            data.append("eventRules", this.eventRulesJson);
-            data.append("entrylist", this.entrylistJson);
-			      data.append("bop", this.bopJson);
-		      	data.append("assistRules", this.assistRulesJson);
-
-            let headers = {headers: {"Content-Type": "multipart/form-data"}};
-
-            axios.post("/api/import-instance", data, headers)
-            .then(() => {
-                this.$router.push("/");
-            })
-            .catch(e => {
-                this.$store.commit("toast", this.$t("import_error"))
-            });
         }
     }
 }
@@ -175,11 +113,7 @@ export default {
         "cancel": "Cancel",
         "back": "Back",
         "server_config": "Configure server",
-        "import_server": "Import server",
-        "upload_hint": "You can import an existing server by uploading its configuration files. Select the files of your server configuration and press import.",
-        "import_button": "Import",
-        "save_error": "Error saving configuration, please check your input.",
-        "import_error": "Error importing configuration files, please check your input."
+        "save_error": "Error saving configuration, please check your input."
     }
 }
 </i18n>
