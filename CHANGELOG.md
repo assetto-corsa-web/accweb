@@ -2,10 +2,10 @@
 
 ## 1.15.0
 * Reorganization of the codebase
-* added server instance auto start
+* added server instance auto start ( #74 and #119 )
 * added stop all instances
 * embedding web client public files
-* simplified file import
+* simplified file import ( #84 )
 
 ## 1.14.2
 * Update js libraries versionss
