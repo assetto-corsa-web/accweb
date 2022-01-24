@@ -132,10 +132,10 @@ All Go code must have been run through go fmt. The frontend and backend changes 
 To build a release, execute the `build_release.sh` script (on Linux) or follow the steps inside the script. You need to pass the build version as the first parameter. Example:
 
 ```
-./build_release.sh 1.2.3
+./build/build_release.sh 1.2.3
 ```
 
-This will create a directory `accweb_1.2.3` containing the release build of accweb. This directory can be zipped, uploaded to GitHub and deployed on a server.
+This will create a directory `releases/accweb_1.2.3` containing the release build of accweb. This directory can be zipped, uploaded to GitHub and deployed on a server.
 
 ## Links
 <a name="links" />

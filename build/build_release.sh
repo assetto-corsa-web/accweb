@@ -3,13 +3,13 @@
 VERSION=$1
 
 if [ -z $VERSION ]; then
-  echo "Usage: ./build_release.sh <Version Number, e.g. 1.2.3>"
+  echo "Usage: ./build/build_release.sh <Version Number, e.g. 1.2.3>"
   exit
 fi
 
 # create release directory
-DIR="accweb_$VERSION"
-mkdir "$DIR"
+DIR="releases/accweb_$VERSION"
+mkdir -p "$DIR"
 
 # build frontend
 cd public
@@ -26,7 +26,7 @@ cp gen_rsa_keys.sh "$DIR/gen_rsa_keys.sh"
 cp gen_rsa_keys.cmd "$DIR/gen_rsa_keys.cmd"
 cp LICENSE "$DIR/LICENSE"
 cp README.md "$DIR/README.md"
-cp sample_config.yml "$DIR/config.yml"
+cp build/sample_config.yml "$DIR/config.yml"
 
 # make scripts and accweb executable
 chmod +x "$DIR/accweb"
