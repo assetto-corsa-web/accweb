@@ -1,30 +1,19 @@
 <template>
   <label class="text-reader">
+    <i class="fas fa-file-upload" :title="$t('upload_config')"></i>
     <input type="file" @change="loadTextFromFile">
   </label>
 </template>
 
 <style>
-.text-reader {
-  position: relative;
-  overflow: hidden;
-  display: inline-block;
+  input[type="file"] {
+    display: none;
+  }
 
-  /* Fancy button looking */
-  border: 2px solid black;
-  border-radius: 5px;
-  padding: 8px 12px;
-  cursor: pointer;
-  width: 100px;
-  background-color: #c7d5e0;
-}
-.text-reader input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: -1;
-  opacity: 0;
-}
+  .text-reader {
+    width: auto;
+    cursor: pointer;
+  }
 </style>
 
 <script>
@@ -43,3 +32,11 @@ export default {
   }
 };
 </script>
+
+<i18n>
+{
+  "en": {
+    "upload_config": "Upload config"
+  }
+}
+</i18n>

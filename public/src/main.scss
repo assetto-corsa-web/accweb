@@ -155,7 +155,10 @@ body {
 		border-color: $medium_blue;
 		border-width: 0 0 1px 0;
 		padding: 10px 6px;
-		cursor: pointer;
+
+		.collapse-icon {
+			cursor: pointer;
+		}
 	}
 
 	.collapsible-content {

@@ -1,9 +1,12 @@
 <template>
     <div class="collapsible">
         <div class="collapsible-title" v-on:click="expanded = !expanded">
-            {{title}}
-            <filereader v-show="withImport" @load="onLoadContent"></filereader>
-            <i v-bind:class="{fas: true, 'fa-chevron-down': !expanded, 'fa-chevron-up': expanded}"></i>
+            <div class="action-title">
+              {{title}}
+              <filereader v-show="withImport" @load="onLoadContent"></filereader>
+            </div>
+
+            <i class="collapse-icon" v-bind:class="{fas: true, 'fa-chevron-down': !expanded, 'fa-chevron-up': expanded}"></i>
         </div>
         <div class="collapsible-content" v-show="expanded">
             <slot></slot>
@@ -30,3 +33,11 @@ export default {
     }
 }
 </script>
+
+<style>
+  .action-title {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-gap: 10px;
+  }
+</style>
