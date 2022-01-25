@@ -2,6 +2,7 @@
   <label class="text-reader">
     <i class="fas fa-file-upload" :title="$t('upload_config')"></i>
     <input type="file" @change="loadTextFromFile">
+    <i>( {{filename}} )</i>
   </label>
 </template>
 
@@ -18,6 +19,7 @@
 
 <script>
 export default {
+  props: ["filename"],
   methods: {
     loadTextFromFile(ev) {
       const file = ev.target.files[0];

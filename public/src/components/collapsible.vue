@@ -2,8 +2,8 @@
     <div class="collapsible">
         <div class="collapsible-title" v-on:click="expanded = !expanded">
             <div class="action-title">
-              {{title}}
-              <filereader v-show="withImport" @load="onLoadContent"></filereader>
+                {{title}}
+                <filereader v-show="withImport" @load="onLoadContent" :filename="importFilename"></filereader>
             </div>
 
             <i class="collapse-icon" v-bind:class="{fas: true, 'fa-chevron-down': !expanded, 'fa-chevron-up': expanded}"></i>
@@ -18,7 +18,7 @@
 import filereader from "./filereader.vue";
 
 export default {
-    props: ["title", "withImport"],
+    props: ["title", "withImport", "importFilename"],
     components: { filereader },
     data() {
         return {
