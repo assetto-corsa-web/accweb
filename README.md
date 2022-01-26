@@ -1,5 +1,6 @@
 # Assetto Corsa Competizione Server Web Interface
 
+[![Discord Shield](https://discordapp.com/api/guilds/913752018588422174/widget.png?style=shield)](https://discord.gg/AVWdF56t6c)
 [![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/assetto-corsa-web/accweb) 
 [![CircleCI](https://circleci.com/gh/assetto-corsa-web/accweb.svg?style=svg)](https://circleci.com/gh/assetto-corsa-web/accweb)
 [![Go Report Card](https://goreportcard.com/badge/github.com/assetto-corsa-web/accweb)](https://goreportcard.com/report/github.com/assetto-corsa-web/accweb)
@@ -17,7 +18,7 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 7. [Build release](#release)
 8. [Links](#links)
 9. [License](#license)
-10. [Screenshots](#screenshots)
+10. [ACCWeb Discord Server](#discord)
 
 ## Features
 <a name="features" />
@@ -147,3 +148,10 @@ This will create a directory `releases/accweb_1.2.3` containing the release buil
 <a name="license" />
 
 MIT
+
+## ACCWeb Discord Server
+<a name="discord" />
+
+Join us on our Discord server to get and provide support.
+
+[![ACCWeb Discord](https://discordapp.com/api/guilds/913752018588422174/widget.png?style=banner4)](https://discord.gg/AVWdF56t6c)
