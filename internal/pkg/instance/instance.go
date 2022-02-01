@@ -81,7 +81,7 @@ func (s *Instance) Start() error {
 
 	if runtime.GOOS == "linux" {
 		command = "wine"
-		args = []string{"accDedicatedServerFile"}
+		args = []string{accDedicatedServerFile}
 	}
 
 	var err error
