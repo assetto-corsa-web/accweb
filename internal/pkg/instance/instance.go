@@ -5,11 +5,13 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"io"
 	"os"
 	"os/exec"
 	"path"
 	"path/filepath"
 	"runtime"
+	"time"
 
 	"github.com/sirupsen/logrus"
 
@@ -21,6 +23,9 @@ const (
 	accCfgDir              = "cfg"
 	accServerLogDir        = "log"
 	accServerLogFile       = "server.log"
+	logDir                 = "logs"
+	logTimeFormat          = "20060102_150405"
+	logExt                 = ".log"
 )
 
 var (
@@ -33,7 +38,8 @@ type Instance struct {
 	Cfg    AccWebConfigJson
 	AccCfg AccConfigFiles
 
-	cmd *exec.Cmd
+	cmd     *exec.Cmd
+	logFile *os.File
 }
 
 func (s *Instance) GetID() string {
@@ -78,8 +84,15 @@ func (s *Instance) Start() error {
 		args = []string{"accDedicatedServerFile"}
 	}
 
+	var err error
+	if s.logFile, err = s.createLogFile(); err != nil {
+		return err
+	}
+
 	cmd := exec.Command(command, args...)
 	cmd.Dir = s.Path
+	cmd.Stdout = s.logFile
+	cmd.Stderr = s.logFile
 
 	s.cmd = cmd
 
@@ -89,12 +102,14 @@ func (s *Instance) Start() error {
 
 	logrus.WithField("server_id", s.GetID()).WithField("pid", s.GetProcessID()).Info("acc server started")
 
-	go func(cmd *exec.Cmd) {
+	go func(cmd *exec.Cmd, l io.Closer) {
 		// wait for shutdown or crash
 		if err := cmd.Wait(); err != nil {
 			logrus.WithError(err).Error("Error when server stopped")
 		}
-	}(cmd)
+
+		_ = l.Close()
+	}(cmd, s.logFile)
 
 	return nil
 }
@@ -263,4 +278,14 @@ func (s *Instance) ExportConfigFilesToZip() ([]byte, error) {
 	}
 
 	return buf.Bytes(), nil
+}
+
+func (s *Instance) createLogFile() (*os.File, error) {
+	if err := helper.CreateIfNotExists(path.Join(s.Path, logDir), 0755); err != nil {
+		return nil, err
+	}
+
+	filename := fmt.Sprintf("logs_%s_%s%s", time.Now().Format(logTimeFormat), s.GetID(), logExt)
+
+	return os.Create(path.Join(s.Path, logDir, filename))
 }
