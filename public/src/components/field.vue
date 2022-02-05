@@ -1,11 +1,13 @@
 <template>
     <div>
-        <label>{{label}}</label>
-        <input :type="type"
-            :placeholder="placeholder"
-            v-bind:value="value"
-            v-on:input="$emit('input', $event.target.value)"
-            :step="step" />
+        <label>
+          {{label}}
+          <input :type="type"
+              :placeholder="placeholder"
+              v-bind:value="value"
+              v-on:input="$emit('input', $event.target.value)"
+              :step="step" />
+        </label>
         <div class="error" v-show="error">{{error}}</div>
     </div>
 </template>
