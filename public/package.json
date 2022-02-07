@@ -5,14 +5,15 @@
   "main": "src/index.js",
   "scripts": {
     "start": "webpack-dev-server",
-    "build": "webpack --mode=production && node-sass static/ -o dist/",
+    "build": "webpack --mode=production && node-sass src/ -o dist/",
     "dev": "webpack --watch",
-    "style": "node-sass -w static/ -o dist/"
+    "style": "node-sass -w src/ -o dist/"
   },
   "author": "Marvin Blum",
   "license": "MIT",
   "dependencies": {
     "axios": "^0.24.0",
+    "lodash": "^4.17.21",
     "vue": "^2.6.14",
     "vue-i18n": "^8.26.7",
     "vue-router": "^3.5.3",

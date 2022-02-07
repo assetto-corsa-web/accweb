@@ -44,4 +44,4 @@ RUN apt -y update && apt -y install gettext-base wine64-development wine-develop
 
 EXPOSE 8080
 
-ENTRYPOINT [ "/bin/sh", "-c", "/accweb/docker-entrypoint.sh" ] 
+ENTRYPOINT [ "/bin/sh", "-c", "/accweb/build/docker/docker-entrypoint.sh" ] 

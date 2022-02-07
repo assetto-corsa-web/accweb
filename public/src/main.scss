@@ -155,7 +155,10 @@ body {
 		border-color: $medium_blue;
 		border-width: 0 0 1px 0;
 		padding: 10px 6px;
-		cursor: pointer;
+
+		.collapse-icon {
+			cursor: pointer;
+		}
 	}
 
 	.collapsible-content {
@@ -243,6 +246,7 @@ input[type~="checkbox"] {
 
 select {
 	width: auto;
+	display: block;
 }
 
 label {
@@ -254,6 +258,11 @@ label {
 .primary {
 	background: $dark_green !important;
 	color: $green !important;
+}
+
+.disabled {
+	background: $gray !important;
+	color: $dark_gray !important;
 }
 
 .error {

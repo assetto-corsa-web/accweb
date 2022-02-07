@@ -1,17 +1,10 @@
 package cfg
 
 import (
+	"io/ioutil"
+
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
-	"io/ioutil"
-)
-
-const (
-	configFile = "config.yml"
-)
-
-var (
-	config Config
 )
 
 type Config struct {
@@ -25,12 +18,10 @@ type Config struct {
 }
 
 type Webserver struct {
-	Host         string `yaml:"host"`
-	WriteTimeout int    `yaml:"write_timeout"`
-	ReadTimeout  int    `yaml:"read_timeout"`
-	TLS          bool   `yaml:"tls"`
-	Cert         string `yaml:"cert"`
-	PrivateKey   string `yaml:"private_key"`
+	Host       string `yaml:"host"`
+	TLS        bool   `yaml:"tls"`
+	Cert       string `yaml:"cert"`
+	PrivateKey string `yaml:"private_key"`
 }
 
 type CORS struct {
@@ -52,28 +43,16 @@ type ACC struct {
 }
 
 // Load loads the application config from config.yml.
-func Load() {
-	loadConfigYml()
-
-	if out, err := yaml.Marshal(config); err == nil {
-		logrus.Info("\n" + string(out))
-	}
-}
-
-func loadConfigYml() {
-	logrus.Info("Loading configuration file")
-	data, err := ioutil.ReadFile(configFile)
-
+func Load(file string) *Config {
+	data, err := ioutil.ReadFile(file)
 	if err != nil {
-		logrus.WithField("err", err).Fatal("Error loading configuration file")
+		logrus.WithError(err).Fatal("Error loading configuration file")
 	}
 
+	var config Config
 	if err := yaml.Unmarshal(data, &config); err != nil {
-		logrus.WithField("err", err).Fatal("Error loading parsing configuration file")
+		logrus.WithError(err).Fatal("Error loading parsing configuration file")
 	}
-}
 
-// Get returns the application configuration.
-func Get() *Config {
 	return &config
 }

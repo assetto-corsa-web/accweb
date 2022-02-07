@@ -1,22 +1,39 @@
-package server
+package instance
 
-import (
-	"os/exec"
+import "time"
+
+const (
+	accwebConfigJsonName  = "accwebConfig.json"
+	configurationJsonName = "configuration.json"
+	settingsJsonName      = "settings.json"
+	eventJsonName         = "event.json"
+	eventRulesJsonName    = "eventRules.json"
+	entrylistJsonName     = "entrylist.json"
+	bopJsonName           = "bop.json"
+	assistRulesJsonName   = "assistRules.json"
+	configVersion         = 1
 )
 
-type ServerSettings struct {
-	Id  int       `json:"id"`
-	PID int       `json:"pid"` // 0 = stopped, else running
-	Cmd *exec.Cmd `json:"-"`
-
-	// ACC server configuration files
-	Configuration ConfigurationJson `json:"basic"`
+type AccConfigFiles struct {
+	Configuration ConfigurationJson `json:"configuration"`
 	Settings      SettingsJson      `json:"settings"`
 	Event         EventJson         `json:"event"`
 	EventRules    EventRulesJson    `json:"eventRules"`
 	Entrylist     EntrylistJson     `json:"entrylist"`
 	Bop           BopJson           `json:"bop"`
 	AssistRules   AssistRulesJson   `json:"assistRules"`
+}
+
+type AccWebConfigJson struct {
+	ID        string    `json:"id"`
+	Md5Sum    string    `json:"md5Sum"`
+	AutoStart bool      `json:"autoStart"`
+	CreatedAt time.Time `json:"createdAt"`
+	UpdatedAt time.Time `json:"updatedAt"`
+}
+
+func (a *AccWebConfigJson) SetUpdateAt() {
+	a.UpdatedAt = time.Now().UTC()
 }
 
 type ConfigurationJson struct {
@@ -141,14 +158,4 @@ type AssistRulesJson struct {
 	DisableAutoGear          int `json:"disableAutoGear"`
 	DisableAutoClutch        int `json:"disableAutoClutch"`
 	DisableIdealLine         int `json:"disableIdealLine"`
-}
-
-func (server *ServerSettings) start(cmd *exec.Cmd) {
-	server.PID = cmd.Process.Pid
-	server.Cmd = cmd
-}
-
-func (server *ServerSettings) stop() {
-	server.PID = 0
-	server.Cmd = nil
 }

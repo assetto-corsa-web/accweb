@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')">
+    <collapsible :title="$t('title')" with-import="true" import-filename="configuration.json" @load="setData">
         <field type="number" :label="$t('udp_label')" v-model="udpPort"></field>
         <field type="number" :label="$t('tcp_label')" v-model="tcpPort"></field>
         <field type="number" :label="$t('maxconnections_label')" v-model="maxConnections"></field>
