@@ -53,7 +53,16 @@ export default {
         };
     },
     mounted() {
+        if (localStorage.sorting) {
+            this.sorting = localStorage.sorting;
+        }
+
         this.refreshList();
+    },
+    watch: {
+        sorting(newSorting) {
+            localStorage.sorting = newSorting
+        }
     },
     computed: {
         orderedServers: function () {
