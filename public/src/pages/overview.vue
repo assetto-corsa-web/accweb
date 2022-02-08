@@ -34,11 +34,11 @@
 
 <script>
 import axios from "axios";
-import {end, layout, selection, server} from "../components";
+import {end, layout, server} from "../components";
 import _ from "lodash";
 
 export default {
-    components: {layout, server, end, selection},
+    components: {layout, server, end},
     data() {
         return {
             stopAllRunning: false,
