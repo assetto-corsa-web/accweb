@@ -37,12 +37,13 @@ func (f *myFS) Open(name string) (http.File, error) {
 }
 
 func StartServer(config *cfg.Config, sM *server_manager.Service) {
-	r := gin.New()
-	_ = r.SetTrustedProxies(nil)
+	var r *gin.Engine
 
 	if !config.Dev {
-		r.Use(gin.Recovery())
 		gin.SetMode(gin.ReleaseMode)
+		r = gin.New()
+		r.Use(gin.Recovery())
+		_ = r.SetTrustedProxies(nil)
 	} else {
 		r = gin.Default()
 	}
