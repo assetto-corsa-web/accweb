@@ -34,13 +34,13 @@
 
 <script>
 import axios from "axios";
-import {layout, server, end, selection} from "../components";
+import {end, layout, selection, server} from "../components";
 import _ from "lodash";
 
 export default {
-	components: {layout, server, end, selection},
-	data() {
-		return {
+    components: {layout, server, end, selection},
+    data() {
+        return {
             stopAllRunning: false,
             servers: [],
             sortingOptions: {
@@ -50,11 +50,11 @@ export default {
                 "is_running": {label: "Is Running", field: "isRunning", order: "desc"},
             },
             sorting: "name"
-		};
-	},
-	mounted() {
-		this.refreshList();
-	},
+        };
+    },
+    mounted() {
+        this.refreshList();
+    },
     computed: {
         orderedServers: function () {
             const o = this.sortingOptions[this.sorting]
@@ -66,54 +66,54 @@ export default {
             }
         }
     },
-	methods: {
-		logout() {
-			this.$store.commit("logout");
-			this.$router.push("/login");
-		},
-		loadServer(refresh) {
-			let timeout = 0;
-
-			if(refresh) {
-				this.servers = [];
-				timeout = 100;
-			}
-
-			setTimeout(() => {
-				axios.get("/api/servers")
-				.then(r => {
-					this.servers = r.data;
-				})
-				.catch(e => {
-					this.$store.commit("toast", this.$t("receive_server_list_error"))
-				});
-			}, timeout);
-		},
-        stopAllServers() {
-          this.stopAllRunning = true;
-          axios.post("/api/servers/stop-all")
-              .then(d => {
-                this.loadServer(false);
-                this.stopAllRunning = false
-              })
-              .catch(e => {
-                this.$store.commit("toast", this.$t("stop_all_error"))
-                this.stopAllRunning = false
-              });
+    methods: {
+        logout() {
+            this.$store.commit("logout");
+            this.$router.push("/login");
         },
-		refreshList() {
-			this.loadServer();
-			setTimeout(() => {
-				this.refreshList();
-			}, 10000);
-		}
-	}
+        loadServer(refresh) {
+            let timeout = 0;
+
+            if (refresh) {
+                this.servers = [];
+                timeout = 100;
+            }
+
+            setTimeout(() => {
+                axios.get("/api/servers")
+                    .then(r => {
+                        this.servers = r.data;
+                    })
+                    .catch(e => {
+                        this.$store.commit("toast", this.$t("receive_server_list_error"))
+                    });
+            }, timeout);
+        },
+        stopAllServers() {
+            this.stopAllRunning = true;
+            axios.post("/api/servers/stop-all")
+                .then(d => {
+                    this.loadServer(false);
+                    this.stopAllRunning = false
+                })
+                .catch(e => {
+                    this.$store.commit("toast", this.$t("stop_all_error"))
+                    this.stopAllRunning = false
+                });
+        },
+        refreshList() {
+            this.loadServer();
+            setTimeout(() => {
+                this.refreshList();
+            }, 10000);
+        }
+    }
 }
 </script>
 
 <style scoped>
 .logout-btn .fas {
-	margin: 0;
+    margin: 0;
 }
 
 .sort select {
@@ -123,14 +123,14 @@ export default {
 
 <i18n>
 {
-	"en": {
-		"title": "Servers",
-		"add_new": "Add Server",
+    "en": {
+        "title": "Servers",
+        "add_new": "Add Server",
         "stop_all": "Stop All Servers",
-		"refresh": "Refresh",
-		"receive_server_list_error": "Error receiving server list.",
+        "refresh": "Refresh",
+        "receive_server_list_error": "Error receiving server list.",
         "stop_all_error": "Error while stopping all servers",
         "sorting": "Sorting: "
-	}
+    }
 }
 </i18n>
