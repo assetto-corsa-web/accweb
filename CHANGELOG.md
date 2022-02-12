@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.15.1
+* Sorting option on server list screen.
+* Fix release mode message when it's in production mode.
+
 ## 1.15.0
 * Reorganization of the codebase
 * added server instance auto start ( #74 and #119 )
