@@ -3,6 +3,7 @@
 ## 1.15.1
 * Sorting option on server list screen.
 * Fix release mode message when it's in production mode.
+* Update js libraries versions
 
 ## 1.15.0
 * Reorganization of the codebase
@@ -12,7 +13,7 @@
 * simplified file import ( #84 )
 
 ## 1.14.2
-* Update js libraries versionss
+* Update js libraries versions
 * Fix build script to force linux OS build
 
 ## 1.14.1
