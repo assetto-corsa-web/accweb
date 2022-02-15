@@ -125,14 +125,39 @@ To backup your files, copy and save the `config` directory as well as the `confi
 
 If you like to contribute, have questions or suggestions you can open tickets and pull requests on GitHub.
 
-All Go code must have been run through go fmt. The frontend and backend changes must be (manually) tested on your system. If you have issues running it locally open a ticket. You can use the `dev.sh` and `gen_rsa_keys.sh` scripts to start accweb on your computer (on Linux).
+All Go code must have been run through go fmt. The frontend and backend changes must be (manually) tested on your system. If you have issues running it locally open a ticket.
+
+To run the accweb locally is really simple, make sure that the attribute `dev` is set to true in your `config.yml` file.
+
+### Frontend development environment
+
+Our current frontend was built using Vue.js and can be found inside `public` directory.
+
+To run the watcher use the following command.
+
+```shell
+make run-dev-frontend
+```
+Then when you edit any js file, the watcher will detect and rebuild the js package.
+
+### Backend development environment
+
+ACCweb backend is running over golang and can be found inside `internal` directory.
+
+Use the following command to run the backend on your terminal.
+
+```shell
+make run-dev-backend
+```
+Keep in mind that you need to restart the command for see the changes that you made in the code working (or not :zany_face:) 
 
 ## Build release
 <a name="release" />
 
 To build a release, execute the `build_release.sh` script (on Linux) or follow the steps inside the script. You need to pass the build version as the first parameter. Example:
+To build a release, execute the `build_release.sh` script (on Linux) or follow the steps inside the script. You need to pass the build version as the first parameter. Example:
 
-```
+```shell
 ./build/build_release.sh 1.2.3
 ```
 

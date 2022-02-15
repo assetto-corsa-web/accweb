@@ -8,7 +8,9 @@ if [ -z $VERSION ]; then
 fi
 
 # create release directory
-DIR="releases/accweb_$VERSION"
+RDIR="releases"
+VDIR="accweb_$VERSION"
+DIR="$RDIR/$VDIR"
 mkdir -p "$DIR"
 
 # build frontend
@@ -34,7 +36,9 @@ chmod +x "$DIR/accweb.exe"
 chmod +x "$DIR/gen_rsa_keys.sh"
 chmod +x "$DIR/gen_rsa_keys.cmd"
 
-zip -r "$DIR.zip" "$DIR"
+cd "$RDIR"
+zip -r "$VDIR.zip" "$VDIR"
+cd ..
 rm -r $DIR
 
 echo "done"
