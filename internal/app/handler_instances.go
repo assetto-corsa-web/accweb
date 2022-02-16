@@ -220,3 +220,23 @@ func (h *Handler) ExportInstance(c *gin.Context) {
 	c.Writer.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"accweb_%s_cfg.zip\"", id))
 	c.Data(http.StatusOK, "application/zip", data)
 }
+
+type LiveServerInstancePayload struct {
+	ListServerItem
+	Live *instance.LiveState `json:"live"`
+}
+
+func (h *Handler) GetInstanceLiveState(c *gin.Context) {
+	id := c.Param("id")
+
+	srv, err := h.sm.GetServerByID(id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, nil)
+		return
+	}
+
+	c.JSON(http.StatusOK, LiveServerInstancePayload{
+		ListServerItem: buildListServerItem(srv),
+		Live:           srv.Live,
+	})
+}

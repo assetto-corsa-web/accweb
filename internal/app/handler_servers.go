@@ -3,6 +3,8 @@ package app
 import (
 	"net/http"
 
+	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
+
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
@@ -17,19 +19,23 @@ type ListServerItem struct {
 	Track     string `json:"track"`
 }
 
+func buildListServerItem(srv *instance.Instance) ListServerItem {
+	return ListServerItem{
+		ID:        srv.GetID(),
+		Name:      srv.AccCfg.Settings.ServerName,
+		IsRunning: srv.IsRunning(),
+		ProcessID: srv.GetProcessID(),
+		UdpPort:   srv.AccCfg.Configuration.UdpPort,
+		TcpPort:   srv.AccCfg.Configuration.TcpPort,
+		Track:     srv.AccCfg.Event.Track,
+	}
+}
+
 func (h *Handler) ListServers(c *gin.Context) {
 	list := h.sm.GetServers()
 	res := []ListServerItem{}
-	for id, srv := range list {
-		res = append(res, ListServerItem{
-			ID:        id,
-			Name:      srv.AccCfg.Settings.ServerName,
-			IsRunning: srv.IsRunning(),
-			ProcessID: srv.GetProcessID(),
-			UdpPort:   srv.AccCfg.Configuration.UdpPort,
-			TcpPort:   srv.AccCfg.Configuration.TcpPort,
-			Track:     srv.AccCfg.Event.Track,
-		})
+	for _, srv := range list {
+		res = append(res, buildListServerItem(srv))
 	}
 
 	c.JSON(http.StatusOK, res)

@@ -2,6 +2,7 @@ package instance
 
 import (
 	"archive/zip"
+	"bufio"
 	"bytes"
 	"errors"
 	"fmt"
@@ -11,6 +12,7 @@ import (
 	"path"
 	"path/filepath"
 	"runtime"
+	"strings"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -37,9 +39,11 @@ type Instance struct {
 	Path   string
 	Cfg    AccWebConfigJson
 	AccCfg AccConfigFiles
+	Live   *LiveState
 
-	cmd     *exec.Cmd
-	logFile *os.File
+	logParser *logParser
+	cmd       *exec.Cmd
+	logFile   *os.File
 }
 
 func (s *Instance) GetID() string {
@@ -51,65 +55,25 @@ func (s *Instance) Start() error {
 		return ErrServerCantBeRunning
 	}
 
-	if err := s.CheckDirectory(); err != nil {
+	if err := s.prepareInstanceDir(); err != nil {
 		return err
 	}
 
-	// Copy config files to cfg dir
-	if err := helper.CreateIfNotExists(path.Join(s.Path, accCfgDir), 0755); err != nil {
+	s.prepareCommandAndArgs()
+
+	if err := s.prepareCmdLogHandler(); err != nil {
 		return err
 	}
-
-	fileList := []string{
-		configurationJsonName,
-		settingsJsonName,
-		eventJsonName,
-		eventRulesJsonName,
-		entrylistJsonName,
-		bopJsonName,
-		assistRulesJsonName,
-	}
-
-	for _, name := range fileList {
-		if err := helper.Copy(path.Join(s.Path, name), path.Join(s.Path, accCfgDir, name)); err != nil {
-			return err
-		}
-	}
-
-	command := "." + string(filepath.Separator) + accDedicatedServerFile
-	var args []string
-
-	if runtime.GOOS == "linux" {
-		command = "wine"
-		args = []string{accDedicatedServerFile}
-	}
-
-	var err error
-	if s.logFile, err = s.createLogFile(); err != nil {
-		return err
-	}
-
-	cmd := exec.Command(command, args...)
-	cmd.Dir = s.Path
-	cmd.Stdout = s.logFile
-	cmd.Stderr = s.logFile
-
-	s.cmd = cmd
 
 	if err := s.cmd.Start(); err != nil {
 		return err
 	}
 
+	s.Live.setServerState(ServerStateStarting)
+
 	logrus.WithField("server_id", s.GetID()).WithField("pid", s.GetProcessID()).Info("acc server started")
 
-	go func(cmd *exec.Cmd, l io.Closer) {
-		// wait for shutdown or crash
-		if err := cmd.Wait(); err != nil {
-			logrus.WithError(err).Error("Error when server stopped")
-		}
-
-		_ = l.Close()
-	}(cmd, s.logFile)
+	go s.wait()
 
 	return nil
 }
@@ -124,6 +88,9 @@ func (s *Instance) Stop() error {
 			return err
 		}
 	}
+
+	s.Live.setServerState(ServerStateOffline)
+
 	logrus.WithField("server_id", s.GetID()).Info("acc server stopped")
 
 	return nil
@@ -288,4 +255,89 @@ func (s *Instance) createLogFile() (*os.File, error) {
 	filename := fmt.Sprintf("logs_%s_%s%s", time.Now().Format(logTimeFormat), s.GetID(), logExt)
 
 	return os.Create(path.Join(s.Path, logDir, filename))
+}
+
+func (s *Instance) prepareInstanceDir() error {
+	if err := s.CheckDirectory(); err != nil {
+		return err
+	}
+
+	// Copy config files to cfg dir
+	if err := helper.CreateIfNotExists(path.Join(s.Path, accCfgDir), 0755); err != nil {
+		return err
+	}
+
+	fileList := []string{
+		configurationJsonName,
+		settingsJsonName,
+		eventJsonName,
+		eventRulesJsonName,
+		entrylistJsonName,
+		bopJsonName,
+		assistRulesJsonName,
+	}
+
+	for _, name := range fileList {
+		if err := helper.Copy(path.Join(s.Path, name), path.Join(s.Path, accCfgDir, name)); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
+func (s *Instance) wait() {
+	// wait for shutdown or crash
+	if err := s.cmd.Wait(); err != nil {
+		logrus.WithError(err).Error("Error when server stopped")
+	}
+
+	_ = s.logFile.Close()
+}
+
+func (s *Instance) prepareCommandAndArgs() {
+	command := "." + string(filepath.Separator) + accDedicatedServerFile
+	var args []string
+
+	if runtime.GOOS == "linux" {
+		command = "wine"
+		args = []string{accDedicatedServerFile}
+	}
+
+	cmd := exec.Command(command, args...)
+	cmd.Dir = s.Path
+	s.cmd = cmd
+}
+
+func (s *Instance) prepareCmdLogHandler() error {
+	if s.cmd == nil {
+		return errors.New("instance command not prepared")
+	}
+
+	rc, err := s.cmd.StdoutPipe()
+	if err != nil {
+		return err
+	}
+
+	if s.logFile, err = s.createLogFile(); err != nil {
+		return err
+	}
+
+	s.logParser = newLogParser()
+
+	scanner := bufio.NewScanner(io.TeeReader(rc, s.logFile))
+
+	go func() {
+		for scanner.Scan() {
+			data := scanner.Text()
+			s.logParser.processLine(s.Live, strings.TrimSpace(data))
+			//logrus.Infof(" >>> %s", data)
+		}
+
+		if err := scanner.Err(); err != nil {
+			logrus.Infof("Error while reading server console: %v", err)
+		}
+	}()
+
+	return nil
 }
