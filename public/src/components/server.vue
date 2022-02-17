@@ -18,6 +18,12 @@
                 Track: {{server.track}}
                 <span v-if="!ro">&bull; Config Dir: {{server.id}}</span>
             </div>
+            <div class="info state" v-if="server.pid">
+                <b>State: </b>{{server.serverState}} &bull;
+                <b>Nr. Drivers: </b>{{server.nrClients}} &bull;
+                <b>Session Type: </b>{{server.sessionType}} &bull;
+                <b>Session Phase: </b>{{server.sessionPhase}}
+            </div>
         </div>
         <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>
         <button class="stop" v-on:click="stop" v-if="is_mod && !ro && server.pid">{{$t("stop_server")}}</button>
@@ -25,6 +31,16 @@
         <div class="offline" v-if="ro && !server.pid">Offline</div>
     </div>
 </template>
+
+<style>
+.state {
+    margin-top: 10px;
+}
+
+.state b {
+    color: #505050;
+}
+</style>
 
 <script>
 import axios from "axios";
