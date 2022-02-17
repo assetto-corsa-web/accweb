@@ -89,7 +89,7 @@ func (s *Instance) Stop() error {
 		}
 	}
 
-	s.Live.setServerState(ServerStateOffline)
+	s.Live.serverOffline()
 
 	logrus.WithField("server_id", s.GetID()).Info("acc server stopped")
 

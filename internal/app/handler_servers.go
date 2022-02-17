@@ -17,17 +17,26 @@ type ListServerItem struct {
 	UdpPort   int    `json:"udpPort"`
 	TcpPort   int    `json:"tcpPort"`
 	Track     string `json:"track"`
+
+	ServerState  instance.ServerState `json:"serverState"`
+	NrClients    int                  `json:"nrClients"`
+	SessionType  string               `json:"sessionType"`
+	SessionPhase string               `json:"sessionPhase"`
 }
 
 func buildListServerItem(srv *instance.Instance) ListServerItem {
 	return ListServerItem{
-		ID:        srv.GetID(),
-		Name:      srv.AccCfg.Settings.ServerName,
-		IsRunning: srv.IsRunning(),
-		ProcessID: srv.GetProcessID(),
-		UdpPort:   srv.AccCfg.Configuration.UdpPort,
-		TcpPort:   srv.AccCfg.Configuration.TcpPort,
-		Track:     srv.AccCfg.Event.Track,
+		ID:           srv.GetID(),
+		Name:         srv.AccCfg.Settings.ServerName,
+		IsRunning:    srv.IsRunning(),
+		ProcessID:    srv.GetProcessID(),
+		UdpPort:      srv.AccCfg.Configuration.UdpPort,
+		TcpPort:      srv.AccCfg.Configuration.TcpPort,
+		Track:        srv.AccCfg.Event.Track,
+		ServerState:  srv.Live.ServerState,
+		NrClients:    srv.Live.NrClients,
+		SessionType:  srv.Live.SessionType,
+		SessionPhase: srv.Live.SessionPhase,
 	}
 }
 
