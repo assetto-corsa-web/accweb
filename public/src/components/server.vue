@@ -21,8 +21,7 @@
             <div class="info state" v-if="server.pid">
                 <b>State: </b>{{server.serverState}} &bull;
                 <b>Nr. Drivers: </b>{{server.nrClients}} &bull;
-                <b>Session Type: </b>{{server.sessionType}} &bull;
-                <b>Session Phase: </b>{{server.sessionPhase}}
+                <b>Session: </b>{{server.sessionType}} ({{server.sessionPhase}})
             </div>
         </div>
         <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>

@@ -35,7 +35,7 @@ func (l *logParser) processLine(s *LiveState, line string) {
 	for _, matcher := range l.matchers {
 		matches := matcher.er.FindStringSubmatch(line)
 		if matches != nil {
-			handleLogger(s, matches)
+			logrus.WithField("line", matches[0]).WithField("attr", matches[1:]).Info("log handled")
 			matcher.handler(s, matches)
 		}
 	}
@@ -49,13 +49,13 @@ func makeLogMatchers() []*logMatcher {
 		newLogMatcher(`^(\d+) client\(s\) online$`, handleNrClientsOnline),
 		newLogMatcher(`^Track (\w+) was set and updated$`, handleTrack),
 		newLogMatcher(`^Detected sessionPhase <([A-Za-z ]+)> -> <([A-Za-z ]+)> \(([A-Za-z ]+)\)$`, handleSessionPhaseChanged),
-		newLogMatcher(`^Resetting race weekend$`, handleLogger),
+		newLogMatcher(`^Resetting race weekend$`, handleResettingRace),
 		newLogMatcher(`^New connection request: id (\d+) (.+) (S\d+) on car model (\d+)$`, handleNewConnection),
 		newLogMatcher(`^Creating new car connection: carId (\d+), carModel (\d+), raceNumber #(\d+)$`, handleNewCar),
 		newLogMatcher(`Removing dead connection (\d+)`, handleDeadConnection),
 		//newLogMatcher(`^car (\d+) has no driving connection anymore, will remove it$`, handleLogger),
 		newLogMatcher(`^Purging car_id (\d+)$`, handleCarPurge),
-		newLogMatcher(`^Lap carId (\d+), driverId (\d+), lapTime (\d+):(\d+):(\d+), timestampMS (\d+)\.\d+, flags: (\d+), S1 (\d+:\d+:\d+), S2 ((\d+:\d+:\d+)), S3 (\d+:\d+:\d+), fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?$`, handleLogger),
+		newLogMatcher(`^Lap carId (\d+), driverId (\d+), lapTime (\d+):(\d+):(\d+), timestampMS (\d+)\.\d+, flags: (\d+), S1 (\d+:\d+:\d+), S2 (\d+:\d+:\d+), S3 (\d+:\d+:\d+), fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?$`, handleLap),
 		newLogMatcher(`^\s*Car (\d+) Pos (\d+)$`, handleGridPosition),
 	}
 }
@@ -68,8 +68,39 @@ func toInt(str string) int {
 	return value
 }
 
-func handleLogger(_ *LiveState, p []string) {
-	logrus.WithField("line", p[0]).WithField("attr", p[1:]).Info("log handled")
+//             1            2          3  4  5                  6                       7
+// Lap carId 1005, driverId 0, lapTime 1:53:895, timestampMS 52610019.000000, flags: 8808693760,
+//       8            9           10           11           12     13      14      15
+// S1 0:36:280, S2 0:40:037, S3 0:37:577, fuel 40.000000, HasCut, InLap, OutLap, SessionOver
+func handleLap(l *LiveState, p []string) {
+	c := l.Cars[toInt(p[1])]
+	if c == nil {
+		return
+	}
+
+	d := c.Drivers[toInt(p[2])]
+	if d == nil {
+		return
+	}
+
+	lap := LapState{
+		CarID:       c.CarID,
+		DriverIndex: toInt(p[2]),
+		Car:         c,
+		Driver:      d,
+		LapTimeMS:   toInt(p[3])*60000 + toInt(p[4])*1000 + toInt(p[5]),
+		TimestampMS: toInt(p[6]),
+		Flags:       toInt(p[7]),
+		S1:          p[8],
+		S2:          p[9],
+		S3:          p[10],
+		Fuel:        toInt(p[11]),
+		HasCut:      p[12] != "",
+		InLap:       p[13] != "",
+		OutLap:      p[14] != "",
+		SessionOver: p[15] != "",
+	}
+	l.setLapState(&lap)
 }
 
 func handleServerStarting(s *LiveState, _ []string) {
@@ -120,4 +151,8 @@ func handleCarPurge(l *LiveState, p []string) {
 
 func handleGridPosition(l *LiveState, p []string) {
 	l.setCarPosition(toInt(p[1]), toInt(p[2]))
+}
+
+func handleResettingRace(l *LiveState, _ []string) {
+	l.advanceSession()
 }
