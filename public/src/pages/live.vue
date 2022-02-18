@@ -66,6 +66,8 @@ import axios from "axios";
 import {layout} from "../components";
 import _ from "lodash";
 
+let toId = null;
+
 export default {
     name: "live",
     components: {layout},
@@ -89,6 +91,12 @@ export default {
         this.id = parseInt(this.$route.query.id);
         this.refreshList();
     },
+    beforeDestroy() {
+        if (toId !== null) {
+            clearTimeout(toId);
+            toId = null;
+        }
+    },
     computed: {
         orderedCars: function () {
             return _.orderBy(
@@ -108,7 +116,7 @@ export default {
         },
         refreshList() {
             this.loadLive();
-            setTimeout(() => {
+            toId = setTimeout(() => {
                 this.refreshList();
             }, 10000);
         },

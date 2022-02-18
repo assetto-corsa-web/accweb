@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.16.0
+* Adding instance live view.
+* Fix bug on UI to prevent unnecessary backend requests.
+
 ## 1.15.1
 * Sorting option on server list screen.
 * Fix release mode message when it's in production mode.

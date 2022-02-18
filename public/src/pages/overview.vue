@@ -37,6 +37,8 @@ import axios from "axios";
 import {end, layout, server} from "../components";
 import _ from "lodash";
 
+let toId = null;
+
 export default {
     components: {layout, server, end},
     data() {
@@ -58,6 +60,12 @@ export default {
         }
 
         this.refreshList();
+    },
+    beforeDestroy() {
+        if (toId !== null) {
+            clearTimeout(toId);
+            toId = null;
+        }
     },
     watch: {
         sorting(newSorting) {
@@ -112,7 +120,7 @@ export default {
         },
         refreshList() {
             this.loadServer();
-            setTimeout(() => {
+            toId = setTimeout(() => {
                 this.refreshList();
             }, 10000);
         }
