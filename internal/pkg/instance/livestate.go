@@ -66,7 +66,7 @@ type LapState struct {
 	Driver      *DriverState `json:"-"`
 	LapTimeMS   int          `json:"lapTimeMS"`
 	TimestampMS int          `json:"timestampMS"`
-	Flags       string       `json:"flags"`
+	Flags       int          `json:"flags"`
 	S1          string       `json:"s1"`
 	S2          string       `json:"s2"`
 	S3          string       `json:"s3"`
@@ -220,7 +220,7 @@ func (l *LiveState) setLapState(lap *LapState) {
 	lap.Car.LastLapMS = lap.LapTimeMS
 	lap.Car.LastLapTimestampMS = lap.TimestampMS
 
-	if lap.Flags == "8808693760" && (lap.Car.BestLapMS <= 0 || lap.LapTimeMS < lap.Car.BestLapMS) {
+	if lap.Flags == 0 && (lap.Car.BestLapMS <= 0 || lap.LapTimeMS < lap.Car.BestLapMS) {
 		lap.Car.BestLapMS = lap.LapTimeMS
 	}
 

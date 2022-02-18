@@ -95,7 +95,7 @@ func handleLap(l *LiveState, p []string) {
 		Driver:      d,
 		LapTimeMS:   toInt(p[3])*60000 + toInt(p[4])*1000 + toInt(p[5]),
 		TimestampMS: toInt(p[6]),
-		Flags:       p[7],
+		Flags:       0,
 		S1:          p[8],
 		S2:          p[9],
 		S3:          p[10],
@@ -105,6 +105,23 @@ func handleLap(l *LiveState, p []string) {
 		OutLap:      p[14] != "",
 		SessionOver: p[15] != "",
 	}
+
+	if lap.HasCut {
+		lap.Flags += 1
+	}
+
+	if lap.OutLap {
+		lap.Flags += 4
+	}
+
+	if lap.InLap {
+		lap.Flags += 8
+	}
+
+	if lap.SessionOver {
+		lap.Flags += 1024
+	}
+
 	l.setLapState(&lap)
 }
 
