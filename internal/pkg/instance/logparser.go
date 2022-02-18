@@ -55,7 +55,7 @@ func makeLogMatchers() []*logMatcher {
 		newLogMatcher(`Removing dead connection (\d+)`, handleDeadConnection),
 		//newLogMatcher(`^car (\d+) has no driving connection anymore, will remove it$`, handleLogger),
 		newLogMatcher(`^Purging car_id (\d+)$`, handleCarPurge),
-		newLogMatcher(`^Lap carId (\d+), driverId (\d+), lapTime (\d+):(\d+):(\d+), timestampMS (\d+)\.\d+, flags: (\d+), S1 (\d+:\d+:\d+), S2 (\d+:\d+:\d+), S3 (\d+:\d+:\d+), fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?$`, handleLap),
+		newLogMatcher(`^Lap carId (\d+), driverId (\d+), lapTime (\d+):(\d+):(\d+), timestampMS (\d+)\.\d+, flags: (.*?), S1 (\d+:\d+:\d+), S2 (\d+:\d+:\d+), S3 (\d+:\d+:\d+), fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?$`, handleLap),
 		newLogMatcher(`^\s*Car (\d+) Pos (\d+)$`, handleGridPosition),
 	}
 }
@@ -78,19 +78,24 @@ func handleLap(l *LiveState, p []string) {
 		return
 	}
 
-	d := c.Drivers[toInt(p[2])]
+	dIdx := toInt(p[2])
+	if len(c.Drivers) < dIdx+1 {
+		return
+	}
+
+	d := c.Drivers[dIdx]
 	if d == nil {
 		return
 	}
 
 	lap := LapState{
 		CarID:       c.CarID,
-		DriverIndex: toInt(p[2]),
+		DriverIndex: dIdx,
 		Car:         c,
 		Driver:      d,
 		LapTimeMS:   toInt(p[3])*60000 + toInt(p[4])*1000 + toInt(p[5]),
 		TimestampMS: toInt(p[6]),
-		Flags:       toInt(p[7]),
+		Flags:       p[7],
 		S1:          p[8],
 		S2:          p[9],
 		S3:          p[10],

@@ -6,6 +6,7 @@
                 <span v-if="!ro">
                     <i class="fas fa-cog" v-on:click="edit" :title="$t('change_config')"></i>
                     <i class="fas fa-terminal" v-on:click="logs" :title="$t('view_logs')"></i>
+                    <i class="fas fa-tv" v-if="server.pid" v-on:click="live" :title="$t('view_live')"></i>
                     <i class="fas fa-copy" v-on:click="copyConfig" v-if="is_admin" :title="$t('copy_config')"></i>
                     <i class="fas fa-file-download" v-on:click="exportConfig" :title="$t('export_config')"></i>
                     <i class="fas fa-trash" v-on:click="deleteServer" v-if="is_admin" :title="$t('delete_server')"></i>
@@ -52,6 +53,9 @@ export default {
         },
         logs() {
             this.$router.push(`/logs?id=${this.server.id}`);
+        },
+        live() {
+            this.$router.push(`/live?id=${this.server.id}`);
         },
         copyConfig() {
             axios.post(`/api/instance/${this.server.id}/clone`)
@@ -108,6 +112,7 @@ export default {
         "stop_server": "Stop",
         "change_config": "Change config",
         "view_logs": "View logs",
+        "view_live": "View live",
         "copy_config": "Copy config",
         "export_config": "Export config",
         "delete_server": "Delete server",

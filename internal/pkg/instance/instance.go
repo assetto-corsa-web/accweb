@@ -44,6 +44,7 @@ type Instance struct {
 	logParser *logParser
 	cmd       *exec.Cmd
 	logFile   *os.File
+	cmdOut    io.ReadCloser
 }
 
 func (s *Instance) GetID() string {
@@ -292,6 +293,7 @@ func (s *Instance) wait() {
 		logrus.WithError(err).Error("Error when server stopped")
 	}
 
+	_ = s.cmdOut.Close()
 	_ = s.logFile.Close()
 }
 
@@ -314,7 +316,8 @@ func (s *Instance) prepareCmdLogHandler() error {
 		return errors.New("instance command not prepared")
 	}
 
-	rc, err := s.cmd.StdoutPipe()
+	var err error
+	s.cmdOut, err = s.cmd.StdoutPipe()
 	if err != nil {
 		return err
 	}
@@ -325,13 +328,12 @@ func (s *Instance) prepareCmdLogHandler() error {
 
 	s.logParser = newLogParser()
 
-	scanner := bufio.NewScanner(io.TeeReader(rc, s.logFile))
+	scanner := bufio.NewScanner(io.TeeReader(s.cmdOut, s.logFile))
 
 	go func() {
 		for scanner.Scan() {
 			data := scanner.Text()
 			s.logParser.processLine(s.Live, strings.TrimSpace(data))
-			//logrus.Infof(" >>> %s", data)
 		}
 
 		if err := scanner.Err(); err != nil {

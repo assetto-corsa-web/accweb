@@ -13,7 +13,7 @@ const (
 
 // DriverState contains the information about a single driver
 type DriverState struct {
-	ConnectionID int    `json:"connectionID"`
+	ConnectionID int    `json:"-"`
 	Name         string `json:"name"`
 	PlayerID     string `json:"playerID"`
 
@@ -34,6 +34,7 @@ type CarState struct {
 	BestLapMS          int            `json:"bestLapMS"`
 	LastLapMS          int            `json:"lastLapMS"`
 	LastLapTimestampMS int            `json:"lastLapTimestampMS"`
+	Laps               []*LapState    `json:"laps"`
 }
 
 func (c *CarState) removeDriver(d *DriverState) {
@@ -59,21 +60,21 @@ func (c *CarState) removeDriver(d *DriverState) {
 }
 
 type LapState struct {
-	CarID       int
-	DriverIndex int
-	Car         *CarState
-	Driver      *DriverState
-	LapTimeMS   int
-	TimestampMS int
-	Flags       int
-	S1          string
-	S2          string
-	S3          string
-	Fuel        int
-	HasCut      bool
-	InLap       bool
-	OutLap      bool
-	SessionOver bool
+	CarID       int          `json:"carID"`
+	DriverIndex int          `json:"driverIndex"`
+	Car         *CarState    `json:"-"`
+	Driver      *DriverState `json:"-"`
+	LapTimeMS   int          `json:"lapTimeMS"`
+	TimestampMS int          `json:"timestampMS"`
+	Flags       string       `json:"flags"`
+	S1          string       `json:"s1"`
+	S2          string       `json:"s2"`
+	S3          string       `json:"s3"`
+	Fuel        int          `json:"fuel"`
+	HasCut      bool         `json:"hasCut"`
+	InLap       bool         `json:"inLap"`
+	OutLap      bool         `json:"outLap"`
+	SessionOver bool         `json:"sessionOver"`
 }
 
 type LiveState struct {
@@ -109,8 +110,13 @@ func (l *LiveState) setTrack(t string) {
 }
 
 func (l *LiveState) setSessionState(t, p string) {
+	oldType := l.SessionType
 	l.SessionType = t
 	l.SessionPhase = p
+
+	if t != oldType {
+		l.advanceSession()
+	}
 }
 
 func (l *LiveState) addNewConnection(connID int, name, playerID string, carModel int) {
@@ -132,18 +138,13 @@ func (l *LiveState) advanceSession() {
 			car.BestLapMS = 0
 			car.LastLapMS = 0
 			car.LastLapTimestampMS = 0
+			car.Laps = []*LapState{}
 		}
 	}
 	l.recalculatePositions()
 }
 
 func (l *LiveState) addNewCar(carID, raceNumber, carModel int) {
-	c := CarState{
-		CarID:      carID,
-		RaceNumber: raceNumber,
-		CarModel:   carModel,
-	}
-
 	car := l.Cars[carID]
 
 	if car == nil {
@@ -151,18 +152,19 @@ func (l *LiveState) addNewCar(carID, raceNumber, carModel int) {
 			CarID:    carID,
 			Position: len(l.Cars) + 1,
 			Drivers:  []*DriverState{},
+			Laps:     []*LapState{},
 		}
 	}
 
-	car.CarModel = c.CarModel
-	car.RaceNumber = c.RaceNumber
+	car.CarModel = carModel
+	car.RaceNumber = raceNumber
 
 	for _, d := range l.connections {
 		if d.car != nil {
 			continue
 		}
 
-		if d.carModel != c.CarModel {
+		if d.carModel != carModel {
 			continue
 		}
 
@@ -218,9 +220,11 @@ func (l *LiveState) setLapState(lap *LapState) {
 	lap.Car.LastLapMS = lap.LapTimeMS
 	lap.Car.LastLapTimestampMS = lap.TimestampMS
 
-	if lap.Flags == 8808693760 && (lap.Car.BestLapMS <= 0 || lap.LapTimeMS < lap.Car.BestLapMS) {
+	if lap.Flags == "8808693760" && (lap.Car.BestLapMS <= 0 || lap.LapTimeMS < lap.Car.BestLapMS) {
 		lap.Car.BestLapMS = lap.LapTimeMS
 	}
+
+	lap.Car.Laps = append(lap.Car.Laps, lap)
 
 	l.recalculatePositions()
 }

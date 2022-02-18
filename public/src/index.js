@@ -15,15 +15,6 @@ Vue.use(VueI18n);
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
-// response error handler
-axios.interceptors.response.use(undefined, err => {
-	if(err.response.data.error){
-		console.log(err.response.data.error);
-	}
-	
-	return Promise.reject(err);
-});
-
 // token interceptor for every request
 axios.interceptors.request.use((config) => {
 	const token = window.localStorage.getItem("token");
@@ -43,6 +34,7 @@ const routes = [
 	{path: "/login", component: pages.Login},
 	{path: "/server", component: pages.Server, meta: {protected: true}},
 	{path: "/logs", component: pages.Logs, meta: {protected: true}},
+	{path: "/live", component: pages.Live, meta: {protected: true}},
 	{path: "/status", component: pages.Status},
 	{path: "*", component: pages.Error404}
 ];
@@ -51,7 +43,7 @@ let router = new VueRouter({routes, mode: "history"});
 
 // router interceptor to check token for protected pages
 router.beforeEach((to, from, next) => {
-	if(to.meta.protected){
+	if (to.meta.protected) {
 		axios.get("/api/token")
 		.then(() => {
 			next();
@@ -60,9 +52,22 @@ router.beforeEach((to, from, next) => {
 			next("/login");
 		});
 	}
-	else{
+	else {
 		next();
 	}
+});
+
+// response error handler
+axios.interceptors.response.use(undefined, err => {
+	if(err.response.data.message){
+		console.log(err.response.data);
+	}
+
+	// if (err.response.status === 401) {
+		// document.location.reload();
+	// }
+
+	return Promise.reject(err);
 });
 
 // i18n
