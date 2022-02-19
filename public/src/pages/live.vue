@@ -10,14 +10,14 @@
 
         <div class="content">
             <div class="header">
-                <div id="state">{{data.live.serverState}}</div>
-                <div id="track">{{data.track}}</div>
-                <div id="phase">{{data.live.sessionType}} ({{data.live.sessionPhase}})</div>
-                <div id="nrdrivers">{{data.live.nrClients}}</div>
+                <div id="state"><strong>Status:</strong> {{data.live.serverState}}</div>
+                <div id="track"><strong>Track:</strong> {{data.track}}</div>
+                <div id="phase"><strong>Phase:</strong> {{data.live.sessionType}} ({{data.live.sessionPhase}})</div>
+                <div id="nrdrivers"><strong>Drivers:</strong> {{data.live.nrClients}}</div>
             </div>
 
             <div class="body">
-                <table>
+                <table border="1" cellpadding="2">
                     <tr>
                         <th>Pos</th>
                         <th>Driver</th>
@@ -99,9 +99,7 @@ export default {
     },
     computed: {
         orderedCars: function () {
-            return _.orderBy(
-                _.filter(this.data.live.cars, 'currentDriver')
-                , "position")
+            return _.orderBy(this.data.live.cars, "position")
         },
     },
     methods: {
@@ -132,18 +130,24 @@ export default {
                 return "--";
             }
 
-            const m = Math.floor(ms / 60000);
-            const s = Math.floor((ms - (m * 60000)) / 1000)
-            const c = ms - (m * 60000) - (s * 1000)
+            const s = ms / 1000;
+            const m = s / 60;
 
-            return `${m}:${_.pad(s, 2, '0')}:${_.pad(c, 3, '0')}`;
+            return `${Math.floor(m % 60)}:${_.pad(Math.floor(s%60).toString(), 2, '0')}:${_.pad(Math.floor(ms%1000).toString(), 3, '0')}`;
         }
     }
 }
 </script>
 
 <style scoped>
+.header {
+    margin-bottom: 30px;
+}
 
+.header div {
+    display: inline;
+    margin-right: 20px;
+}
 </style>
 
 <i18n>

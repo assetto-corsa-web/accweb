@@ -15,6 +15,8 @@ import (
 	"strings"
 	"time"
 
+	"golang.org/x/text/encoding/charmap"
+
 	"github.com/sirupsen/logrus"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
@@ -328,7 +330,8 @@ func (s *Instance) prepareCmdLogHandler() error {
 
 	s.logParser = newLogParser()
 
-	scanner := bufio.NewScanner(io.TeeReader(s.cmdOut, s.logFile))
+	r := charmap.ISO8859_1.NewDecoder().Reader(io.TeeReader(s.cmdOut, s.logFile))
+	scanner := bufio.NewScanner(r)
 
 	go func() {
 		for scanner.Scan() {
