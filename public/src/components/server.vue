@@ -29,8 +29,8 @@
         </div>
         <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>
         <button class="stop" v-on:click="stop" v-if="is_mod && !ro && server.pid">{{$t("stop_server")}}</button>
-        <div class="online" v-if="ro && server.pid">Running</div>
-        <div class="offline" v-if="ro && !server.pid">Offline</div>
+        <div class="online" v-if="ro && server.pid">{{$t("running")}}</div>
+        <div class="offline" v-if="ro && !server.pid">{{$t("offline")}}</div>
     </div>
 </template>
 
@@ -127,6 +127,7 @@ export default {
         "delete_server_error": "Error deleting server configuration.",
         "start_server_error": "Error starting server, please check the logs.",
         "stop_server_error": "Error stopping server.",
+        "running": "Running",
         "not_detected": "Not detected",
 
         "offline": "Offline",
