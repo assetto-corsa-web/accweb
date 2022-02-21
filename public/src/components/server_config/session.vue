@@ -21,7 +21,7 @@ export default {
     	  return {
             types: [
                 {value: "P", label: "Practice"},
-                {value: "Q", label: "Qualify"},
+                {value: "Q", label: "Qualifying"},
                 {value: "R", label: "Race"}
             ]
     	  };
