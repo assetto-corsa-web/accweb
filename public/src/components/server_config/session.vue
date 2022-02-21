@@ -1,5 +1,6 @@
 <template>
     <div class="box">
+      <h2>{{$t(resolveSessionType(session.sessionType))}}</h2>
         <field type="number" :label="$t('hourofday_label')" v-model="session.hourOfDay"></field>
         <field type="number" :label="$t('dayofweekend_label')" v-model="session.dayOfWeekend"></field>
         <field type="number" :label="$t('timemultiplier_label')" v-model="session.timeMultiplier"></field>
@@ -24,6 +25,17 @@ export default {
                 {value: "R", label: "Race"}
     		]
     	};
+    },
+    methods: {
+        resolveSessionType(key) {
+          const type = this.types.find(type => type.value === key);
+
+          if (type === undefined) {
+            return key;
+          }
+
+          return type.label;
+        }
     }
 }
 </script>
@@ -36,7 +48,10 @@ export default {
         "timemultiplier_label": "Time multiplier",
         "type_label": "Type",
         "sessiondurationminutes_label": "Session duration minutes",
-        "remove_button": "Remove session"
+        "remove_button": "Remove session",
+        "Race": "Race",
+        "Qualifying": "Qualifying",
+        "Practice": "Practice"
     }
 }
 </i18n>
