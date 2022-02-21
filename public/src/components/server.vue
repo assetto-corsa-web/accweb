@@ -16,13 +16,13 @@
                 <span v-if="server.pid">PID: {{server.pid}}</span>
                 UDP: {{server.udpPort}} &bull;
                 TCP: {{server.tcpPort}} &bull;
-                Track: {{server.track}}
-                <span v-if="!ro">&bull; Config Dir: {{server.id}}</span>
+                {{$t("track")}}: {{server.track}}
+                <span v-if="!ro">&bull; {{$t("configuration_directory")}}: {{server.id}}</span>
             </div>
             <div class="info state" v-if="server.pid">
-                <b>State: </b>{{$t(server.serverState)}} &bull;
-                <b>Nr. Drivers: </b>{{formattedServerClientCount}} &bull;
-                <b>Session: </b>
+                <b>{{$t("state")}}: </b>{{$t(server.serverState)}} &bull;
+                <b>{{$t("number_of_drivers")}}: </b>{{formattedServerClientCount}} &bull;
+                <b>{{$t("session")}}: </b>
                 <span v-if="server.sessionType">{{server.sessionType}} ({{server.sessionPhase}})</span>
                 <span v-else>{{$t('not_detected')}}</span>
             </div>
@@ -127,7 +127,13 @@ export default {
         "delete_server_error": "Error deleting server configuration.",
         "start_server_error": "Error starting server, please check the logs.",
         "stop_server_error": "Error stopping server.",
+        "track": "Track",
+        "configuration_directory": "Config dir",
         "running": "Running",
+
+        "state": "State",
+        "number_of_drivers": "Drivers",
+        "session": "Session",
         "not_detected": "Not detected",
 
         "offline": "Offline",
