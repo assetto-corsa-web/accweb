@@ -1,6 +1,6 @@
 <template>
     <div class="box">
-      <h2>{{$t(resolveSessionType(session.sessionType))}}</h2>
+        <h2>{{$t(resolveSessionType(session.sessionType))}}</h2>
         <field type="number" :label="$t('hourofday_label')" v-model="session.hourOfDay"></field>
         <field type="number" :label="$t('dayofweekend_label')" v-model="session.dayOfWeekend"></field>
         <field type="number" :label="$t('timemultiplier_label')" v-model="session.timeMultiplier"></field>
@@ -18,23 +18,23 @@ export default {
     components: {field, selection},
     props: ["session"],
     data() {
-    	return {
-    		types: [
-    			{value: "P", label: "Practice"},
-    			{value: "Q", label: "Qualify"},
+    	  return {
+            types: [
+                {value: "P", label: "Practice"},
+                {value: "Q", label: "Qualify"},
                 {value: "R", label: "Race"}
-    		]
-    	};
+            ]
+    	  };
     },
     methods: {
         resolveSessionType(key) {
-          const type = this.types.find(type => type.value === key);
+            const type = this.types.find(type => type.value === key);
 
-          if (type === undefined) {
-            return key;
-          }
+            if (type === undefined) {
+                return key;
+            }
 
-          return type.label;
+            return type.label;
         }
     }
 }
