@@ -16,7 +16,11 @@
             :key="session.index"
             :session="session"
             v-on:remove="removeSession"></session>
-        <button v-on:click="addSession">{{$t("add_session_button")}}</button>
+        <div class="button-row">
+          <button v-on:click="addSession">{{$t("add_session_button")}}</button>
+          <button v-on:click="addDefaultSessions('Q/R')">{{$t("add_sessions_q_r_button")}}</button>
+          <button v-on:click="addDefaultSessions('P/Q/R')">{{$t("add_sessions_p_q_r_button")}}</button>
+        </div>
     </collapsible>
 </template>
 
@@ -140,6 +144,36 @@ export default {
             });
             this.sessionIndex++;
         },
+        addDefaultSessions(type) {
+          if (type === 'P/Q/R') {
+            this.sessions.push({
+              index: this.sessionIndex++,
+              hourOfDay: 9,
+              dayOfWeekend: 1,
+              timeMultiplier: 1,
+              sessionType: "P",
+              sessionDurationMinutes: 7
+            });
+          }
+
+          this.sessions.push({
+            index: this.sessionIndex++,
+            hourOfDay: 9,
+            dayOfWeekend: 2,
+            timeMultiplier: 1,
+            sessionType: "Q",
+            sessionDurationMinutes: 15
+          });
+
+          this.sessions.push({
+            index: this.sessionIndex++,
+            hourOfDay: 9,
+            dayOfWeekend: 3,
+            timeMultiplier: 1,
+            sessionType: "R",
+            sessionDurationMinutes: 30
+          });
+        },
         removeSession(index) {
             index = parseInt(index);
 
@@ -177,7 +211,9 @@ export default {
         "postraceseconds_label": "Post Race Seconds",
 		"simracerWeatherConditions_label": "Simracer Weather Conditions",
 		"isFixedConditionQualification_label": "Is Fixed Weather Conditions in Qualification",
-		"add_session_button": "Add session"
+		"add_session_button": "Add session",
+        "add_sessions_q_r_button": "Add sessions (Q/R)",
+        "add_sessions_p_q_r_button": "Add sessions (P/Q/R)"
     }
 }
 </i18n>
