@@ -20,9 +20,11 @@
                 <span v-if="!ro">&bull; Config Dir: {{server.id}}</span>
             </div>
             <div class="info state" v-if="server.pid">
-                <b>State: </b>{{server.serverState}} &bull;
-                <b>Nr. Drivers: </b>{{server.nrClients}} &bull;
-                <b>Session: </b>{{server.sessionType}} ({{server.sessionPhase}})
+                <b>State: </b>{{$t(server.serverState)}} &bull;
+                <b>Nr. Drivers: </b>{{formattedServerClientCount}} &bull;
+                <b>Session: </b>
+                <span v-if="server.sessionType">{{server.sessionType}} ({{server.sessionPhase}})</span>
+                <span v-else>{{$t('not_detected')}}</span>
             </div>
         </div>
         <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>
@@ -47,6 +49,11 @@ import axios from "axios";
 
 export default {
     props: ["server", "ro"],
+    computed: {
+        formattedServerClientCount: function () {
+            return this.server.serverState === 'not_registered' ? '-' : this.server.nrClients;
+        }
+    },
     methods: {
         edit() {
             this.$router.push(`/server?id=${this.server.id}`);
@@ -119,7 +126,13 @@ export default {
         "copy_server_error": "Error copying server configuration.",
         "delete_server_error": "Error deleting server configuration.",
         "start_server_error": "Error starting server, please check the logs.",
-        "stop_server_error": "Error stopping server."
+        "stop_server_error": "Error stopping server.",
+        "not_detected": "Not detected",
+
+        "offline": "Offline",
+        "starting": "Starting",
+        "not_registered": "Waiting for events",
+        "online": "Online"
     }
 }
 </i18n>
