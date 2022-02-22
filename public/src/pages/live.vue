@@ -12,13 +12,16 @@
             <div class="header">
                 <div id="state"><strong>Status:</strong> {{data.live.serverState}}</div>
                 <div id="track"><strong>Track:</strong> {{data.track}}</div>
-                <div id="phase"><strong>Phase:</strong> {{data.live.sessionType}} ({{data.live.sessionPhase}})</div>
+                <div id="phase">
+                    <strong>Phase:</strong> {{data.live.sessionType}} ({{data.live.sessionPhase}})
+                    <span v-if="data.live.sessionRemaining > 0">[{{data.live.sessionRemaining}} min]</span>
+                </div>
                 <div id="nrdrivers"><strong>Drivers:</strong> {{data.live.nrClients}}</div>
             </div>
 
             <div class="body">
-                <table border="1" cellpadding="2">
-                    <tr>
+                <table id="leaderboard" border="1" cellpadding="2">
+                    <tr class="tbl-header">
                         <th>Pos</th>
                         <th>Driver</th>
                         <th>Nr</th>
@@ -37,7 +40,10 @@
                         <th>SessionOver</th>
                     </tr>
 
-                    <tr v-for="(car, carId) in orderedCars" :key="carId">
+                    <tr v-for="(car, carId) in orderedCars" :key="carId"
+                        v-on:click="setShowLaps(car.carID)"
+                        class="tbl-row"
+                    >
                         <td>{{carId+1}}</td>
                         <td>{{car.currentDriver ? car.currentDriver.name : car.carID}}</td>
                         <td>{{car.raceNumber}}</td>
@@ -56,6 +62,34 @@
                         <td>{{lastLap(car.laps).sessionOver}}</td>
                     </tr>
                 </table>
+
+                <div id="laps" v-if="showLaps">
+                    <h3>Car {{showLapsCar.raceNumber}} Laps</h3>
+
+                    <table border="1" cellpadding="2">
+                        <tr class="tbl-header">
+                            <th>Nr</th>
+                            <th>Driver</th>
+                            <th>Fuel</th>
+                            <th>Last Lap</th>
+                            <th>S1</th>
+                            <th>S2</th>
+                            <th>S3</th>
+                            <th>Flags</th>
+                        </tr>
+
+                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i" class="tbl-row">
+                            <td>{{i+1}}</td>
+                            <td>{{showLapsCar.drivers[lap.driverIndex] ? showLapsCar.drivers[lap.driverIndex].name : '--'}}</td>
+                            <td>{{lap.fuel}}</td>
+                            <td>{{msToTime(lap.lapTimeMS)}}</td>
+                            <td>{{lap.s1}}</td>
+                            <td>{{lap.s2}}</td>
+                            <td>{{lap.s3}}</td>
+                            <td>{{lap.hasCut}} {{lap.inLap}} {{lap.outLap}} {{lap.sessionOver}}</td>
+                        </tr>
+                    </table>
+                </div>
             </div>
         </div>
     </layout>
@@ -74,6 +108,8 @@ export default {
     data() {
         return {
             id: 0,
+            showLaps: null,
+            showLapsCar: null,
             data: {
                 name: "",
                 track: "",
@@ -82,6 +118,7 @@ export default {
                     nrClients: 0,
                     sessionType: "",
                     sessionPhase: "",
+                    sessionRemaining: 0,
                     cars: {},
                 }
             },
@@ -107,6 +144,10 @@ export default {
             axios.get(`/api/instance/${this.id}/live`)
                 .then(r => {
                     this.data = r.data;
+
+                    if (this.showLaps !== null && this.data.live.cars[this.showLaps] === undefined) {
+                        this.showLaps = null;
+                    }
                 })
                 .catch(e => {
                     this.$store.commit("toast", this.$t("load_live_error"))
@@ -117,6 +158,10 @@ export default {
             toId = setTimeout(() => {
                 this.refreshList();
             }, 10000);
+        },
+        setShowLaps(carID) {
+            this.showLaps = carID;
+            this.showLapsCar = this.data.live.cars[carID]
         },
         lastLap(laps) {
             if (laps === undefined || laps.length === 0) {
@@ -147,6 +192,11 @@ export default {
 .header div {
     display: inline;
     margin-right: 20px;
+}
+
+#leaderboard .tbl-row:hover {
+    background-color: #304363;
+    cursor: pointer;
 }
 </style>
 

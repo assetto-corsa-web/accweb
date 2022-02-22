@@ -35,7 +35,7 @@ func (l *logParser) processLine(s *LiveState, line string) {
 	for _, matcher := range l.matchers {
 		matches := matcher.er.FindStringSubmatch(line)
 		if matches != nil {
-			logrus.WithField("line", matches[0]).WithField("attr", matches[1:]).Info("log handled")
+			logrus.WithField("line", matches[0]).WithField("attr", matches[1:]).Debug("log handled")
 			matcher.handler(s, matches)
 		}
 	}
@@ -55,8 +55,9 @@ func makeLogMatchers() []*logMatcher {
 		newLogMatcher(`Removing dead connection (\d+)`, handleDeadConnection),
 		//newLogMatcher(`^car (\d+) has no driving connection anymore, will remove it$`, handleLogger),
 		newLogMatcher(`^Purging car_id (\d+)$`, handleCarPurge),
-		newLogMatcher(`^Lap carId (\d+), driverId (\d+), lapTime (\d+):(\d+):(\d+), timestampMS (\d+)\.\d+, flags: (.*?), S1 (\d+:\d+:\d+), S2 (\d+:\d+:\d+), S3 (\d+:\d+:\d+), fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?$`, handleLap),
+		newLogMatcher(`Lap carId (\d+), driverId (\d+), lapTime (\d+):(\d+):(\d+), timestampMS (\d+)\.\d+, flags: (.*?)(, S1 (\d+:\d+:\d+))?(, S2 (\d+:\d+:\d+))?(, S3 (\d+:\d+:\d+)), fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?`, handleLap),
 		newLogMatcher(`^\s*Car (\d+) Pos (\d+)$`, handleGridPosition),
+		newLogMatcher(`^Updated leaderboard for \d+ clients \(([A-Za-z ]+)-<([-A-Za-z ]+)> (\d+) min\)$`, handleSessionUpdate),
 	}
 }
 
@@ -70,21 +71,24 @@ func toInt(str string) int {
 
 //             1            2          3  4  5                  6                       7
 // Lap carId 1005, driverId 0, lapTime 1:53:895, timestampMS 52610019.000000, flags: 8808693760,
-//       8            9           10           11           12     13      14      15
+//       9            11           13           14          15     16      17      18
 // S1 0:36:280, S2 0:40:037, S3 0:37:577, fuel 40.000000, HasCut, InLap, OutLap, SessionOver
 func handleLap(l *LiveState, p []string) {
 	c := l.Cars[toInt(p[1])]
 	if c == nil {
+		logrus.Warn("car not found")
 		return
 	}
 
 	dIdx := toInt(p[2])
 	if len(c.Drivers) < dIdx+1 {
+		logrus.Warn("driver not found")
 		return
 	}
 
 	d := c.Drivers[dIdx]
 	if d == nil {
+		logrus.Warn("driver index not found")
 		return
 	}
 
@@ -96,14 +100,14 @@ func handleLap(l *LiveState, p []string) {
 		LapTimeMS:   toInt(p[3])*60000 + toInt(p[4])*1000 + toInt(p[5]),
 		TimestampMS: toInt(p[6]),
 		Flags:       0,
-		S1:          p[8],
-		S2:          p[9],
-		S3:          p[10],
-		Fuel:        toInt(p[11]),
-		HasCut:      p[12] != "",
-		InLap:       p[13] != "",
-		OutLap:      p[14] != "",
-		SessionOver: p[15] != "",
+		S1:          p[9],
+		S2:          p[11],
+		S3:          p[13],
+		Fuel:        toInt(p[14]),
+		HasCut:      p[15] != "",
+		InLap:       p[16] != "",
+		OutLap:      p[17] != "",
+		SessionOver: p[18] != "",
 	}
 
 	if lap.HasCut {
@@ -120,6 +124,10 @@ func handleLap(l *LiveState, p []string) {
 
 	if lap.SessionOver {
 		lap.Flags += 1024
+	}
+
+	if lap.Flags > 0 {
+		logrus.WithField("line", p[0]).WithField("attr", p[1:]).Debug("log handled")
 	}
 
 	l.setLapState(&lap)
@@ -146,13 +154,11 @@ func handleTrack(s *LiveState, p []string) {
 }
 
 func handleSessionPhaseChanged(s *LiveState, p []string) {
-	old := s.SessionType
+	s.setSessionState(p[3], p[2], 0)
+}
 
-	s.setSessionState(p[3], p[2])
-
-	if old != p[3] {
-		s.advanceSession()
-	}
+func handleSessionUpdate(s *LiveState, p []string) {
+	s.setSessionState(p[1], p[2], toInt(p[3]))
 }
 
 func handleNewConnection(l *LiveState, p []string) {

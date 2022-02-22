@@ -3,8 +3,6 @@ secrets/
 config/
 accweb_*/
 releases/
-main
-main.exe
 accweb
 accweb.exe
 config.yml

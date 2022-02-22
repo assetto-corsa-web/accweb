@@ -78,12 +78,13 @@ type LapState struct {
 }
 
 type LiveState struct {
-	ServerState  ServerState       `json:"serverState"`
-	NrClients    int               `json:"nrClients"`
-	Track        string            `json:"track"`
-	SessionType  string            `json:"sessionType"`
-	SessionPhase string            `json:"sessionPhase"`
-	Cars         map[int]*CarState `json:"cars"`
+	ServerState      ServerState       `json:"serverState"`
+	NrClients        int               `json:"nrClients"`
+	Track            string            `json:"track"`
+	SessionType      string            `json:"sessionType"`
+	SessionPhase     string            `json:"sessionPhase"`
+	SessionRemaining int               `json:"sessionRemaining"`
+	Cars             map[int]*CarState `json:"cars"`
 
 	// drivers waiting to be assigned to a car, key: ConnectionID
 	connections map[int]*DriverState
@@ -109,10 +110,11 @@ func (l *LiveState) setTrack(t string) {
 	l.Track = t
 }
 
-func (l *LiveState) setSessionState(t, p string) {
+func (l *LiveState) setSessionState(t, p string, r int) {
 	oldType := l.SessionType
 	l.SessionType = t
 	l.SessionPhase = p
+	l.SessionRemaining = r
 
 	if t != oldType {
 		l.advanceSession()
@@ -204,7 +206,7 @@ func (l *LiveState) serverOffline() {
 	}
 	l.setNrClients(0)
 	l.setTrack("")
-	l.setSessionState("", "")
+	l.setSessionState("", "", 0)
 	l.connections = map[int]*DriverState{}
 }
 
