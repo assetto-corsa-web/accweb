@@ -3,10 +3,12 @@
         <div>
             <div class="name">
                 {{server.name}}
+                <span v-if="is_ro">
+                    <i class="fas fa-tv" v-if="server.pid" v-on:click="live" :title="$t('view_live')"></i>
+                </span>
                 <span v-if="!ro">
                     <i class="fas fa-cog" v-on:click="edit" :title="$t('change_config')"></i>
                     <i class="fas fa-terminal" v-on:click="logs" :title="$t('view_logs')"></i>
-                    <i class="fas fa-tv" v-if="server.pid" v-on:click="live" :title="$t('view_live')"></i>
                     <i class="fas fa-copy" v-on:click="copyConfig" v-if="is_admin" :title="$t('copy_config')"></i>
                     <i class="fas fa-file-download" v-on:click="exportConfig" :title="$t('export_config')"></i>
                     <i class="fas fa-trash" v-on:click="deleteServer" v-if="is_admin" :title="$t('delete_server')"></i>
