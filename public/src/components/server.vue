@@ -16,19 +16,21 @@
                 <span v-if="server.pid">PID: {{server.pid}}</span>
                 UDP: {{server.udpPort}} &bull;
                 TCP: {{server.tcpPort}} &bull;
-                Track: {{server.track}}
-                <span v-if="!ro">&bull; Config Dir: {{server.id}}</span>
+                {{$t("track")}}: {{server.track}}
+                <span v-if="!ro">&bull; {{$t("configuration_directory")}}: {{server.id}}</span>
             </div>
             <div class="info state" v-if="server.pid">
-                <b>State: </b>{{server.serverState}} &bull;
-                <b>Nr. Drivers: </b>{{server.nrClients}} &bull;
-                <b>Session: </b>{{server.sessionType}} ({{server.sessionPhase}})
+                <b>{{$t("state")}}: </b>{{$t(server.serverState)}} &bull;
+                <b>{{$t("number_of_drivers")}}: </b>{{formattedServerClientCount}} &bull;
+                <b>{{$t("session")}}: </b>
+                <span v-if="server.sessionType">{{server.sessionType}} ({{server.sessionPhase}})</span>
+                <span v-else>{{$t('not_detected')}}</span>
             </div>
         </div>
         <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>
         <button class="stop" v-on:click="stop" v-if="is_mod && !ro && server.pid">{{$t("stop_server")}}</button>
-        <div class="online" v-if="ro && server.pid">Running</div>
-        <div class="offline" v-if="ro && !server.pid">Offline</div>
+        <div class="online" v-if="ro && server.pid">{{$t("running")}}</div>
+        <div class="offline" v-if="ro && !server.pid">{{$t("offline")}}</div>
     </div>
 </template>
 
@@ -47,6 +49,11 @@ import axios from "axios";
 
 export default {
     props: ["server", "ro"],
+    computed: {
+        formattedServerClientCount: function () {
+            return this.server.serverState === 'not_registered' ? '-' : this.server.nrClients;
+        }
+    },
     methods: {
         edit() {
             this.$router.push(`/server?id=${this.server.id}`);
@@ -119,7 +126,20 @@ export default {
         "copy_server_error": "Error copying server configuration.",
         "delete_server_error": "Error deleting server configuration.",
         "start_server_error": "Error starting server, please check the logs.",
-        "stop_server_error": "Error stopping server."
+        "stop_server_error": "Error stopping server.",
+        "track": "Track",
+        "configuration_directory": "Config dir",
+        "running": "Running",
+
+        "state": "State",
+        "number_of_drivers": "Drivers",
+        "session": "Session",
+        "not_detected": "Not detected",
+
+        "offline": "Offline",
+        "starting": "Starting",
+        "not_registered": "Waiting for events",
+        "online": "Online"
     }
 }
 </i18n>
