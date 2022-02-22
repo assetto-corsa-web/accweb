@@ -34,15 +34,11 @@
                         <th>S2</th>
                         <th>S3</th>
                         <th>Flags</th>
-                        <th>Cut</th>
-                        <th>InLap</th>
-                        <th>OutLap</th>
-                        <th>SessionOver</th>
                     </tr>
 
                     <tr v-for="(car, carId) in orderedCars" :key="carId"
                         v-on:click="setShowLaps(car.carID)"
-                        class="tbl-row"
+                        v-bind:class="{'tbl-row': true, active: car.carID === showLaps}"
                     >
                         <td>{{carId+1}}</td>
                         <td>{{car.currentDriver ? car.currentDriver.name : car.carID}}</td>
@@ -51,15 +47,16 @@
                         <td>{{car.nrLaps}}</td>
                         <td>{{car.fuel}}</td>
                         <td>{{msToTime(car.bestLapMS)}}</td>
-                        <td>{{msToTime(car.lastLapMS)}}</td>
-                        <td>{{lastLap(car.laps).s1}}</td>
-                        <td>{{lastLap(car.laps).s2}}</td>
-                        <td>{{lastLap(car.laps).s3}}</td>
-                        <td>{{lastLap(car.laps).flags}}</td>
-                        <td>{{lastLap(car.laps).hasCut}}</td>
-                        <td>{{lastLap(car.laps).inLap}}</td>
-                        <td>{{lastLap(car.laps).outLap}}</td>
-                        <td>{{lastLap(car.laps).sessionOver}}</td>
+                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{msToTime(car.lastLapMS)}}</td>
+                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{lastLap(car.laps).s1}}</td>
+                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{lastLap(car.laps).s2}}</td>
+                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{lastLap(car.laps).s3}}</td>
+                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">
+                            <i class="fas fa-cut" v-if="lastLap(car.laps).hasCut" title="Has Cut"></i>
+                            <i class="fas fa-sign-in-alt" v-if="lastLap(car.laps).inLap" title="In Lap"></i>
+                            <i class="fas fa-sign-out-alt" v-if="lastLap(car.laps).outLap" title="Out Lap"></i>
+                            <i class="fas fa-flag-checkered" v-if="lastLap(car.laps).sessionOver" title="Session is Over"></i>
+                        </td>
                     </tr>
                 </table>
 
@@ -71,14 +68,15 @@
                             <th>Nr</th>
                             <th>Driver</th>
                             <th>Fuel</th>
-                            <th>Last Lap</th>
+                            <th>Lap Time</th>
                             <th>S1</th>
                             <th>S2</th>
                             <th>S3</th>
+                            <th>Delta</th>
                             <th>Flags</th>
                         </tr>
 
-                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i" class="tbl-row">
+                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i" v-bind:class="{ 'tbl-row': true, invalid: lap.flags>0}">
                             <td>{{i+1}}</td>
                             <td>{{showLapsCar.drivers[lap.driverIndex] ? showLapsCar.drivers[lap.driverIndex].name : '--'}}</td>
                             <td>{{lap.fuel}}</td>
@@ -86,7 +84,13 @@
                             <td>{{lap.s1}}</td>
                             <td>{{lap.s2}}</td>
                             <td>{{lap.s3}}</td>
-                            <td>{{lap.hasCut}} {{lap.inLap}} {{lap.outLap}} {{lap.sessionOver}}</td>
+                            <td align="right">{{calcDelta(i)}}</td>
+                            <td>
+                                <i class="fas fa-cut" v-if="lap.hasCut" title="Has Cut"></i>
+                                <i class="fas fa-sign-in-alt" v-if="lap.inLap" title="In Lap"></i>
+                                <i class="fas fa-sign-out-alt" v-if="lap.outLap" title="Out Lap"></i>
+                                <i class="fas fa-flag-checkered" v-if="lap.sessionOver" title="Session is Over"></i>
+                            </td>
                         </tr>
                     </table>
                 </div>
@@ -138,6 +142,12 @@ export default {
         orderedCars: function () {
             return _.orderBy(this.data.live.cars, "position")
         },
+        classObject: function(lap) {
+            return {
+                "tbl-row": true,
+                "lap-invalid": lap.flags > 0
+            }
+        }
     },
     methods: {
         loadLive() {
@@ -175,10 +185,27 @@ export default {
                 return "--";
             }
 
+            let sign = "";
+
+            if (ms < 0) {
+                sign = "-";
+                ms = Math.abs(ms);
+            }
+
             const s = ms / 1000;
             const m = s / 60;
 
-            return `${Math.floor(m % 60)}:${_.pad(Math.floor(s%60).toString(), 2, '0')}:${_.pad(Math.floor(ms%1000).toString(), 3, '0')}`;
+            return `${sign}${Math.floor(m % 60)}:${_.padStart(Math.floor(s%60).toString(), 2, '0')}:${_.padStart(Math.floor(ms%1000).toString(), 3, '0')}`;
+        },
+        calcDelta(idx) {
+            if (this.showLapsCar.laps.length < 2 || idx < 1) {
+                return "";
+            }
+
+            const prevLap = this.showLapsCar.laps[idx-1].lapTimeMS;
+            const curLap = this.showLapsCar.laps[idx].lapTimeMS;
+
+            return this.msToTime(prevLap-curLap);
         }
     }
 }
@@ -197,6 +224,13 @@ export default {
 #leaderboard .tbl-row:hover {
     background-color: #304363;
     cursor: pointer;
+}
+.active {
+    background-color: #27344c;
+}
+
+.invalid {
+    background-color: #a35050;
 }
 </style>
 
