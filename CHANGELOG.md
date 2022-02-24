@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.16.0
+* Adding instance live view.
+* Fix bug on UI to prevent unnecessary backend requests.
+* Add utility buttons to server configuration for event session to add Q/R and P/Q/R automagically.
+
 ## 1.15.1
 * Sorting option on server list screen.
 * Fix release mode message when it's in production mode.

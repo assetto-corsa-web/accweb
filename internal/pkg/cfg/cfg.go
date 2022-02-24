@@ -7,6 +7,13 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+var logLevel = map[string]logrus.Level{
+	"debug": logrus.DebugLevel,
+	"info":  logrus.InfoLevel,
+	"warn":  logrus.WarnLevel,
+	"error": logrus.ErrorLevel,
+}
+
 type Config struct {
 	Dev        bool      `yaml:"dev"`
 	Loglevel   string    `yaml:"loglevel"`
@@ -52,6 +59,10 @@ func Load(file string) *Config {
 	var config Config
 	if err := yaml.Unmarshal(data, &config); err != nil {
 		logrus.WithError(err).Fatal("Error loading parsing configuration file")
+	}
+
+	if l, ok := logLevel[config.Loglevel]; ok {
+		logrus.SetLevel(l)
 	}
 
 	return &config

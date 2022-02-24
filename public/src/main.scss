@@ -277,6 +277,10 @@ a {
 	text-decoration: none;
 }
 
+.button-row>button {
+	margin-right: 8px;
+}
+
 @media (max-device-width: 700px) {
 	.main {
 		margin: 0 auto;

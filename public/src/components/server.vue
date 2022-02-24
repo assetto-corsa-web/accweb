@@ -3,6 +3,9 @@
         <div>
             <div class="name">
                 {{server.name}}
+                <span v-if="is_ro">
+                    <i class="fas fa-tv" v-if="server.pid" v-on:click="live" :title="$t('view_live')"></i>
+                </span>
                 <span v-if="!ro">
                     <i class="fas fa-cog" v-on:click="edit" :title="$t('change_config')"></i>
                     <i class="fas fa-terminal" v-on:click="logs" :title="$t('view_logs')"></i>
@@ -15,28 +18,53 @@
                 <span v-if="server.pid">PID: {{server.pid}}</span>
                 UDP: {{server.udpPort}} &bull;
                 TCP: {{server.tcpPort}} &bull;
-                Track: {{server.track}}
-                <span v-if="!ro">&bull; Config Dir: {{server.id}}</span>
+                {{$t("track")}}: {{server.track}}
+                <span v-if="!ro">&bull; {{$t("configuration_directory")}}: {{server.id}}</span>
+            </div>
+            <div class="info state" v-if="server.pid">
+                <b>{{$t("state")}}: </b>{{$t(server.serverState)}} &bull;
+                <b>{{$t("number_of_drivers")}}: </b>{{formattedServerClientCount}} &bull;
+                <b>{{$t("session")}}: </b>
+                <span v-if="server.sessionType">{{server.sessionType}} ({{server.sessionPhase}})</span>
+                <span v-else>{{$t('not_detected')}}</span>
             </div>
         </div>
         <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>
         <button class="stop" v-on:click="stop" v-if="is_mod && !ro && server.pid">{{$t("stop_server")}}</button>
-        <div class="online" v-if="ro && server.pid">Running</div>
-        <div class="offline" v-if="ro && !server.pid">Offline</div>
+        <div class="online" v-if="ro && server.pid">{{$t("running")}}</div>
+        <div class="offline" v-if="ro && !server.pid">{{$t("offline")}}</div>
     </div>
 </template>
+
+<style>
+.state {
+    margin-top: 10px;
+}
+
+.state b {
+    color: #505050;
+}
+</style>
 
 <script>
 import axios from "axios";
 
 export default {
     props: ["server", "ro"],
+    computed: {
+        formattedServerClientCount: function () {
+            return this.server.serverState === 'not_registered' ? '-' : this.server.nrClients;
+        }
+    },
     methods: {
         edit() {
             this.$router.push(`/server?id=${this.server.id}`);
         },
         logs() {
             this.$router.push(`/logs?id=${this.server.id}`);
+        },
+        live() {
+            this.$router.push(`/live?id=${this.server.id}`);
         },
         copyConfig() {
             axios.post(`/api/instance/${this.server.id}/clone`)
@@ -93,13 +121,27 @@ export default {
         "stop_server": "Stop",
         "change_config": "Change config",
         "view_logs": "View logs",
+        "view_live": "View live",
         "copy_config": "Copy config",
         "export_config": "Export config",
         "delete_server": "Delete server",
         "copy_server_error": "Error copying server configuration.",
         "delete_server_error": "Error deleting server configuration.",
         "start_server_error": "Error starting server, please check the logs.",
-        "stop_server_error": "Error stopping server."
+        "stop_server_error": "Error stopping server.",
+        "track": "Track",
+        "configuration_directory": "Config dir",
+        "running": "Running",
+
+        "state": "State",
+        "number_of_drivers": "Drivers",
+        "session": "Session",
+        "not_detected": "Not detected",
+
+        "offline": "Offline",
+        "starting": "Starting",
+        "not_registered": "Waiting for events",
+        "online": "Online"
     }
 }
 </i18n>
