@@ -75,7 +75,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/instance/:id": {
+        "/instance/{id}": {
             "get": {
                 "security": [
                     {
@@ -215,7 +215,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/instance/:id/clone": {
+        "/instance/{id}/clone": {
             "post": {
                 "security": [
                     {
@@ -258,7 +258,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/instance/:id/export": {
+        "/instance/{id}/export": {
             "get": {
                 "security": [
                     {
@@ -304,7 +304,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/instance/:id/live": {
+        "/instance/{id}/live": {
             "get": {
                 "security": [
                     {
@@ -344,7 +344,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/instance/:id/logs": {
+        "/instance/{id}/logs": {
             "get": {
                 "security": [
                     {
@@ -390,7 +390,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/instance/:id/start": {
+        "/instance/{id}/start": {
             "post": {
                 "security": [
                     {
@@ -439,7 +439,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/instance/:id/stop": {
+        "/instance/{id}/stop": {
             "post": {
                 "security": [
                     {

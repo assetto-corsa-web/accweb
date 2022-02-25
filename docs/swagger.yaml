@@ -469,7 +469,7 @@ paths:
       summary: Create new acc instance information
       tags:
       - instances
-  /instance/:id:
+  /instance/{id}:
     delete:
       consumes:
       - application/json
@@ -558,7 +558,7 @@ paths:
       summary: Saves acc instance information
       tags:
       - instances
-  /instance/:id/clone:
+  /instance/{id}/clone:
     post:
       consumes:
       - application/json
@@ -585,7 +585,7 @@ paths:
       summary: Clones acc instance
       tags:
       - instances
-  /instance/:id/export:
+  /instance/{id}/export:
     get:
       consumes:
       - application/json
@@ -614,7 +614,7 @@ paths:
       summary: Get acc instance configuration files
       tags:
       - instances
-  /instance/:id/live:
+  /instance/{id}/live:
     get:
       consumes:
       - application/json
@@ -639,7 +639,7 @@ paths:
       summary: Get acc instance live information
       tags:
       - instances
-  /instance/:id/logs:
+  /instance/{id}/logs:
     get:
       consumes:
       - application/json
@@ -668,7 +668,7 @@ paths:
       summary: Get acc instance logs
       tags:
       - instances
-  /instance/:id/start:
+  /instance/{id}/start:
     post:
       consumes:
       - application/json
@@ -699,7 +699,7 @@ paths:
       summary: Starts acc instance
       tags:
       - instances
-  /instance/:id/stop:
+  /instance/{id}/stop:
     post:
       consumes:
       - application/json

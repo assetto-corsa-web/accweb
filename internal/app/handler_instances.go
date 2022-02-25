@@ -44,7 +44,7 @@ func NewInstancePayload(srv *instance.Instance) InstancePayload {
 // @Success 200 {object} InstancePayload
 // @Failure 404
 // @Param id path int true "Instance ID"
-// @Router /instance/:id [get]
+// @Router /instance/{id} [get]
 // @Security JWT
 func (h *Handler) GetInstance(c *gin.Context) {
 	id := c.Param("id")
@@ -106,7 +106,7 @@ func (h *Handler) NewInstance(c *gin.Context) {
 // @Failure 500 {object} AccWError
 // @Param id path int true "Instance ID"
 // @Param instance body SaveInstancePayload true "Instance data"
-// @Router /instance/:id [post]
+// @Router /instance/{id} [post]
 // @Security JWT
 func (h *Handler) SaveInstance(c *gin.Context) {
 	id := c.Param("id")
@@ -158,7 +158,7 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 // @Failure 404
 // @Failure 500 {object} AccWError
 // @Param id path int true "Instance ID"
-// @Router /instance/:id [delete]
+// @Router /instance/{id} [delete]
 // @Security JWT
 func (h *Handler) DeleteInstance(c *gin.Context) {
 	id := c.Param("id")
@@ -187,7 +187,7 @@ func (h *Handler) DeleteInstance(c *gin.Context) {
 // @Failure 400 {object} AccWError
 // @Failure 500 {object} AccWError
 // @Param id path int true "Instance ID"
-// @Router /instance/:id/start [post]
+// @Router /instance/{id}/start [post]
 // @Security JWT
 func (h *Handler) StartInstance(c *gin.Context) {
 	id := c.Param("id")
@@ -221,7 +221,7 @@ func (h *Handler) StartInstance(c *gin.Context) {
 // @Failure 400 {object} AccWError
 // @Failure 500 {object} AccWError
 // @Param id path int true "Instance ID"
-// @Router /instance/:id/stop [post]
+// @Router /instance/{id}/stop [post]
 // @Security JWT
 func (h *Handler) StopInstance(c *gin.Context) {
 	id := c.Param("id")
@@ -250,7 +250,7 @@ func (h *Handler) StopInstance(c *gin.Context) {
 // @Failure 404
 // @Failure 500 {object} AccWError
 // @Param id path int true "Instance ID"
-// @Router /instance/:id/clone [post]
+// @Router /instance/{id}/clone [post]
 // @Security JWT
 func (h *Handler) CloneInstance(c *gin.Context) {
 	id := c.Param("id")
@@ -286,7 +286,7 @@ type accWebInstanceLogs struct {
 // @Failure 404
 // @Failure 500 {object} AccWError
 // @Param id path int true "Instance ID"
-// @Router /instance/:id/logs [get]
+// @Router /instance/{id}/logs [get]
 // @Security JWT
 func (h *Handler) GetInstanceLogs(c *gin.Context) {
 	id := c.Param("id")
@@ -316,7 +316,7 @@ func (h *Handler) GetInstanceLogs(c *gin.Context) {
 // @Failure 404
 // @Failure 500 {object} AccWError
 // @Param id path int true "Instance ID"
-// @Router /instance/:id/export [get]
+// @Router /instance/{id}/export [get]
 // @Security JWT
 func (h *Handler) ExportInstance(c *gin.Context) {
 	id := c.Param("id")
@@ -351,7 +351,7 @@ type LiveServerInstancePayload struct {
 // @Success 200 {object} LiveServerInstancePayload
 // @Failure 404
 // @Param id path int true "Instance ID"
-// @Router /instance/:id/live [get]
+// @Router /instance/{id}/live [get]
 // @Security JWT
 func (h *Handler) GetInstanceLiveState(c *gin.Context) {
 	id := c.Param("id")

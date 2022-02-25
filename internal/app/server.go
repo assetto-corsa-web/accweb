@@ -5,6 +5,7 @@ import (
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
+	"github.com/assetto-corsa-web/accweb/docs"
 	_ "github.com/assetto-corsa-web/accweb/docs"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
@@ -89,6 +90,8 @@ func StartServer(config *cfg.Config, sM *server_manager.Service) {
 
 	if config.Dev {
 		// Swagger
+		docs.SwaggerInfo.Version = "1.16"
+		docs.SwaggerInfo.Host = config.Webserver.Host
 		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	}
 

@@ -67,7 +67,7 @@
                 }
             }
         },
-        "/instance/:id": {
+        "/instance/{id}": {
             "get": {
                 "security": [
                     {
@@ -207,7 +207,7 @@
                 }
             }
         },
-        "/instance/:id/clone": {
+        "/instance/{id}/clone": {
             "post": {
                 "security": [
                     {
@@ -250,7 +250,7 @@
                 }
             }
         },
-        "/instance/:id/export": {
+        "/instance/{id}/export": {
             "get": {
                 "security": [
                     {
@@ -296,7 +296,7 @@
                 }
             }
         },
-        "/instance/:id/live": {
+        "/instance/{id}/live": {
             "get": {
                 "security": [
                     {
@@ -336,7 +336,7 @@
                 }
             }
         },
-        "/instance/:id/logs": {
+        "/instance/{id}/logs": {
             "get": {
                 "security": [
                     {
@@ -382,7 +382,7 @@
                 }
             }
         },
-        "/instance/:id/start": {
+        "/instance/{id}/start": {
             "post": {
                 "security": [
                     {
@@ -431,7 +431,7 @@
                 }
             }
         },
-        "/instance/:id/stop": {
+        "/instance/{id}/stop": {
             "post": {
                 "security": [
                     {
