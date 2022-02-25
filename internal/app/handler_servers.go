@@ -40,6 +40,16 @@ func buildListServerItem(srv *instance.Instance) ListServerItem {
 	}
 }
 
+// ListServers Handle the list all ACC dedicated servers
+// @Summary List all ACC dedicated servers
+// @Schemes
+// @Description List all ACC dedicated servers
+// @Tags servers
+// @Accept json
+// @Produce json
+// @Success 200 {object} []ListServerItem{}
+// @Router /servers [get]
+// @Security JWT
 func (h *Handler) ListServers(c *gin.Context) {
 	list := h.sm.GetServers()
 	res := []ListServerItem{}
@@ -50,6 +60,16 @@ func (h *Handler) ListServers(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// StopAllServers Stops all running ACC dedicated servers
+// @Summary Stops all running ACC dedicated servers
+// @Schemes
+// @Description Stops all running ACC dedicated servers
+// @Tags servers
+// @Accept json
+// @Produce json
+// @Success 200
+// @Router /servers/stop-all [post]
+// @Security JWT
 func (h *Handler) StopAllServers(c *gin.Context) {
 	if err := h.sm.StopAll(); err != nil {
 		logrus.WithError(err).Error("failed during stoping all servers")

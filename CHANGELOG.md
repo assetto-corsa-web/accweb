@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.16.1
+* Building releases assets automatically.
+* Generating Swagger docummention of accweb api.
+
 ## 1.16.0
 * Adding instance live view.
 * Fix bug on UI to prevent unnecessary backend requests.

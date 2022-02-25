@@ -35,6 +35,17 @@ func NewInstancePayload(srv *instance.Instance) InstancePayload {
 	}
 }
 
+// GetInstance Get instance information
+// @Summary Get acc instance information
+// @Description Get acc instance information
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200 {object} InstancePayload
+// @Failure 404
+// @Param id path int true "Instance ID"
+// @Router /instance/:id [get]
+// @Security JWT
 func (h *Handler) GetInstance(c *gin.Context) {
 	id := c.Param("id")
 
@@ -53,16 +64,28 @@ func (h *Handler) GetInstance(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+// NewInstance Create new instance information
+// @Summary Create new acc instance information
+// @Description Create new acc instance information
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200 {object} InstancePayload
+// @Failure 400  {object} AccWError
+// @Failure 500  {object} AccWError
+// @Param instance body SaveInstancePayload true "Instance data"
+// @Router /instance [post]
+// @Security JWT
 func (h *Handler) NewInstance(c *gin.Context) {
 	var json SaveInstancePayload
 	if err := c.ShouldBindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
 		return
 	}
 
 	srv, err := h.sm.Create(&json.Acc, json.AccWeb.AutoStart)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
 	}
 
@@ -71,6 +94,20 @@ func (h *Handler) NewInstance(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
+// SaveInstance Saves instance information
+// @Summary Saves acc instance information
+// @Description Saves acc instance information
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200 {object} InstancePayload
+// @Failure 404
+// @Failure 400 {object} AccWError
+// @Failure 500 {object} AccWError
+// @Param id path int true "Instance ID"
+// @Param instance body SaveInstancePayload true "Instance data"
+// @Router /instance/:id [post]
+// @Security JWT
 func (h *Handler) SaveInstance(c *gin.Context) {
 	id := c.Param("id")
 
@@ -82,7 +119,7 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 
 	var json SaveInstancePayload
 	if err := c.ShouldBindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
 		return
 	}
 
@@ -102,7 +139,7 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 	srv.Cfg.AutoStart = json.AccWeb.AutoStart
 
 	if err := srv.Save(); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
 	}
 
@@ -111,6 +148,18 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 	c.JSON(http.StatusCreated, res)
 }
 
+// DeleteInstance Delete instance
+// @Summary Delete acc instance
+// @Description Delete acc instance
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200
+// @Failure 404
+// @Failure 500 {object} AccWError
+// @Param id path int true "Instance ID"
+// @Router /instance/:id [delete]
+// @Security JWT
 func (h *Handler) DeleteInstance(c *gin.Context) {
 	id := c.Param("id")
 
@@ -120,13 +169,26 @@ func (h *Handler) DeleteInstance(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusInternalServerError, nil)
+		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
 	}
 
 	c.JSON(http.StatusOK, nil)
 }
 
+// StartInstance Starts acc instance
+// @Summary Starts acc instance
+// @Description Starts acc instance
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200
+// @Failure 404
+// @Failure 400 {object} AccWError
+// @Failure 500 {object} AccWError
+// @Param id path int true "Instance ID"
+// @Router /instance/:id/start [post]
+// @Security JWT
 func (h *Handler) StartInstance(c *gin.Context) {
 	id := c.Param("id")
 
@@ -138,16 +200,29 @@ func (h *Handler) StartInstance(c *gin.Context) {
 
 	if err := srv.Start(); err != nil {
 		if errors.Is(err, instance.ErrServerCantBeRunning) {
-			c.JSON(http.StatusBadRequest, nil)
+			c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
 			return
 		}
-		c.JSON(http.StatusInternalServerError, nil)
+		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
 	}
 
 	c.JSON(http.StatusOK, nil)
 }
 
+// StopInstance Stops acc instance
+// @Summary Stops acc instance
+// @Description Stops acc instance
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200
+// @Failure 404
+// @Failure 400 {object} AccWError
+// @Failure 500 {object} AccWError
+// @Param id path int true "Instance ID"
+// @Router /instance/:id/stop [post]
+// @Security JWT
 func (h *Handler) StopInstance(c *gin.Context) {
 	id := c.Param("id")
 
@@ -158,13 +233,25 @@ func (h *Handler) StopInstance(c *gin.Context) {
 	}
 
 	if err := srv.Stop(); err != nil {
-		c.JSON(http.StatusInternalServerError, nil)
+		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
 	}
 
 	c.JSON(http.StatusOK, nil)
 }
 
+// CloneInstance Clones acc instance
+// @Summary Clones acc instance
+// @Description Clones acc instance
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200
+// @Failure 404
+// @Failure 500 {object} AccWError
+// @Param id path int true "Instance ID"
+// @Router /instance/:id/clone [post]
+// @Security JWT
 func (h *Handler) CloneInstance(c *gin.Context) {
 	id := c.Param("id")
 
@@ -175,7 +262,7 @@ func (h *Handler) CloneInstance(c *gin.Context) {
 			return
 		}
 
-		c.JSON(http.StatusInternalServerError, nil)
+		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
 	}
 
@@ -184,6 +271,23 @@ func (h *Handler) CloneInstance(c *gin.Context) {
 	c.JSON(http.StatusOK, res)
 }
 
+type accWebInstanceLogs struct {
+	ID   string `json:"id"`
+	Logs string `json:"logs"`
+}
+
+// GetInstanceLogs Get acc instance logs
+// @Summary Get acc instance logs
+// @Description Get acc instance logs
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200 {object} accWebInstanceLogs
+// @Failure 404
+// @Failure 500 {object} AccWError
+// @Param id path int true "Instance ID"
+// @Router /instance/:id/logs [get]
+// @Security JWT
 func (h *Handler) GetInstanceLogs(c *gin.Context) {
 	id := c.Param("id")
 
@@ -195,13 +299,25 @@ func (h *Handler) GetInstanceLogs(c *gin.Context) {
 
 	data, err := srv.GetAccServerLogs()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, nil)
+		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"id": srv.GetID(), "logs": string(data)})
+	c.JSON(http.StatusOK, accWebInstanceLogs{ID: srv.GetID(), Logs: string(data)})
 }
 
+// ExportInstance Get acc instance configuration files
+// @Summary Get acc instance configuration files
+// @Description Get acc instance configuration files
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200 string filedata "Zip file with all cofiguration files"
+// @Failure 404
+// @Failure 500 {object} AccWError
+// @Param id path int true "Instance ID"
+// @Router /instance/:id/export [get]
+// @Security JWT
 func (h *Handler) ExportInstance(c *gin.Context) {
 	id := c.Param("id")
 
@@ -213,7 +329,7 @@ func (h *Handler) ExportInstance(c *gin.Context) {
 
 	data, err := srv.ExportConfigFilesToZip()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, nil)
+		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
 	}
 
@@ -226,6 +342,17 @@ type LiveServerInstancePayload struct {
 	Live *instance.LiveState `json:"live"`
 }
 
+// GetInstanceLiveState Get acc instance live information
+// @Summary Get acc instance live information
+// @Description Get acc instance live information
+// @Tags instances
+// @Accept json
+// @Produce json
+// @Success 200 {object} LiveServerInstancePayload
+// @Failure 404
+// @Param id path int true "Instance ID"
+// @Router /instance/:id/live [get]
+// @Security JWT
 func (h *Handler) GetInstanceLiveState(c *gin.Context) {
 	id := c.Param("id")
 

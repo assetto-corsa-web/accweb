@@ -1,0 +1,772 @@
+basePath: /api
+definitions:
+  app.AccWError:
+    properties:
+      error:
+        type: string
+    type: object
+  app.InstancePayload:
+    properties:
+      acc:
+        $ref: '#/definitions/instance.AccConfigFiles'
+      accWeb:
+        $ref: '#/definitions/instance.AccWebConfigJson'
+      id:
+        type: string
+      is_running:
+        type: boolean
+      path:
+        type: string
+      pid:
+        type: integer
+    type: object
+  app.ListServerItem:
+    properties:
+      id:
+        type: string
+      isRunning:
+        type: boolean
+      name:
+        type: string
+      nrClients:
+        type: integer
+      pid:
+        type: integer
+      serverState:
+        type: string
+      sessionPhase:
+        type: string
+      sessionType:
+        type: string
+      tcpPort:
+        type: integer
+      track:
+        type: string
+      udpPort:
+        type: integer
+    type: object
+  app.LiveServerInstancePayload:
+    properties:
+      id:
+        type: string
+      isRunning:
+        type: boolean
+      live:
+        $ref: '#/definitions/instance.LiveState'
+      name:
+        type: string
+      nrClients:
+        type: integer
+      pid:
+        type: integer
+      serverState:
+        type: string
+      sessionPhase:
+        type: string
+      sessionType:
+        type: string
+      tcpPort:
+        type: integer
+      track:
+        type: string
+      udpPort:
+        type: integer
+    type: object
+  app.SaveInstancePayload:
+    properties:
+      acc:
+        $ref: '#/definitions/instance.AccConfigFiles'
+      accWeb:
+        $ref: '#/definitions/instance.AccWebConfigJson'
+    type: object
+  app.accWebInstanceLogs:
+    properties:
+      id:
+        type: string
+      logs:
+        type: string
+    type: object
+  instance.AccConfigFiles:
+    properties:
+      assistRules:
+        $ref: '#/definitions/instance.AssistRulesJson'
+      bop:
+        $ref: '#/definitions/instance.BopJson'
+      configuration:
+        $ref: '#/definitions/instance.ConfigurationJson'
+      entrylist:
+        $ref: '#/definitions/instance.EntrylistJson'
+      event:
+        $ref: '#/definitions/instance.EventJson'
+      eventRules:
+        $ref: '#/definitions/instance.EventRulesJson'
+      settings:
+        $ref: '#/definitions/instance.SettingsJson'
+    type: object
+  instance.AccWebConfigJson:
+    properties:
+      autoStart:
+        type: boolean
+      createdAt:
+        type: string
+      id:
+        type: string
+      md5Sum:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+  instance.AssistRulesJson:
+    properties:
+      configVersion:
+        type: integer
+      disableAutoClutch:
+        type: integer
+      disableAutoEngineStart:
+        type: integer
+      disableAutoGear:
+        type: integer
+      disableAutoLights:
+        type: integer
+      disableAutoPitLimiter:
+        type: integer
+      disableAutoWiper:
+        type: integer
+      disableAutosteer:
+        type: integer
+      disableIdealLine:
+        type: integer
+      stabilityControlLevelMax:
+        type: integer
+    type: object
+  instance.BopJson:
+    properties:
+      configVersion:
+        type: integer
+      entries:
+        items:
+          $ref: '#/definitions/instance.BopSettings'
+        type: array
+    type: object
+  instance.BopSettings:
+    properties:
+      ballastKg:
+        type: integer
+      carModel:
+        type: integer
+      restrictor:
+        type: integer
+      track:
+        type: string
+    type: object
+  instance.CarState:
+    properties:
+      bestLapMS:
+        type: integer
+      carID:
+        type: integer
+      carModel:
+        type: integer
+      currentDriver:
+        $ref: '#/definitions/instance.DriverState'
+      drivers:
+        items:
+          $ref: '#/definitions/instance.DriverState'
+        type: array
+      fuel:
+        type: integer
+      laps:
+        items:
+          $ref: '#/definitions/instance.LapState'
+        type: array
+      lastLapMS:
+        type: integer
+      lastLapTimestampMS:
+        type: integer
+      nrLaps:
+        type: integer
+      position:
+        type: integer
+      raceNumber:
+        type: integer
+    type: object
+  instance.ConfigurationJson:
+    properties:
+      configVersion:
+        type: integer
+      lanDiscovery:
+        type: integer
+      maxConnections:
+        type: integer
+      registerToLobby:
+        type: integer
+      tcpPort:
+        type: integer
+      udpPort:
+        type: integer
+    type: object
+  instance.DriverSettings:
+    properties:
+      driverCategory:
+        type: integer
+      firstName:
+        type: string
+      lastName:
+        type: string
+      playerID:
+        type: string
+      shortName:
+        type: string
+    type: object
+  instance.DriverState:
+    properties:
+      name:
+        type: string
+      playerID:
+        type: string
+    type: object
+  instance.EntrySettings:
+    properties:
+      ballastKg:
+        type: integer
+      customCar:
+        type: string
+      defaultGridPosition:
+        type: integer
+      drivers:
+        items:
+          $ref: '#/definitions/instance.DriverSettings'
+        type: array
+      forcedCarModel:
+        type: integer
+      isServerAdmin:
+        type: integer
+      overrideCarModelForCustomCar:
+        type: integer
+      overrideDriverInfo:
+        type: integer
+      raceNumber:
+        type: integer
+      restrictor:
+        type: integer
+    type: object
+  instance.EntrylistJson:
+    properties:
+      configVersion:
+        type: integer
+      entries:
+        items:
+          $ref: '#/definitions/instance.EntrySettings'
+        type: array
+      forceEntryList:
+        type: integer
+    type: object
+  instance.EventJson:
+    properties:
+      ambientTemp:
+        type: integer
+      cloudLevel:
+        type: number
+      configVersion:
+        type: integer
+      isFixedConditionQualification:
+        type: integer
+      postQualySeconds:
+        type: integer
+      postRaceSeconds:
+        type: integer
+      preRaceWaitingTimeSeconds:
+        type: integer
+      rain:
+        type: number
+      sessionOverTimeSeconds:
+        type: integer
+      sessions:
+        items:
+          $ref: '#/definitions/instance.SessionSettings'
+        type: array
+      simracerWeatherConditions:
+        type: integer
+      track:
+        type: string
+      trackTemp:
+        type: integer
+      weatherRandomness:
+        type: integer
+    type: object
+  instance.EventRulesJson:
+    properties:
+      configVersion:
+        type: integer
+      driverStintTimeSec:
+        type: integer
+      isMandatoryPitstopRefuellingRequired:
+        type: boolean
+      isMandatoryPitstopSwapDriverRequired:
+        type: boolean
+      isMandatoryPitstopTyreChangeRequired:
+        type: boolean
+      isRefuellingAllowedInRace:
+        type: boolean
+      isRefuellingTimeFixed:
+        type: boolean
+      mandatoryPitstopCount:
+        type: integer
+      maxDriversCount:
+        type: integer
+      maxTotalDrivingTime:
+        type: integer
+      pitWindowLengthSec:
+        type: integer
+      qualifyStandingType:
+        type: integer
+      tyreSetCount:
+        type: integer
+    type: object
+  instance.LapState:
+    properties:
+      carID:
+        type: integer
+      driverIndex:
+        type: integer
+      flags:
+        type: integer
+      fuel:
+        type: integer
+      hasCut:
+        type: boolean
+      inLap:
+        type: boolean
+      lapTimeMS:
+        type: integer
+      outLap:
+        type: boolean
+      s1:
+        type: string
+      s2:
+        type: string
+      s3:
+        type: string
+      sessionOver:
+        type: boolean
+      timestampMS:
+        type: integer
+    type: object
+  instance.LiveState:
+    properties:
+      cars:
+        additionalProperties:
+          $ref: '#/definitions/instance.CarState'
+        type: object
+      nrClients:
+        type: integer
+      serverState:
+        type: string
+      sessionPhase:
+        type: string
+      sessionRemaining:
+        type: integer
+      sessionType:
+        type: string
+      track:
+        type: string
+    type: object
+  instance.SessionSettings:
+    properties:
+      dayOfWeekend:
+        type: integer
+      hourOfDay:
+        type: integer
+      sessionDurationMinutes:
+        type: integer
+      sessionType:
+        type: string
+      timeMultiplier:
+        type: integer
+    type: object
+  instance.SettingsJson:
+    properties:
+      adminPassword:
+        type: string
+      allowAutoDQ:
+        type: integer
+      carGroup:
+        type: string
+      centralEntryListPath:
+        type: string
+      configVersion:
+        type: integer
+      dumpEntryList:
+        type: integer
+      dumpLeaderboards:
+        type: integer
+      formationLapType:
+        type: integer
+      ignorePrematureDisconnects:
+        type: integer
+      isRaceLocked:
+        type: integer
+      maxCarSlots:
+        type: integer
+      password:
+        type: string
+      racecraftRatingRequirement:
+        type: integer
+      randomizeTrackWhenEmpty:
+        type: integer
+      safetyRatingRequirement:
+        type: integer
+      serverName:
+        type: string
+      shortFormationLap:
+        type: integer
+      spectatorPassword:
+        type: string
+      trackMedalsRequirement:
+        type: integer
+    type: object
+host: localhost:8080
+info:
+  contact:
+    name: ACCWeb project
+    url: https://github.com/assetto-corsa-web/accweb
+  description: Accweb api documentation
+  license:
+    name: MIT
+    url: https://github.com/assetto-corsa-web/accweb/blob/master/LICENSE
+  termsOfService: http://swagger.io/terms/
+  title: ACCWeb API documentation
+paths:
+  /instance:
+    post:
+      consumes:
+      - application/json
+      description: Create new acc instance information
+      parameters:
+      - description: Instance data
+        in: body
+        name: instance
+        required: true
+        schema:
+          $ref: '#/definitions/app.SaveInstancePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.InstancePayload'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/app.AccWError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.AccWError'
+      security:
+      - JWT: []
+      summary: Create new acc instance information
+      tags:
+      - instances
+  /instance/:id:
+    delete:
+      consumes:
+      - application/json
+      description: Delete acc instance
+      parameters:
+      - description: Instance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "404":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.AccWError'
+      security:
+      - JWT: []
+      summary: Delete acc instance
+      tags:
+      - instances
+    get:
+      consumes:
+      - application/json
+      description: Get acc instance information
+      parameters:
+      - description: Instance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.InstancePayload'
+        "404":
+          description: ""
+      security:
+      - JWT: []
+      summary: Get acc instance information
+      tags:
+      - instances
+    post:
+      consumes:
+      - application/json
+      description: Saves acc instance information
+      parameters:
+      - description: Instance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Instance data
+        in: body
+        name: instance
+        required: true
+        schema:
+          $ref: '#/definitions/app.SaveInstancePayload'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.InstancePayload'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/app.AccWError'
+        "404":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.AccWError'
+      security:
+      - JWT: []
+      summary: Saves acc instance information
+      tags:
+      - instances
+  /instance/:id/clone:
+    post:
+      consumes:
+      - application/json
+      description: Clones acc instance
+      parameters:
+      - description: Instance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "404":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.AccWError'
+      security:
+      - JWT: []
+      summary: Clones acc instance
+      tags:
+      - instances
+  /instance/:id/export:
+    get:
+      consumes:
+      - application/json
+      description: Get acc instance configuration files
+      parameters:
+      - description: Instance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Zip file with all cofiguration files
+          schema:
+            type: string
+        "404":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.AccWError'
+      security:
+      - JWT: []
+      summary: Get acc instance configuration files
+      tags:
+      - instances
+  /instance/:id/live:
+    get:
+      consumes:
+      - application/json
+      description: Get acc instance live information
+      parameters:
+      - description: Instance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.LiveServerInstancePayload'
+        "404":
+          description: ""
+      security:
+      - JWT: []
+      summary: Get acc instance live information
+      tags:
+      - instances
+  /instance/:id/logs:
+    get:
+      consumes:
+      - application/json
+      description: Get acc instance logs
+      parameters:
+      - description: Instance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/app.accWebInstanceLogs'
+        "404":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.AccWError'
+      security:
+      - JWT: []
+      summary: Get acc instance logs
+      tags:
+      - instances
+  /instance/:id/start:
+    post:
+      consumes:
+      - application/json
+      description: Starts acc instance
+      parameters:
+      - description: Instance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/app.AccWError'
+        "404":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.AccWError'
+      security:
+      - JWT: []
+      summary: Starts acc instance
+      tags:
+      - instances
+  /instance/:id/stop:
+    post:
+      consumes:
+      - application/json
+      description: Stops acc instance
+      parameters:
+      - description: Instance ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/app.AccWError'
+        "404":
+          description: ""
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/app.AccWError'
+      security:
+      - JWT: []
+      summary: Stops acc instance
+      tags:
+      - instances
+  /servers:
+    get:
+      consumes:
+      - application/json
+      description: List all ACC dedicated servers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/app.ListServerItem'
+            type: array
+      security:
+      - JWT: []
+      summary: List all ACC dedicated servers
+      tags:
+      - servers
+  /servers/stop-all:
+    post:
+      consumes:
+      - application/json
+      description: Stops all running ACC dedicated servers
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: ""
+      security:
+      - JWT: []
+      summary: Stops all running ACC dedicated servers
+      tags:
+      - servers
+securityDefinitions:
+  JWT:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
