@@ -90,7 +90,7 @@ type LiveState struct {
 	connections map[int]*DriverState
 }
 
-func newLiveState() *LiveState {
+func NewLiveState() *LiveState {
 	return &LiveState{
 		ServerState: ServerStateOffline,
 		Cars:        map[int]*CarState{},

@@ -11,7 +11,7 @@ import (
 
 // LoadServerFromPath load the server configuration data based on baseDir and returns a Instance instance
 func LoadServerFromPath(baseDir string) (*Instance, error) {
-	s := &Instance{Path: baseDir, Live: newLiveState()}
+	s := &Instance{Path: baseDir, Live: NewLiveState()}
 
 	if cfg, err := loadAccWebConfig(baseDir); err != nil {
 		return nil, err

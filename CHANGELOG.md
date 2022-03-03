@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.16.1
+* Fix acc dedicated server create instance. (  )
+
 ## 1.16.0
 * Adding instance live view.
 * Fix bug on UI to prevent unnecessary backend requests.
