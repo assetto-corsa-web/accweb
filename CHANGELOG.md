@@ -2,6 +2,8 @@
 
 ## 1.16.1
 * Fix acc dedicated server create instance. ( #185 )
+* Building releases assets automatically.
+* Generating Swagger docummention of accweb api.
 
 ## 1.16.0
 * Adding instance live view.
