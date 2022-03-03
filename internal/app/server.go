@@ -4,17 +4,45 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/assetto-corsa-web/accweb/public"
-
 	jwt "github.com/appleboy/gin-jwt/v2"
+	"github.com/assetto-corsa-web/accweb/docs"
+	_ "github.com/assetto-corsa-web/accweb/docs"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
+	"github.com/assetto-corsa-web/accweb/public"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
+// @title           ACCWeb API documentation
+// @description     Accweb api documentation
+// @termsOfService  http://swagger.io/terms/
+
+// @contact.name   ACCWeb project
+// @contact.url    https://github.com/assetto-corsa-web/accweb
+
+// @license.name  MIT
+// @license.url   https://github.com/assetto-corsa-web/accweb/blob/master/LICENSE
+
+// @host      localhost:8080
+// @BasePath  /api
+
+// @securityDefinitions.apikey JWT
+// @in header
+// @name Authorization
+
 const identityKey = "user_name"
+
+type AccWError struct {
+	Error string `json:"error"`
+}
+
+func newAccWError(msg string) AccWError {
+	return AccWError{Error: msg}
+}
 
 type Handler struct {
 	sm *server_manager.Service
@@ -59,6 +87,13 @@ func StartServer(config *cfg.Config, sM *server_manager.Service) {
 
 	// setup routers
 	setupRouters(r, sM, config)
+
+	if config.Dev {
+		// Swagger
+		docs.SwaggerInfo.Version = "1.16"
+		docs.SwaggerInfo.Host = config.Webserver.Host
+		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	}
 
 	// Starting HTTP Server
 	if config.Webserver.TLS {
