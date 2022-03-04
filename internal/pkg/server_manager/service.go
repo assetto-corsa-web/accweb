@@ -211,6 +211,7 @@ func (s *Service) Create(accConfig *instance.AccConfigFiles, autoStart bool) (*i
 			UpdatedAt: time.Now().UTC(),
 		},
 		AccCfg: *accConfig,
+		Live:   instance.NewLiveState(),
 	}
 
 	if _, err := srv.UpdateAccServerExe(path.Join(s.config.AccServerPath, s.config.AccServerExe)); err != nil {
