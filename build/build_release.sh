@@ -15,8 +15,13 @@ mkdir -p "$DIR"
 
 # build frontend
 cd public
+COMMIT=`git rev-parse --short HEAD`
+cp src/components/end.vue src/components/end.vue.orig
+sed -i "s/%VERSION%/$VERSION/g" src/components/end.vue
+sed -i "s/%COMMIT%/$COMMIT/g" src/components/end.vue
 npm i
 npm run build
+mv src/components/end.vue.orig src/components/end.vue
 
 # build backend (Windows and Linux)
 cd ..
