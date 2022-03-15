@@ -20,11 +20,8 @@ jobs:
         run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Build accweb release
         run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${{ steps.get_version.outputs.VERSION }}
-      - name: Extract release information from CHANGELOG.md
-        # Extract every line from ## (set flag), if flag has become 2, exit - `flag` at tne end indicates if row should be included if > 0
-        run: awk '/##/{flag+=1}flag==2{exit};flag' CHANGELOG.md > RELEASE.md
       - uses: ncipollo/release-action@v1
         with:
           artifacts: 'releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip'
-          bodyFile: 'RELEASE.md'
+          generateReleaseNotes: true
           token: ${{ secrets.GITHUB_TOKEN }}
