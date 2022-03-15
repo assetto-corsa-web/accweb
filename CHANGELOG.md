@@ -1,6 +1,7 @@
 # Changelog
 
-## next
+## 1.16.2
+* Fix server password handler.
 * Fix session timeout, redirecting to login screen.
 * Add confirmation before stop all acc servers.
 * Fix live laps delta calculation.

@@ -55,6 +55,11 @@ export default {
         loadServer() {
             axios.get("/api/instance/"+this.id)
             .then(r => {
+                let settings = r.data.acc.settings;
+                settings.passwordIsEmpty = r.data.accExtraSettings.passwordIsEmpty
+                settings.adminPasswordIsEmpty = r.data.accExtraSettings.adminPasswordIsEmpty
+                settings.spectatorPasswordIsEmpty = r.data.accExtraSettings.spectatorPasswordIsEmpty
+
                 this.servername = r.data.acc.settings.serverName;
                 this.$refs.accweb.setData(r.data.accWeb)
                 this.$refs.basic.setData(r.data.acc.configuration);
@@ -85,6 +90,11 @@ export default {
                     entrylist,
                     bop,
                     assistrules
+                },
+                accExtraSettings: {
+                    passwordIsEmpty: settings.passwordIsEmpty,
+                    adminPasswordIsEmpty: settings.adminPasswordIsEmpty,
+                    spectatorPasswordIsEmpty: settings.spectatorPasswordIsEmpty,
                 }
             };
 

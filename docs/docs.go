@@ -554,11 +554,28 @@ const docTemplate = `{
                 }
             }
         },
+        "app.ExtraAccSettings": {
+            "type": "object",
+            "properties": {
+                "adminPasswordIsEmpty": {
+                    "type": "boolean"
+                },
+                "passwordIsEmpty": {
+                    "type": "boolean"
+                },
+                "spectatorPasswordIsEmpty": {
+                    "type": "boolean"
+                }
+            }
+        },
         "app.InstancePayload": {
             "type": "object",
             "properties": {
                 "acc": {
                     "$ref": "#/definitions/instance.AccConfigFiles"
+                },
+                "accExtraSettings": {
+                    "$ref": "#/definitions/app.ExtraAccSettings"
                 },
                 "accWeb": {
                     "$ref": "#/definitions/instance.AccWebConfigJson"
@@ -661,6 +678,9 @@ const docTemplate = `{
             "properties": {
                 "acc": {
                     "$ref": "#/definitions/instance.AccConfigFiles"
+                },
+                "accExtraSettings": {
+                    "$ref": "#/definitions/app.ExtraAccSettings"
                 },
                 "accWeb": {
                     "$ref": "#/definitions/instance.AccWebConfigJson"
