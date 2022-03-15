@@ -1,6 +1,8 @@
 # Changelog
 
 ## next
+* Fix session timeout, redirecting to login screen.
+* Add confirmation before stop all acc servers.
 * Fix live laps delta calculation.
 * Add live gaps column during races.
 
