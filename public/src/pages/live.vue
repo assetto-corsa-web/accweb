@@ -78,7 +78,7 @@
                             <th>Flags</th>
                         </tr>
 
-                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i" v-bind:class="{ 'tbl-row': true, invalid: lap.flags > 0, best: lap.lapTimeMS === showLapsCar.bestLapMS}">
+                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i" v-bind:class="{ 'tbl-row': true, invalid: lap.flags > 0, best: lap.lapTimeMS === showLapsCar.bestLapMS }">
                             <td>{{i+1}}</td>
                             <td>{{showLapsCar.drivers[lap.driverIndex] ? showLapsCar.drivers[lap.driverIndex].name : '--'}}</td>
                             <td>{{lap.fuel}}</td>
