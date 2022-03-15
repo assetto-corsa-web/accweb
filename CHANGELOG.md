@@ -1,5 +1,9 @@
 # Changelog
 
+## next
+* Fix session timeout, redirecting to login screen.
+* Add confirmation before stop all acc servers.
+
 ## 1.16.1
 * Fix acc dedicated server create instance. ( #185 )
 * Building releases assets automatically.
