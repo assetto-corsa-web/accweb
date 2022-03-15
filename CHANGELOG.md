@@ -1,5 +1,9 @@
 # Changelog
 
+## next
+* Fix live laps delta calculation.
+* Add live gaps column during races.
+
 ## 1.16.1
 * Fix acc dedicated server create instance. ( #185 )
 * Building releases assets automatically.
