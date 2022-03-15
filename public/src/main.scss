@@ -233,6 +233,11 @@ input[type~="checkbox"] {
 	margin: 0 8px 0 0;
 }
 
+input[disabled="disabled"] {
+	background-color: $dark_gray;
+	border-color: $gray;
+}
+
 .checkbox {
 	display: flex;
 	justify-content: center;

@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.16.2
+* Fix server password handler.
+
 ## 1.16.1
 * Fix acc dedicated server create instance. ( #185 )
 * Building releases assets automatically.

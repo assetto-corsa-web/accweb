@@ -1,9 +1,18 @@
 <template>
     <collapsible :title="$t('title')" with-import="true" import-filename="settings.json" @load="setData">
         <field :label="$t('servername_label')" v-model="serverName"></field>
-        <field type="password" :label="$t('password_label')" v-model="password"></field>
-        <field type="password" :label="$t('adminpassword_label')" v-model="adminPassword"></field>
-        <field type="password" :label="$t('spectatorpassword_label')" v-model="spectatorPassword"></field>
+        <div class="pwd">
+            <field v-if="!passwordIsEmpty" type="password" :label="$t('password_label')" v-model="password" :disabled="passwordIsEmpty"></field>
+            <checkbox :label="$t('password_empty_label')" v-model="passwordIsEmpty"></checkbox>
+        </div>
+        <div class="pwd">
+            <field v-if="!adminPasswordIsEmpty" type="password" :label="$t('adminpassword_label')" v-model="adminPassword" :disabled="adminPasswordIsEmpty"></field>
+            <checkbox :label="$t('adminpassword_empty_label')" v-model="adminPasswordIsEmpty"></checkbox>
+        </div>
+        <div class="pwd">
+            <field v-if="!spectatorPasswordIsEmpty" type="password" :label="$t('spectatorpassword_label')" v-model="spectatorPassword" :disabled="spectatorPasswordIsEmpty"></field>
+            <checkbox :label="$t('spectatorpassword_empty_label')" v-model="spectatorPasswordIsEmpty"></checkbox>
+        </div>
         <field type="number" :label="$t('trackmedalsrequirement_label')" v-model="trackMedalsRequirement"></field>
         <field type="number" :label="$t('safetyratingrequirement_label')" v-model="safetyRatingRequirement"></field>
         <field type="number" :label="$t('racecraftratingrequirement_label')" v-model="racecraftRatingRequirement"></field>
@@ -31,10 +40,13 @@ export default {
     components: {collapsible, field, selection, checkbox},
     data() {
         return {
-            serverName: "Servername",
+            serverName: "Servername (by accweb)",
             password: "",
+            passwordIsEmpty: true,
             adminPassword: "",
+            adminPasswordIsEmpty: true,
             spectatorPassword: "",
+            spectatorPasswordIsEmpty: true,
             trackMedalsRequirement: 0,
             safetyRatingRequirement: -1,
             racecraftRatingRequirement: -1,
@@ -58,7 +70,6 @@ export default {
                 {value: "GT3", label: "Mode GT3"},
                 {value: "GT4", label: "Mode GT4"},
                 {value: "GTC", label: "Mode GTC"},
-
             ],
             carGroup: "FreeForAll"
         };
@@ -67,8 +78,11 @@ export default {
         setData(data) {
             this.serverName = data.serverName;
             this.password = data.password;
+            this.passwordIsEmpty = data.passwordIsEmpty;
             this.adminPassword = data.adminPassword;
+            this.adminPasswordIsEmpty = data.adminPasswordIsEmpty;
             this.spectatorPassword = data.spectatorPassword;
+            this.spectatorPasswordIsEmpty = data.spectatorPasswordIsEmpty;
             this.trackMedalsRequirement = data.trackMedalsRequirement;
             this.safetyRatingRequirement = data.safetyRatingRequirement;
             this.racecraftRatingRequirement = data.racecraftRatingRequirement;
@@ -88,8 +102,11 @@ export default {
             return {
                 serverName: this.serverName,
                 password: this.password,
+                passwordIsEmpty: this.passwordIsEmpty,
                 adminPassword: this.adminPassword,
+                adminPasswordIsEmpty: this.adminPasswordIsEmpty,
                 spectatorPassword: this.spectatorPassword,
+                spectatorPasswordIsEmpty: this.spectatorPasswordIsEmpty,
                 trackMedalsRequirement: parseInt(this.trackMedalsRequirement),
                 safetyRatingRequirement: parseInt(this.safetyRatingRequirement),
                 racecraftRatingRequirement: parseInt(this.racecraftRatingRequirement),
@@ -115,9 +132,12 @@ export default {
     "en": {
         "title": "Server settings",
         "servername_label": "Servername",
-        "password_label": "Password",
-        "adminpassword_label": "Admin password",
-        "spectatorpassword_label": "Spectator Password",
+        "password_label": "Password (leave empty to not update)",
+        "password_empty_label": "Password is Empty",
+        "adminpassword_label": "Admin password (leave empty to not update)",
+        "adminpassword_empty_label": "Admin password is Empty",
+        "spectatorpassword_label": "Spectator Password (leave empty to not update)",
+        "spectatorpassword_empty_label": "Spectator password is Empty",
         "trackmedalsrequirement_label": "Track medals requirement (-1 - 3)",
         "safetyratingrequirement_label": "Safety rating requirement (-1 - 99)",
         "racecraftratingrequirement_label": "Racecraft Training Requirement (-1 - 99)",
@@ -131,7 +151,7 @@ export default {
         "allowautodq_label": "Allow Auto DQ",
         "dumpentrylist_label": "Dump Entry List",
         "formationlaptype_label": "Formation Lap Type",
-		    "cargroup_label": "Car Group"
+		"cargroup_label": "Car Group"
     }
 }
 </i18n>
