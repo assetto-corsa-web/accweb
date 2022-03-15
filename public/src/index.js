@@ -63,9 +63,9 @@ axios.interceptors.response.use(undefined, err => {
 		console.log(err.response.data);
 	}
 
-	// if (err.response.status === 401) {
-		// document.location.reload();
-	// }
+	if (err.response.status === 401) {
+		router.push("/login");
+	}
 
 	return Promise.reject(err);
 });
