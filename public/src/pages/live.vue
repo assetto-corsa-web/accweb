@@ -33,6 +33,7 @@
                         <th>S1</th>
                         <th>S2</th>
                         <th>S3</th>
+                        <th v-if="data.live.sessionType == 'Race'">Gap</th>
                         <th>Flags</th>
                     </tr>
 
@@ -51,6 +52,7 @@
                         <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{lastLap(car.laps).s1}}</td>
                         <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{lastLap(car.laps).s2}}</td>
                         <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{lastLap(car.laps).s3}}</td>
+                        <td v-if="data.live.sessionType == 'Race'">{{calcGap(carId)}}</td>
                         <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">
                             <i class="fas fa-cut" v-if="lastLap(car.laps).hasCut" title="Has Cut"></i>
                             <i class="fas fa-sign-in-alt" v-if="lastLap(car.laps).inLap" title="In Lap"></i>
@@ -76,7 +78,7 @@
                             <th>Flags</th>
                         </tr>
 
-                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i" v-bind:class="{ 'tbl-row': true, invalid: lap.flags>0}">
+                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i" v-bind:class="{ 'tbl-row': true, invalid: lap.flags>0, best: lap.lapTimeMS === showLapsCar.bestLapMS}">
                             <td>{{i+1}}</td>
                             <td>{{showLapsCar.drivers[lap.driverIndex] ? showLapsCar.drivers[lap.driverIndex].name : '--'}}</td>
                             <td>{{lap.fuel}}</td>
@@ -158,6 +160,10 @@ export default {
                     if (this.showLaps !== null && this.data.live.cars[this.showLaps] === undefined) {
                         this.showLaps = null;
                     }
+
+                    if (this.showLaps !== null) {
+                        this.setShowLaps(this.showLaps);
+                    }
                 })
                 .catch(e => {
                     this.$store.commit("toast", this.$t("load_live_error"))
@@ -195,17 +201,27 @@ export default {
             const s = ms / 1000;
             const m = s / 60;
 
-            return `${sign}${Math.floor(m % 60)}:${_.padStart(Math.floor(s%60).toString(), 2, '0')}:${_.padStart(Math.floor(ms%1000).toString(), 3, '0')}`;
+            return `${sign}${Math.floor(m % 60)}:${_.padStart(Math.floor(s%60).toString(), 2, '0')}.${_.padStart(Math.floor(ms%1000).toString(), 3, '0')}`;
         },
         calcDelta(idx) {
-            if (this.showLapsCar.laps.length < 2 || idx < 1) {
+            const bestLap = this.showLapsCar.bestLapMS;
+            const curLap = this.showLapsCar.laps[idx].lapTimeMS;
+
+            return this.msToTime(curLap-bestLap);
+        },
+        calcGap(idx) {
+            if (idx === 0) {
                 return "";
             }
 
-            const prevLap = this.showLapsCar.laps[idx-1].lapTimeMS;
-            const curLap = this.showLapsCar.laps[idx].lapTimeMS;
+            const curr = this.orderedCars[idx];
+            const prev = this.orderedCars[idx-1];
 
-            return this.msToTime(prevLap-curLap);
+            if (prev.nrLaps !== curr.nrLaps) {
+                return `+ ${this.orderedCars[0].nrLaps - curr.nrLaps} laps`;
+            }
+
+            return this.msToTime(curr.lastLapTimestampMS-prev.lastLapTimestampMS);
         }
     }
 }
@@ -231,6 +247,10 @@ export default {
 
 .invalid {
     background-color: #a35050;
+}
+
+.best {
+    background-color: #274c29;
 }
 </style>
 
