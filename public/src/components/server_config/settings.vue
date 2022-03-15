@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')" with-import="true" import-filename="settings.json" @load="setData">
+    <collapsible :title="$t('title')" with-import="true" import-filename="settings.json" @load="setDataFile">
         <field :label="$t('servername_label')" v-model="serverName"></field>
         <div class="pwd">
             <field v-if="!passwordIsEmpty" type="password" :label="$t('password_label')" v-model="password" :disabled="passwordIsEmpty"></field>
@@ -97,6 +97,13 @@ export default {
             this.dumpEntryList = data.dumpEntryList;
             this.formationLapType = data.formationLapType;
             this.carGroup = data.carGroup;
+        },
+        setDataFile(data) {
+            data.passwordIsEmpty = data.password === "";
+            data.adminPasswordIsEmpty = data.adminPassword === "";
+            data.spectatorPasswordIsEmpty = data.spectatorPasswordIsEmpty === "";
+            
+            this.setData(data);
         },
         getData() {
             return {
