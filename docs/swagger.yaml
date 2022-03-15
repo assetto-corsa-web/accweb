@@ -5,10 +5,21 @@ definitions:
       error:
         type: string
     type: object
+  app.ExtraAccSettings:
+    properties:
+      adminPasswordIsEmpty:
+        type: boolean
+      passwordIsEmpty:
+        type: boolean
+      spectatorPasswordIsEmpty:
+        type: boolean
+    type: object
   app.InstancePayload:
     properties:
       acc:
         $ref: '#/definitions/instance.AccConfigFiles'
+      accExtraSettings:
+        $ref: '#/definitions/app.ExtraAccSettings'
       accWeb:
         $ref: '#/definitions/instance.AccWebConfigJson'
       id:
@@ -76,6 +87,8 @@ definitions:
     properties:
       acc:
         $ref: '#/definitions/instance.AccConfigFiles'
+      accExtraSettings:
+        $ref: '#/definitions/app.ExtraAccSettings'
       accWeb:
         $ref: '#/definitions/instance.AccWebConfigJson'
     type: object
