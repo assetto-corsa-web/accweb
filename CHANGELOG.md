@@ -2,6 +2,10 @@
 
 ## 1.16.2
 * Fix server password handler.
+* Fix session timeout, redirecting to login screen.
+* Add confirmation before stop all acc servers.
+* Fix live laps delta calculation.
+* Add live gaps column during races.
 
 ## 1.16.1
 * Fix acc dedicated server create instance. ( #185 )
