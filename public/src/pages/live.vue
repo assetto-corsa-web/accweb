@@ -78,7 +78,7 @@
                             <th>Flags</th>
                         </tr>
 
-                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i" v-bind:class="{ 'tbl-row': true, invalid: lap.flags>0, best: lap.lapTimeMS === showLapsCar.bestLapMS}">
+                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i" v-bind:class="{ 'tbl-row': true, invalid: lap.flags > 0, best: lap.lapTimeMS === showLapsCar.bestLapMS}">
                             <td>{{i+1}}</td>
                             <td>{{showLapsCar.drivers[lap.driverIndex] ? showLapsCar.drivers[lap.driverIndex].name : '--'}}</td>
                             <td>{{lap.fuel}}</td>
@@ -207,7 +207,7 @@ export default {
             const bestLap = this.showLapsCar.bestLapMS;
             const curLap = this.showLapsCar.laps[idx].lapTimeMS;
 
-            return this.msToTime(curLap-bestLap);
+            return this.msToTime(curLap - bestLap);
         },
         calcGap(idx) {
             if (idx === 0) {
@@ -221,7 +221,7 @@ export default {
                 return `+ ${this.orderedCars[0].nrLaps - curr.nrLaps} laps`;
             }
 
-            return this.msToTime(curr.lastLapTimestampMS-prev.lastLapTimestampMS);
+            return this.msToTime(curr.lastLapTimestampMS - prev.lastLapTimestampMS);
         }
     }
 }
