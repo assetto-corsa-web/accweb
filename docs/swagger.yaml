@@ -443,12 +443,13 @@ info:
   contact:
     name: ACCWeb project
     url: https://github.com/assetto-corsa-web/accweb
-  description: Accweb api documentation
+  description: ACCweb api documentation
   license:
     name: MIT
     url: https://github.com/assetto-corsa-web/accweb/blob/master/LICENSE
   termsOfService: http://swagger.io/terms/
   title: ACCWeb API documentation
+  version: "1.16"
 paths:
   /instance:
     post:

@@ -5,21 +5,18 @@ import (
 	"time"
 
 	jwt "github.com/appleboy/gin-jwt/v2"
-	"github.com/assetto-corsa-web/accweb/docs"
-	_ "github.com/assetto-corsa-web/accweb/docs"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
 	"github.com/assetto-corsa-web/accweb/public"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
-	swaggerfiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @title           ACCWeb API documentation
-// @description     Accweb api documentation
+// @description     ACCweb api documentation
 // @termsOfService  http://swagger.io/terms/
+// @version 1.16
 
 // @contact.name   ACCWeb project
 // @contact.url    https://github.com/assetto-corsa-web/accweb
@@ -87,13 +84,6 @@ func StartServer(config *cfg.Config, sM *server_manager.Service) {
 
 	// setup routers
 	setupRouters(r, sM, config)
-
-	if config.Dev {
-		// Swagger
-		docs.SwaggerInfo.Version = "1.16"
-		docs.SwaggerInfo.Host = config.Webserver.Host
-		r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
-	}
 
 	// Starting HTTP Server
 	if config.Webserver.TLS {
