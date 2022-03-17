@@ -23,9 +23,13 @@ func GenerateTokenKeysIfNotPresent(config *cfg.Config) {
 		logrus.WithField("file", config.Auth.PublicKeyPath).Info("Public/private keys already exists, not attempting regeneration")
 		return
 	} else if Exists(config.Auth.PublicKeyPath) {
-		logrus.WithField("file", config.Auth.PrivateKeyPath).Fatal("Private key file is missing (public key present)")
+		logrus.WithField("publicKeyFile", config.Auth.PublicKeyPath).
+			WithField("privateKeyFile", config.Auth.PrivateKeyPath).
+			Fatal("Only public key file is present (private key file missing) - remove the public key file to regenerate keys on startup.")
 	} else if Exists(config.Auth.PrivateKeyPath) {
-		logrus.WithField("file", config.Auth.PublicKeyPath).Fatal("Public key file is missing (private key present)")
+		logrus.WithField("publicKeyFile", config.Auth.PublicKeyPath).
+			WithField("privateKeyFile", config.Auth.PrivateKeyPath).
+			Fatal("Only private key file is present (public key file missing) - remove the private key file to regenerate keys on startup.")
 	}
 
 	// Neither key exists, let's generate them
