@@ -9,8 +9,6 @@ webserver:
   cert: path to ssl certificate
   private_key: path to ssl private key
 auth:
-  public_key_path: secrets/token.public
-  private_key_path: secrets/token.private
   admin_password: admin
   moderator_password: mod
   read_only_password: ro
