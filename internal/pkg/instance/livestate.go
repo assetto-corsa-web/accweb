@@ -156,30 +156,31 @@ func (l *LiveState) addNewCar(carID, raceNumber, carModel int) {
 			Drivers:  []*DriverState{},
 			Laps:     []*LapState{},
 		}
+
+		l.Cars[carID] = car
 	}
 
 	car.CarModel = carModel
 	car.RaceNumber = raceNumber
+}
 
-	for _, d := range l.connections {
-		if d.car != nil {
-			continue
-		}
-
-		if d.carModel != carModel {
-			continue
-		}
-
-		d.car = car
-		car.Drivers = append(car.Drivers, d)
-
-		if car.CurrentDriver == nil {
-			car.CurrentDriver = d
-		}
-		break
+func (l *LiveState) handshake(carID, connectionID int) {
+	d := l.connections[connectionID]
+	if d == nil {
+		return
 	}
 
-	l.Cars[carID] = car
+	car := l.Cars[carID]
+	if car == nil {
+		return
+	}
+
+	d.car = car
+	car.Drivers = append(car.Drivers, d)
+
+	if car.CurrentDriver == nil {
+		car.CurrentDriver = d
+	}
 }
 
 func (l *LiveState) removeConnection(id int) {

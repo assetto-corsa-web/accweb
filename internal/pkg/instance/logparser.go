@@ -52,6 +52,7 @@ func makeLogMatchers() []*logMatcher {
 		newLogMatcher(`^Resetting race weekend$`, handleResettingRace),
 		newLogMatcher(`^New connection request: id (\d+) (.+) (S\d+) on car model (\d+)$`, handleNewConnection),
 		newLogMatcher(`^Creating new car connection: carId (\d+), carModel (\d+), raceNumber #(\d+)$`, handleNewCar),
+		newLogMatcher(`^Sent handshake response for car (\d+) connection (\d+) with`, handleHandshake),
 		newLogMatcher(`Removing dead connection (\d+)`, handleDeadConnection),
 		//newLogMatcher(`^car (\d+) has no driving connection anymore, will remove it$`, handleLogger),
 		newLogMatcher(`^Purging car_id (\d+)$`, handleCarPurge),
@@ -167,6 +168,10 @@ func handleNewConnection(l *LiveState, p []string) {
 
 func handleNewCar(l *LiveState, p []string) {
 	l.addNewCar(toInt(p[1]), toInt(p[3]), toInt(p[2]))
+}
+
+func handleHandshake(l *LiveState, p []string) {
+	l.handshake(toInt(p[1]), toInt(p[2]))
 }
 
 func handleDeadConnection(l *LiveState, p []string) {
