@@ -5,42 +5,43 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 )
 
-func GenerateTokenKeysIfNotPresent(config *cfg.Config) {
+func GenerateTokenKeysIfNotPresent(publicKeyPath string, privateKeyPath string) {
 	// Based on https://stackoverflow.com/questions/64104586/use-golang-to-get-rsa-key-the-same-way-openssl-genrsa
 	bitSize := 4096
 
 	logrus.Info("accweb: checking for secrets...")
 
 	// make sure files don't already exist
-	if Exists(config.Auth.PublicKeyPath) && Exists(config.Auth.PrivateKeyPath) {
-		logrus.WithField("file", config.Auth.PublicKeyPath).Info("Public/private keys already exists, not attempting regeneration")
+	if Exists(publicKeyPath) && Exists(privateKeyPath) {
+		logrus.WithField("privateKeyPath", privateKeyPath).
+			WithField("publicKeyPath", publicKeyPath).
+			Info("Public/private keys already exists, not attempting regeneration")
 		return
-	} else if Exists(config.Auth.PublicKeyPath) {
-		logrus.WithField("publicKeyFile", config.Auth.PublicKeyPath).
-			WithField("privateKeyFile", config.Auth.PrivateKeyPath).
+	} else if Exists(publicKeyPath) {
+		logrus.WithField("publicKeyFile", publicKeyPath).
+			WithField("privateKeyFile", privateKeyPath).
 			Fatal("Only public key file is present (private key file missing) - remove the public key file to regenerate keys on startup.")
-	} else if Exists(config.Auth.PrivateKeyPath) {
-		logrus.WithField("publicKeyFile", config.Auth.PublicKeyPath).
-			WithField("privateKeyFile", config.Auth.PrivateKeyPath).
+	} else if Exists(privateKeyPath) {
+		logrus.WithField("publicKeyFile", publicKeyPath).
+			WithField("privateKeyFile", privateKeyPath).
 			Fatal("Only private key file is present (public key file missing) - remove the private key file to regenerate keys on startup.")
 	}
 
 	// Neither key exists, let's generate them
 	// create path if required ("secrets" directory by default)
-	privateKeyPath := filepath.Join(".", filepath.Dir(config.Auth.PrivateKeyPath))
-	if err := os.MkdirAll(privateKeyPath, os.ModePerm); err != nil {
+	privateKeyDirectoryPath := filepath.Join(".", filepath.Dir(privateKeyPath))
+	if err := os.MkdirAll(privateKeyDirectoryPath, os.ModePerm); err != nil {
 		logrus.WithField("err", err).Fatal("Failed creating public key path directory!")
 	}
 
-	publicKeyPath := filepath.Join(".", filepath.Dir(config.Auth.PublicKeyPath))
-	if err := os.MkdirAll(publicKeyPath, os.ModePerm); err != nil {
+	publicKeyDirectoryPath := filepath.Join(".", filepath.Dir(publicKeyPath))
+	if err := os.MkdirAll(publicKeyDirectoryPath, os.ModePerm); err != nil {
 		logrus.WithField("err", err).Fatal("Failed creating public key path directory!")
 	}
 
@@ -48,8 +49,8 @@ func GenerateTokenKeysIfNotPresent(config *cfg.Config) {
 
 	if err != nil {
 		logrus.WithField("err", err).
-			WithField("publicKeyPath", publicKeyPath).
 			WithField("privateKeyPath", privateKeyPath).
+			WithField("publicKeyPath", publicKeyPath).
 			Fatal("Key generation failed!")
 	}
 
@@ -82,16 +83,16 @@ func GenerateTokenKeysIfNotPresent(config *cfg.Config) {
 	)
 
 	// Write private key to file.
-	if err := ioutil.WriteFile(config.Auth.PrivateKeyPath, keyPEM, 0700); err != nil {
-		logrus.WithField("file", config.Auth.PrivateKeyPath).WithField("err", err).Fatal("Failed writing private key to file.")
+	if err := ioutil.WriteFile(privateKeyPath, keyPEM, 0700); err != nil {
+		logrus.WithField("file", privateKeyPath).WithField("err", err).Fatal("Failed writing private key to file.")
 	}
 
 	// Write public key to file.
-	if err := ioutil.WriteFile(config.Auth.PublicKeyPath, pubPEM, 0755); err != nil {
-		logrus.WithField("file", config.Auth.PublicKeyPath).WithField("err", err).Fatal("Failed writing public key to file.")
+	if err := ioutil.WriteFile(publicKeyPath, pubPEM, 0755); err != nil {
+		logrus.WithField("file", publicKeyPath).WithField("err", err).Fatal("Failed writing public key to file.")
 	}
 
-	logrus.WithField("publicKeyPath", config.Auth.PublicKeyPath).
-		WithField("privateKeyPath", config.Auth.PrivateKeyPath).
+	logrus.WithField("privateKeyPath", privateKeyPath).
+		WithField("publicKeyPath", publicKeyPath).
 		Info("accweb: new secrets were generated.")
 }

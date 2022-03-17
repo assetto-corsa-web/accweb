@@ -16,7 +16,7 @@ func main() {
 	sM := server_manager.New(c.ConfigPath, c.ACC.ServerPath, c.ACC.ServerExe)
 
 	logrus.Info("accweb: checking for secrets...")
-	helper.GenerateTokenKeysIfNotPresent(c)
+	helper.GenerateTokenKeysIfNotPresent(c.Auth.PublicKeyPath, c.Auth.PrivateKeyPath)
 
 	logrus.Info("accweb: initializing...")
 	if err := sM.Bootstrap(); err != nil {
