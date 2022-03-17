@@ -65,5 +65,13 @@ func Load(file string) *Config {
 		logrus.SetLevel(l)
 	}
 
+	if config.Auth.PrivateKeyPath == "" {
+		config.Auth.PrivateKeyPath = "secrets/token.private"
+	}
+
+	if config.Auth.PublicKeyPath == "" {
+		config.Auth.PublicKeyPath = "secrets/token.public"
+	}
+
 	return &config
 }

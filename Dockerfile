@@ -17,7 +17,6 @@ RUN apt-get install -y nodejs
 
 ENV GOPATH=/go
 RUN go build -tags netgo -a -v -ldflags "-s -w" main.go 
-RUN ./gen_rsa_keys.sh
 
 RUN cd /go/src/github.com/assetto-corsa-web/accweb/public && npm i && npm rebuild node-sass && npm run build
 

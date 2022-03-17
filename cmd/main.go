@@ -16,13 +16,7 @@ func main() {
 	sM := server_manager.New(c.ConfigPath, c.ACC.ServerPath, c.ACC.ServerExe)
 
 	logrus.Info("accweb: checking for secrets...")
-	if !helper.Exists(c.Auth.PublicKeyPath) {
-		logrus.WithField("file", c.Auth.PublicKeyPath).Fatal("Token public key file not found")
-	}
-
-	if !helper.Exists(c.Auth.PrivateKeyPath) {
-		logrus.WithField("file", c.Auth.PrivateKeyPath).Fatal("Token private key file not found")
-	}
+	helper.GenerateTokenKeysIfNotPresent(c.Auth.PublicKeyPath, c.Auth.PrivateKeyPath)
 
 	logrus.Info("accweb: initializing...")
 	if err := sM.Bootstrap(); err != nil {

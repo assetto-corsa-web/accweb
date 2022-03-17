@@ -59,10 +59,6 @@ accweb is installed by extracting the zip on your server, modifing the YAML conf
 
 I recommend to setup an SSL certificate, but that's out of scope for this instructions. You can enable a certificate inside the `config.yml`.
 
-accweb should generate the key files for authentication on its own, but in case that doesn't work you can do it manually.
-To generate the RSA key pair, you can use the `gen_rsa_keys.sh` on Linux or install one of the tools available for Windows and run `gen_rsa_keys.cmd`.
-You can also use an online service which generates RSA key pairs (search for "generate rsa key pair online").
-
 **Note that you have to install [wine](https://www.winehq.org/) if you're on Linux.**
 
 ## Docker
