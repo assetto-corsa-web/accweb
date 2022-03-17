@@ -3,6 +3,7 @@ package instance
 import (
 	"regexp"
 	"strconv"
+	"time"
 
 	"github.com/sirupsen/logrus"
 )
@@ -37,6 +38,7 @@ func (l *logParser) processLine(s *LiveState, line string) {
 		if matches != nil {
 			logrus.WithField("line", matches[0]).WithField("attr", matches[1:]).Debug("log handled")
 			matcher.handler(s, matches)
+			s.UpdatedAt = time.Now().UTC()
 		}
 	}
 }
@@ -56,7 +58,8 @@ func makeLogMatchers() []*logMatcher {
 		newLogMatcher(`Removing dead connection (\d+)`, handleDeadConnection),
 		//newLogMatcher(`^car (\d+) has no driving connection anymore, will remove it$`, handleLogger),
 		newLogMatcher(`^Purging car_id (\d+)$`, handleCarPurge),
-		newLogMatcher(`Lap carId (\d+), driverId (\d+), lapTime (\d+):(\d+):(\d+), timestampMS (\d+)\.\d+, flags: (.*?)(, S1 (\d+:\d+:\d+))?(, S2 (\d+:\d+:\d+))?(, S3 (\d+:\d+:\d+)), fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?`, handleLap),
+		newLogMatcher(`Lap carId (\d+), driverId (\d+), lapTime (\d+):(\d+):(\d+), timestampMS (\d+)\.\d+, flags: (.*?)(, S1 (\d+:\d+:\d+))(, S2 (\d+:\d+:\d+))(, S3 (\d+:\d+:\d+)), fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?`, handleLap),
+		newLogMatcher(`Lap  ?carId (\d+), driverId (\d+), lapTime (35791):(23):(647), timestampMS (\d+)\.\d+, flags: (.*?)(, S1 (\d+:\d+:\d+))?(, S2 (\d+:\d+:\d+))?(, S3 (\d+:\d+:\d+))?, fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?`, handleCurrLap),
 		newLogMatcher(`^\s*Car (\d+) Pos (\d+)$`, handleGridPosition),
 		newLogMatcher(`^Updated leaderboard for \d+ clients \(([A-Za-z ]+)-<([-A-Za-z ]+)> (\d+) min\)$`, handleSessionUpdate),
 	}
@@ -70,30 +73,26 @@ func toInt(str string) int {
 	return value
 }
 
-//             1            2          3  4  5                  6                       7
-// Lap carId 1005, driverId 0, lapTime 1:53:895, timestampMS 52610019.000000, flags: 8808693760,
-//       9            11           13           14          15     16      17      18
-// S1 0:36:280, S2 0:40:037, S3 0:37:577, fuel 40.000000, HasCut, InLap, OutLap, SessionOver
-func handleLap(l *LiveState, p []string) {
+func toLap(l *LiveState, p []string) *LapState {
 	c := l.Cars[toInt(p[1])]
 	if c == nil {
 		logrus.Warn("car not found")
-		return
+		return nil
 	}
 
 	dIdx := toInt(p[2])
 	if len(c.Drivers) < dIdx+1 {
 		logrus.Warn("driver not found")
-		return
+		return nil
 	}
 
 	d := c.Drivers[dIdx]
 	if d == nil {
 		logrus.Warn("driver index not found")
-		return
+		return nil
 	}
 
-	lap := LapState{
+	lap := &LapState{
 		CarID:       c.CarID,
 		DriverIndex: dIdx,
 		Car:         c,
@@ -127,11 +126,29 @@ func handleLap(l *LiveState, p []string) {
 		lap.Flags += 1024
 	}
 
-	if lap.Flags > 0 {
-		logrus.WithField("line", p[0]).WithField("attr", p[1:]).Debug("log handled")
+	return lap
+}
+
+//             1            2          3  4  5                  6                       7
+// Lap carId 1005, driverId 0, lapTime 1:53:895, timestampMS 52610019.000000, flags: 8808693760,
+//       9            11           13           14          15     16      17      18
+// S1 0:36:280, S2 0:40:037, S3 0:37:577, fuel 40.000000, HasCut, InLap, OutLap, SessionOver
+func handleLap(l *LiveState, p []string) {
+	lap := toLap(l, p)
+	if lap == nil {
+		return
 	}
 
-	l.setLapState(&lap)
+	l.setLapState(lap)
+}
+
+func handleCurrLap(l *LiveState, p []string) {
+	lap := toLap(l, p)
+	if lap == nil {
+		return
+	}
+
+	l.setCurrLapState(*lap)
 }
 
 func handleServerStarting(s *LiveState, _ []string) {

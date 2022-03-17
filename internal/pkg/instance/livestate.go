@@ -1,6 +1,9 @@
 package instance
 
-import "sort"
+import (
+	"sort"
+	"time"
+)
 
 type ServerState string
 
@@ -35,6 +38,7 @@ type CarState struct {
 	LastLapMS          int            `json:"lastLapMS"`
 	LastLapTimestampMS int            `json:"lastLapTimestampMS"`
 	Laps               []*LapState    `json:"laps"`
+	CurrLap            LapState       `json:"currLap"`
 }
 
 func (c *CarState) removeDriver(d *DriverState) {
@@ -85,6 +89,7 @@ type LiveState struct {
 	SessionPhase     string            `json:"sessionPhase"`
 	SessionRemaining int               `json:"sessionRemaining"`
 	Cars             map[int]*CarState `json:"cars"`
+	UpdatedAt        time.Time         `json:"updatedAt"`
 
 	// drivers waiting to be assigned to a car, key: ConnectionID
 	connections map[int]*DriverState
@@ -95,6 +100,7 @@ func NewLiveState() *LiveState {
 		ServerState: ServerStateOffline,
 		Cars:        map[int]*CarState{},
 		connections: map[int]*DriverState{},
+		UpdatedAt:   time.Now().UTC(),
 	}
 }
 
@@ -141,6 +147,7 @@ func (l *LiveState) advanceSession() {
 			car.LastLapMS = 0
 			car.LastLapTimestampMS = 0
 			car.Laps = []*LapState{}
+			car.CurrLap = LapState{}
 		}
 	}
 	l.recalculatePositions()
@@ -232,6 +239,12 @@ func (l *LiveState) setLapState(lap *LapState) {
 	l.recalculatePositions()
 }
 
+func (l *LiveState) setCurrLapState(lap LapState) {
+	lap.Car.LastLapTimestampMS = lap.TimestampMS
+	lap.Car.CurrLap = lap
+	l.recalculatePositions()
+}
+
 func cmpPositionFastestLap(a, b *CarState) bool {
 	if a.BestLapMS > 0 {
 		if b.BestLapMS > 0 { // Both a and b have a lap
@@ -248,13 +261,31 @@ func cmpPositionFastestLap(a, b *CarState) bool {
 	}
 }
 
+func isEmpty(v string) bool {
+	return v == ""
+}
+
 func cmpPositionMostDistance(a, b *CarState) bool {
 	if a.NrLaps != b.NrLaps {
 		return a.NrLaps > b.NrLaps
 	}
+
+	if isEmpty(a.CurrLap.S3) != isEmpty(b.CurrLap.S3) {
+		return isEmpty(a.CurrLap.S3)
+	}
+
+	if isEmpty(a.CurrLap.S2) != isEmpty(b.CurrLap.S2) {
+		return !isEmpty(a.CurrLap.S2)
+	}
+
+	if isEmpty(a.CurrLap.S1) != isEmpty(b.CurrLap.S1) {
+		return !isEmpty(a.CurrLap.S1)
+	}
+
 	if a.LastLapTimestampMS != b.LastLapTimestampMS {
 		return a.LastLapTimestampMS < b.LastLapTimestampMS
 	}
+
 	return a.Position < b.Position
 }
 

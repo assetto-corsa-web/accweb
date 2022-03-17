@@ -6,6 +6,8 @@
 * Add confirmation before stop all acc servers.
 * Fix live laps delta calculation.
 * Add live gaps column during races.
+* Add live current splits.
+* Fix live driver handshake.
 
 ## 1.16.1
 * Fix acc dedicated server create instance. ( #185 )

@@ -822,6 +822,9 @@ const docTemplate = `{
                 "carModel": {
                     "type": "integer"
                 },
+                "currLap": {
+                    "$ref": "#/definitions/instance.LapState"
+                },
                 "currentDriver": {
                     "$ref": "#/definitions/instance.DriverState"
                 },
@@ -1129,6 +1132,9 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "track": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }

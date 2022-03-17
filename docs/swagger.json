@@ -815,6 +815,9 @@
                 "carModel": {
                     "type": "integer"
                 },
+                "currLap": {
+                    "$ref": "#/definitions/instance.LapState"
+                },
                 "currentDriver": {
                     "$ref": "#/definitions/instance.DriverState"
                 },
@@ -1122,6 +1125,9 @@
                     "type": "string"
                 },
                 "track": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }

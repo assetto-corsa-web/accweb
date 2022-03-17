@@ -11,16 +11,17 @@
         <div class="content">
             <div class="header">
                 <div id="state"><strong>Status:</strong> {{data.live.serverState}}</div>
-                <div id="track"><strong>Track:</strong> {{data.track}}</div>
+                <div id="track"><strong>Track:</strong> {{data.live.track}}</div>
                 <div id="phase">
                     <strong>Phase:</strong> {{data.live.sessionType}} ({{data.live.sessionPhase}})
                     <span v-if="data.live.sessionRemaining > 0">[{{data.live.sessionRemaining}} min]</span>
                 </div>
                 <div id="nrdrivers"><strong>Drivers:</strong> {{data.live.nrClients}}</div>
+                <div id="updatedat"><strong>Last Update:</strong> {{new Date(data.live.updatedAt).toLocaleString()}}</div>
             </div>
 
             <div class="body">
-                <table id="leaderboard" border="1" cellpadding="2">
+                <table id="leaderboard">
                     <tr class="tbl-header">
                         <th>Pos</th>
                         <th>Driver</th>
@@ -48,16 +49,16 @@
                         <td>{{car.nrLaps}}</td>
                         <td>{{car.fuel}}</td>
                         <td>{{msToTime(car.bestLapMS)}}</td>
-                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{msToTime(car.lastLapMS)}}</td>
-                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{lastLap(car.laps).s1}}</td>
-                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{lastLap(car.laps).s2}}</td>
-                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">{{lastLap(car.laps).s3}}</td>
+                        <td v-bind:class="{invalid: car.currLap.flags > 0}">{{msToTime(car.lastLapMS)}}</td>
+                        <td v-bind:class="{invalid: car.currLap.flags > 0}">{{car.currLap.s1}}</td>
+                        <td v-bind:class="{invalid: car.currLap.flags > 0}">{{car.currLap.s2}}</td>
+                        <td v-bind:class="{invalid: car.currLap.flags > 0}">{{car.currLap.s3}}</td>
                         <td v-if="data.live.sessionType == 'Race'">{{calcGap(carId)}}</td>
-                        <td v-bind:class="{invalid: lastLap(car.laps).flags > 0}">
-                            <i class="fas fa-cut" v-if="lastLap(car.laps).hasCut" title="Has Cut"></i>
-                            <i class="fas fa-sign-in-alt" v-if="lastLap(car.laps).inLap" title="In Lap"></i>
-                            <i class="fas fa-sign-out-alt" v-if="lastLap(car.laps).outLap" title="Out Lap"></i>
-                            <i class="fas fa-flag-checkered" v-if="lastLap(car.laps).sessionOver" title="Session is Over"></i>
+                        <td v-bind:class="{invalid: car.currLap.flags > 0}">
+                            <i class="fas fa-cut" v-if="car.currLap.hasCut" title="Has Cut"></i>
+                            <i class="fas fa-sign-in-alt" v-if="car.currLap.inLap" title="In Lap"></i>
+                            <i class="fas fa-sign-out-alt" v-if="car.currLap.outLap" title="Out Lap"></i>
+                            <i class="fas fa-flag-checkered" v-if="car.currLap.sessionOver" title="Session is Over"></i>
                         </td>
                     </tr>
                 </table>
@@ -65,7 +66,7 @@
                 <div id="laps" v-if="showLaps">
                     <h3>Car {{showLapsCar.raceNumber}} Laps</h3>
 
-                    <table border="1" cellpadding="2">
+                    <table>
                         <tr class="tbl-header">
                             <th>Nr</th>
                             <th>Driver</th>
@@ -142,7 +143,8 @@ export default {
     },
     computed: {
         orderedCars: function () {
-            return _.orderBy(this.data.live.cars, "position")
+            const ordered = _.orderBy(this.data.live.cars, "position");
+            return _.filter(ordered, (o) => { return o.currentDriver !== null });
         },
         classObject: function(lap) {
             return {
@@ -217,15 +219,26 @@ export default {
             const curr = this.orderedCars[idx];
             const prev = this.orderedCars[idx-1];
 
-            if (prev.nrLaps !== curr.nrLaps) {
-                return `+ ${this.orderedCars[0].nrLaps - curr.nrLaps} laps`;
+            if (curr.lastLapTimestampMS === 0) {
+                return "";
             }
 
-            return this.msToTime(curr.lastLapTimestampMS - prev.lastLapTimestampMS);
+            if (prev.nrLaps !== curr.nrLaps) {
+                const diff = this.orderedCars[0].nrLaps - curr.nrLaps;
+                return `+${diff} lap${(diff > 1) ? "s" : ""}`;
+            }
+
+            const gap = curr.lastLapTimestampMS - prev.lastLapTimestampMS;
+
+            if (gap < 0) {
+                return "--";
+            }
+
+            return this.msToTime(gap);
         }
     }
 }
-</script>
+</script>	
 
 <style scoped>
 .header {
@@ -241,16 +254,29 @@ export default {
     background-color: #304363;
     cursor: pointer;
 }
+
 .active {
-    background-color: #27344c;
+    background-color: #27344c !important;
 }
 
 .invalid {
-    background-color: #a35050;
+    background-color: #803c3c !important;
 }
 
 .best {
-    background-color: #274c29;
+    background-color: #274c29 !important;
+}
+
+th {
+    background-color: #1b2838;
+}
+
+td, th {
+    padding: 5px;
+}
+
+tr:nth-child(odd) {
+  background-color: #1f2936;
 }
 </style>
 
