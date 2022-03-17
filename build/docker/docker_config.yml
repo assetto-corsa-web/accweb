@@ -26,13 +26,15 @@ auth:
   moderator_password: $ACCWEB_MOD_PASSWORD
   read_only_password: $ACCWEB_RO_PASSWORD
 
-  # Path to public and private token key files.
-  # These must be provided as they are required to generate save tokens for authentication.
-  # accweb won't start without them. They will be automatically generated if accweb finds the gen_rsa_keys script
-  # next to the accweb executable. So you will most likely be able to start the server without touching this.
-  public_key_path: secrets/token.public
-  private_key_path: secrets/token.private
-  
+  # Optional path to public and private token key files. If you need to store the private/public keys used to
+  # sign the session token (the JWT) in a specific location (or have existing keys in a specific location), you
+  # can define those here.
+  #
+  # accweb now generate these with a default path if not configured.
+  #
+  # public_key_path: secrets/token.public
+  # private_key_path: secrets/token.private
+
 acc:
   # Path to ACC server installation directory.
   # Use forward slashes (even if you're on Windows!). The example path is for Linux.
