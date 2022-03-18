@@ -107,6 +107,10 @@ export default {
             }, timeout);
         },
         stopAllServers() {
+            if (!window.confirm(this.$t("confirm_stop_all"))) {
+                return;
+            }
+
             this.stopAllRunning = true;
             axios.post("/api/servers/stop-all")
                 .then(d => {
@@ -147,7 +151,8 @@ export default {
         "refresh": "Refresh",
         "receive_server_list_error": "Error receiving server list.",
         "stop_all_error": "Error while stopping all servers",
-        "sorting": "Sorting: "
+        "sorting": "Sorting: ",
+        "confirm_stop_all": "Do you really want to stop all acc servers?"
     }
 }
 </i18n>

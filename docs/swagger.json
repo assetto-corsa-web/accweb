@@ -1,7 +1,7 @@
 {
     "swagger": "2.0",
     "info": {
-        "description": "Accweb api documentation",
+        "description": "ACCweb api documentation",
         "title": "ACCWeb API documentation",
         "termsOfService": "http://swagger.io/terms/",
         "contact": {
@@ -11,7 +11,8 @@
         "license": {
             "name": "MIT",
             "url": "https://github.com/assetto-corsa-web/accweb/blob/master/LICENSE"
-        }
+        },
+        "version": "1.16"
     },
     "host": "localhost:8080",
     "basePath": "/api",
@@ -546,11 +547,28 @@
                 }
             }
         },
+        "app.ExtraAccSettings": {
+            "type": "object",
+            "properties": {
+                "adminPasswordIsEmpty": {
+                    "type": "boolean"
+                },
+                "passwordIsEmpty": {
+                    "type": "boolean"
+                },
+                "spectatorPasswordIsEmpty": {
+                    "type": "boolean"
+                }
+            }
+        },
         "app.InstancePayload": {
             "type": "object",
             "properties": {
                 "acc": {
                     "$ref": "#/definitions/instance.AccConfigFiles"
+                },
+                "accExtraSettings": {
+                    "$ref": "#/definitions/app.ExtraAccSettings"
                 },
                 "accWeb": {
                     "$ref": "#/definitions/instance.AccWebConfigJson"
@@ -653,6 +671,9 @@
             "properties": {
                 "acc": {
                     "$ref": "#/definitions/instance.AccConfigFiles"
+                },
+                "accExtraSettings": {
+                    "$ref": "#/definitions/app.ExtraAccSettings"
                 },
                 "accWeb": {
                     "$ref": "#/definitions/instance.AccWebConfigJson"
@@ -793,6 +814,9 @@
                 },
                 "carModel": {
                     "type": "integer"
+                },
+                "currLap": {
+                    "$ref": "#/definitions/instance.LapState"
                 },
                 "currentDriver": {
                     "$ref": "#/definitions/instance.DriverState"
@@ -1101,6 +1125,9 @@
                     "type": "string"
                 },
                 "track": {
+                    "type": "string"
+                },
+                "updatedAt": {
                     "type": "string"
                 }
             }

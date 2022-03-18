@@ -5,10 +5,21 @@ definitions:
       error:
         type: string
     type: object
+  app.ExtraAccSettings:
+    properties:
+      adminPasswordIsEmpty:
+        type: boolean
+      passwordIsEmpty:
+        type: boolean
+      spectatorPasswordIsEmpty:
+        type: boolean
+    type: object
   app.InstancePayload:
     properties:
       acc:
         $ref: '#/definitions/instance.AccConfigFiles'
+      accExtraSettings:
+        $ref: '#/definitions/app.ExtraAccSettings'
       accWeb:
         $ref: '#/definitions/instance.AccWebConfigJson'
       id:
@@ -76,6 +87,8 @@ definitions:
     properties:
       acc:
         $ref: '#/definitions/instance.AccConfigFiles'
+      accExtraSettings:
+        $ref: '#/definitions/app.ExtraAccSettings'
       accWeb:
         $ref: '#/definitions/instance.AccWebConfigJson'
     type: object
@@ -167,6 +180,8 @@ definitions:
         type: integer
       carModel:
         type: integer
+      currLap:
+        $ref: '#/definitions/instance.LapState'
       currentDriver:
         $ref: '#/definitions/instance.DriverState'
       drivers:
@@ -370,6 +385,8 @@ definitions:
         type: string
       track:
         type: string
+      updatedAt:
+        type: string
     type: object
   instance.SessionSettings:
     properties:
@@ -430,12 +447,13 @@ info:
   contact:
     name: ACCWeb project
     url: https://github.com/assetto-corsa-web/accweb
-  description: Accweb api documentation
+  description: ACCweb api documentation
   license:
     name: MIT
     url: https://github.com/assetto-corsa-web/accweb/blob/master/LICENSE
   termsOfService: http://swagger.io/terms/
   title: ACCWeb API documentation
+  version: "1.16"
 paths:
   /instance:
     post:

@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.16.2
+* Fix server password handler.
+* Fix session timeout, redirecting to login screen.
+* Add confirmation before stop all acc servers.
+* Fix live laps delta calculation.
+* Add live gaps column during races.
+* Add live current splits.
+* Fix live driver handshake.
+* Removing the necessity of external scripts to generate secret keys.
+
 ## 1.16.1
 * Fix acc dedicated server create instance. ( #185 )
 * Building releases assets automatically.

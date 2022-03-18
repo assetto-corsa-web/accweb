@@ -554,11 +554,28 @@ const docTemplate = `{
                 }
             }
         },
+        "app.ExtraAccSettings": {
+            "type": "object",
+            "properties": {
+                "adminPasswordIsEmpty": {
+                    "type": "boolean"
+                },
+                "passwordIsEmpty": {
+                    "type": "boolean"
+                },
+                "spectatorPasswordIsEmpty": {
+                    "type": "boolean"
+                }
+            }
+        },
         "app.InstancePayload": {
             "type": "object",
             "properties": {
                 "acc": {
                     "$ref": "#/definitions/instance.AccConfigFiles"
+                },
+                "accExtraSettings": {
+                    "$ref": "#/definitions/app.ExtraAccSettings"
                 },
                 "accWeb": {
                     "$ref": "#/definitions/instance.AccWebConfigJson"
@@ -661,6 +678,9 @@ const docTemplate = `{
             "properties": {
                 "acc": {
                     "$ref": "#/definitions/instance.AccConfigFiles"
+                },
+                "accExtraSettings": {
+                    "$ref": "#/definitions/app.ExtraAccSettings"
                 },
                 "accWeb": {
                     "$ref": "#/definitions/instance.AccWebConfigJson"
@@ -801,6 +821,9 @@ const docTemplate = `{
                 },
                 "carModel": {
                     "type": "integer"
+                },
+                "currLap": {
+                    "$ref": "#/definitions/instance.LapState"
                 },
                 "currentDriver": {
                     "$ref": "#/definitions/instance.DriverState"
@@ -1110,6 +1133,9 @@ const docTemplate = `{
                 },
                 "track": {
                     "type": "string"
+                },
+                "updatedAt": {
+                    "type": "string"
                 }
             }
         },
@@ -1207,12 +1233,12 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "",
+	Version:          "1.16",
 	Host:             "localhost:8080",
 	BasePath:         "/api",
 	Schemes:          []string{},
 	Title:            "ACCWeb API documentation",
-	Description:      "Accweb api documentation",
+	Description:      "ACCweb api documentation",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
 }

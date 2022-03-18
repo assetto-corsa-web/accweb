@@ -10,22 +10,30 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+type ExtraAccSettings struct {
+	PasswordIsEmpty          bool `json:"passwordIsEmpty"`
+	AdminPasswordIsEmpty     bool `json:"adminPasswordIsEmpty"`
+	SpectatorPasswordIsEmpty bool `json:"spectatorPasswordIsEmpty"`
+}
+
 type InstancePayload struct {
-	ID          string                    `json:"id"`
-	Path        string                    `json:"path"`
-	IsRunning   bool                      `json:"is_running"`
-	PID         int                       `json:"pid"`
-	Settings    instance.AccWebConfigJson `json:"accWeb"`
-	AccSettings instance.AccConfigFiles   `json:"acc"`
+	ID               string                    `json:"id"`
+	Path             string                    `json:"path"`
+	IsRunning        bool                      `json:"is_running"`
+	PID              int                       `json:"pid"`
+	Settings         instance.AccWebConfigJson `json:"accWeb"`
+	AccSettings      instance.AccConfigFiles   `json:"acc"`
+	AccExtraSettings ExtraAccSettings          `json:"accExtraSettings"`
 }
 
 type SaveInstancePayload struct {
-	AccWeb instance.AccWebConfigJson `json:"accWeb"`
-	Acc    instance.AccConfigFiles   `json:"acc"`
+	AccWeb           instance.AccWebConfigJson `json:"accWeb"`
+	Acc              instance.AccConfigFiles   `json:"acc"`
+	AccExtraSettings ExtraAccSettings          `json:"accExtraSettings"`
 }
 
 func NewInstancePayload(srv *instance.Instance) InstancePayload {
-	return InstancePayload{
+	res := InstancePayload{
 		ID:          srv.GetID(),
 		Path:        srv.Path,
 		IsRunning:   srv.IsRunning(),
@@ -33,6 +41,17 @@ func NewInstancePayload(srv *instance.Instance) InstancePayload {
 		Settings:    srv.Cfg,
 		AccSettings: srv.AccCfg,
 	}
+
+	res.AccExtraSettings.PasswordIsEmpty = res.AccSettings.Settings.Password == ""
+	res.AccSettings.Settings.Password = ""
+
+	res.AccExtraSettings.AdminPasswordIsEmpty = res.AccSettings.Settings.AdminPassword == ""
+	res.AccSettings.Settings.AdminPassword = ""
+
+	res.AccExtraSettings.SpectatorPasswordIsEmpty = res.AccSettings.Settings.SpectatorPassword == ""
+	res.AccSettings.Settings.SpectatorPassword = ""
+
+	return res
 }
 
 // GetInstance Get instance information
@@ -56,10 +75,6 @@ func (h *Handler) GetInstance(c *gin.Context) {
 	}
 
 	res := NewInstancePayload(srv)
-
-	res.AccSettings.Settings.AdminPassword = ""
-	res.AccSettings.Settings.Password = ""
-	res.AccSettings.Settings.SpectatorPassword = ""
 
 	c.JSON(http.StatusOK, res)
 }
@@ -123,15 +138,21 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 		return
 	}
 
-	if json.Acc.Settings.Password == "" {
+	if json.AccExtraSettings.PasswordIsEmpty {
+		json.Acc.Settings.Password = ""
+	} else if json.Acc.Settings.Password == "" {
 		json.Acc.Settings.Password = srv.AccCfg.Settings.Password
 	}
 
-	if json.Acc.Settings.SpectatorPassword == "" {
+	if json.AccExtraSettings.SpectatorPasswordIsEmpty {
+		json.Acc.Settings.SpectatorPassword = ""
+	} else if json.Acc.Settings.SpectatorPassword == "" {
 		json.Acc.Settings.SpectatorPassword = srv.AccCfg.Settings.SpectatorPassword
 	}
 
-	if json.Acc.Settings.AdminPassword == "" {
+	if json.AccExtraSettings.AdminPasswordIsEmpty {
+		json.Acc.Settings.AdminPassword = ""
+	} else if json.Acc.Settings.AdminPassword == "" {
 		json.Acc.Settings.AdminPassword = srv.AccCfg.Settings.AdminPassword
 	}
 
