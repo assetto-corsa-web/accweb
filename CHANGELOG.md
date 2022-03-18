@@ -8,6 +8,7 @@
 * Add live gaps column during races.
 * Add live current splits.
 * Fix live driver handshake.
+* Removing the necessity of external scripts to generate secret keys.
 
 ## 1.16.1
 * Fix acc dedicated server create instance. ( #185 )

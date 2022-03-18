@@ -76,19 +76,31 @@ func toInt(str string) int {
 func toLap(l *LiveState, p []string) *LapState {
 	c := l.Cars[toInt(p[1])]
 	if c == nil {
-		logrus.Warn("car not found")
+		logrus.WithFields(logrus.Fields{
+			"carID":    toInt(p[1]),
+			"rawCarID": p[1],
+			"track":    l.Track,
+		}).Warn("car not found while building lap")
 		return nil
 	}
 
 	dIdx := toInt(p[2])
 	if len(c.Drivers) < dIdx+1 {
-		logrus.Warn("driver not found")
+		logrus.WithFields(logrus.Fields{
+			"driverIndex":    dIdx,
+			"rawDriverIndex": p[2],
+			"track":          l.Track,
+		}).Warn("driver not found while building lap")
 		return nil
 	}
 
 	d := c.Drivers[dIdx]
 	if d == nil {
-		logrus.Warn("driver index not found")
+		logrus.WithFields(logrus.Fields{
+			"driverIndex":    dIdx,
+			"rawDriverIndex": p[2],
+			"track":          l.Track,
+		}).Warn("driver index not found while building lap")
 		return nil
 	}
 
