@@ -286,6 +286,24 @@ a {
 	margin-right: 8px;
 }
 
+.server-settings-container {
+	display: grid;
+	grid-gap: 2.0rem;
+	margin-bottom: 1.0rem;
+}
+
+.server-settings-container.two-columns {
+	grid-template-columns: 1fr 1fr;
+}
+
+.server-settings-container.three-columns {
+	grid-template-columns: 1fr 1fr 1fr;
+}
+
+.server-settings-container.four-columns {
+	grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
 @media (max-device-width: 700px) {
 	.main {
 		margin: 0 auto;
