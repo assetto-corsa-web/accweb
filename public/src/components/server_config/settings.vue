@@ -25,12 +25,19 @@
         <checkbox :label="$t('dumpleaderboards_label')" v-model="dumpLeaderboards"></checkbox>
         <checkbox :label="$t('isracelocked_label')" v-model="isRaceLocked"></checkbox>
         <checkbox :label="$t('randomizetrackwhenempty_label')" v-model="randomizeTrackWhenEmpty"></checkbox>
-        <field type="text" :label="$t('centralentrylistpath_label')" v-model="centralEntryListPath"></field>
-        <checkbox :label="$t('shortformationlap_label')" v-model="shortFormationLap"></checkbox>
         <checkbox :label="$t('allowautodq_label')" v-model="allowAutoDQ"></checkbox>
+
+        <div class="server-settings-group">
+            <selection :label="$t('cargroup_label')" :options="carGroups" v-model="carGroup"></selection>
+        </div>
+
+        <div class="server-settings-group">
+            <selection :label="$t('formationlaptype_label')" :options="formationLapTypes" v-model="formationLapType"></selection>
+            <checkbox :label="$t('shortformationlap_label')" v-model="shortFormationLap"></checkbox>
+        </div>
+
+        <field type="text" :label="$t('centralentrylistpath_label')" v-model="centralEntryListPath"></field>
         <checkbox :label="$t('dumpentrylist_label')" v-model="dumpEntryList"></checkbox>
-        <selection :label="$t('formationlaptype_label')" :options="formationLapTypes" v-model="formationLapType"></selection>
-        <selection :label="$t('cargroup_label')" :options="carGroups" v-model="carGroup"></selection>
     </collapsible>
 </template>
 
