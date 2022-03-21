@@ -6,7 +6,7 @@
 				<button class="primary" v-on:click="$router.push('/server')" v-if="is_admin"><i class="fas fa-plus"></i> {{$t("add_new")}}</button>
 				<button v-bind:class="stopAllClass" v-on:click="stopAllServers" v-if="is_mod || is_admin"><i class="fas fa-stop"></i> {{$t("stop_all")}}</button>
 				<button v-on:click="loadServer(true)"><i class="fas fa-sync"></i> {{$t("refresh")}}</button>
-				<button class="logout-btn" v-on:click="logout"><i class="fas fa-sign-out-alt"></i></button>
+				<button class="logout-btn" v-on:click="logout" v-bind:title="$t('log_out')"><i class="fas fa-sign-out-alt"></i></button>
 			</div>
 		</div>
 
@@ -152,7 +152,8 @@ export default {
         "receive_server_list_error": "Error receiving server list.",
         "stop_all_error": "Error while stopping all servers",
         "sorting": "Sorting: ",
-        "confirm_stop_all": "Do you really want to stop all acc servers?"
+        "confirm_stop_all": "Do you really want to stop all acc servers?",
+        "log_out": "Log out"
     }
 }
 </i18n>
