@@ -1,6 +1,6 @@
 <template>
     <div v-bind:class="{main: true, 'main-small': small}">
-    	<img src="static/logo.png" alt="" class="logo" />
+        <router-link to="/"><img src="static/logo.png" alt="" class="logo" /></router-link>
         <slot></slot>
         <end></end>
         <error></error>
