@@ -1,5 +1,11 @@
 # Changelog
 
+## next
+* Link logo to front page.
+* Add title attribute to "log out"-button. 
+* Group small input fields together to avoid long lists of wide input fields.
+* Reorder fields to group similar functionality together and group them visually.
+
 ## 1.16.2
 * Fix server password handler.
 * Fix session timeout, redirecting to login screen.
