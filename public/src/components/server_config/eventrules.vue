@@ -1,12 +1,14 @@
 <template>
     <collapsible :title="$t('title')" with-import="true" import-filename="eventRules.json" @load="setData">
         <selection :label="$t('qualifyStandingType_label')" :options="qualifyStandingTypes" v-model="qualifyStandingType"></selection>
-        <field type="number" :label="$t('pitWindowLengthSec_label')" v-model="pitWindowLengthSec"></field>
-        <field type="number" :label="$t('driverStintTimeSec_label')" v-model="driverStintTimeSec"></field>
-        <field type="number" :label="$t('mandatoryPitstopCount_label')" v-model="mandatoryPitstopCount"></field>
-        <field type="number" :label="$t('maxTotalDrivingTime_label')" v-model="maxTotalDrivingTime"></field>
-        <field type="number" :label="$t('maxDriversCount_label')" v-model="maxDriversCount"></field>
-        <field type="number" :label="$t('tyreSetCount_label')" v-model="tyreSetCount"></field>
+        <div class="server-settings-container three-columns" style="margin-top: 1.0rem;">
+            <field type="number" :label="$t('pitWindowLengthSec_label')" v-model="pitWindowLengthSec"></field>
+            <field type="number" :label="$t('driverStintTimeSec_label')" v-model="driverStintTimeSec"></field>
+            <field type="number" :label="$t('mandatoryPitstopCount_label')" v-model="mandatoryPitstopCount"></field>
+            <field type="number" :label="$t('maxTotalDrivingTime_label')" v-model="maxTotalDrivingTime"></field>
+            <field type="number" :label="$t('maxDriversCount_label')" v-model="maxDriversCount"></field>
+            <field type="number" :label="$t('tyreSetCount_label')" v-model="tyreSetCount"></field>
+        </div>
         <checkbox :label="$t('isRefuellingAllowedInRace_label')" v-model="isRefuellingAllowedInRace"></checkbox>
         <checkbox :label="$t('isRefuellingTimeFixed_label')" v-model="isRefuellingTimeFixed"></checkbox>
         <checkbox :label="$t('isMandatoryPitstopRefuellingRequired_label')" v-model="isMandatoryPitstopRefuellingRequired"></checkbox>

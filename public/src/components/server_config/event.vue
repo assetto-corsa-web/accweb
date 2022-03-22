@@ -1,17 +1,25 @@
 <template>
     <collapsible :title="$t('title')" with-import="true" import-filename="event.json" @load="setData">
-        <selection :label="$t('track_label')" :options="tracks" v-model="track"></selection>
-        <field type="number" :label="$t('preracewaitingtimeseconds_label')" v-model="preRaceWaitingTimeSeconds"></field>
-        <field type="number" :label="$t('sessionovertimeseconds_label')" v-model="sessionOverTimeSeconds"></field>
-        <field type="number" :label="$t('ambienttemp_label')" v-model="ambientTemp"></field>
-        <field type="number" :label="$t('tracktemp_label')" v-model="trackTemp"></field>
-        <field type="number" :label="$t('cloudlevel_label')" :step="0.01" v-model="cloudLevel"></field>
-        <field type="number" :label="$t('rain_label')" :step="0.01" v-model="rain"></field>
-        <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
-        <field type="number" :label="$t('postqualyseconds_label')" v-model="postQualySeconds"></field>
-        <field type="number" :label="$t('postraceseconds_label')" v-model="postRaceSeconds"></field>
-        <checkbox :label="$t('simracerWeatherConditions_label')" v-model="simracerWeatherConditions"></checkbox>
-        <checkbox :label="$t('isFixedConditionQualification_label')" v-model="isFixedConditionQualification"></checkbox>
+        <div style="margin-bottom: 1.0rem;">
+            <selection :label="$t('track_label')" :options="tracks" v-model="track"></selection>
+        </div>
+        <div class="server-settings-container two-columns">
+            <div>
+                <field type="number" :label="$t('ambienttemp_label')" v-model="ambientTemp"></field>
+                <field type="number" :label="$t('tracktemp_label')" v-model="trackTemp"></field>
+                <field type="number" :label="$t('cloudlevel_label')" :step="0.01" v-model="cloudLevel"></field>
+                <field type="number" :label="$t('rain_label')" :step="0.01" v-model="rain"></field>
+                <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
+                <checkbox :label="$t('simracerWeatherConditions_label')" v-model="simracerWeatherConditions"></checkbox>
+                <checkbox :label="$t('isFixedConditionQualification_label')" v-model="isFixedConditionQualification"></checkbox>
+            </div>
+            <div>
+                <field type="number" :label="$t('preracewaitingtimeseconds_label')" v-model="preRaceWaitingTimeSeconds"></field>
+                <field type="number" :label="$t('sessionovertimeseconds_label')" v-model="sessionOverTimeSeconds"></field>
+                <field type="number" :label="$t('postqualyseconds_label')" v-model="postQualySeconds"></field>
+                <field type="number" :label="$t('postraceseconds_label')" v-model="postRaceSeconds"></field>
+            </div>
+        </div>
         <session v-for="session in sessions"
             :key="session.index"
             :session="session"
