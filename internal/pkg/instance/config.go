@@ -37,12 +37,13 @@ func (a *AccWebConfigJson) SetUpdateAt() {
 }
 
 type ConfigurationJson struct {
-	ConfigVersion   int `json:"configVersion"`
-	UdpPort         int `json:"udpPort"`
-	TcpPort         int `json:"tcpPort"`
-	MaxConnections  int `json:"maxConnections"`
-	RegisterToLobby int `json:"registerToLobby"`
-	LanDiscovery    int `json:"lanDiscovery"`
+	ConfigVersion   int    `json:"configVersion"`
+	UdpPort         int    `json:"udpPort"`
+	TcpPort         int    `json:"tcpPort"`
+	MaxConnections  int    `json:"maxConnections"`
+	RegisterToLobby int    `json:"registerToLobby"`
+	LanDiscovery    int    `json:"lanDiscovery"`
+	PublicIP        string `json:"publicIP"`
 }
 
 type SettingsJson struct {
