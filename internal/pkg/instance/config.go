@@ -134,6 +134,7 @@ type DriverSettings struct {
 	ShortName      string `json:"shortName"`
 	DriverCategory int    `json:"driverCategory"`
 	PlayerID       string `json:"playerID"`
+	Nationality    int    `json:"nationality"`
 }
 
 type BopJson struct {
