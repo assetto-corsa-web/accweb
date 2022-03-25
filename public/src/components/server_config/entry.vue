@@ -64,6 +64,7 @@ export default {
               {value: 51, label: "Aston Martin Vantage GT4"},
               {value: 52, label: "Audi R8 LMS GT4"},
               {value: 53, label: "BMW M4 GT4"},
+              {value: 54, label: "Audi R8 LMS GT3 evo II"},
               {value: 55, label: "Chevrolet Camaro GT4"},
               {value: 56, label: "Ginetta G55 GT4"},
               {value: 57, label: "KTM X-Bow GT4"},
@@ -71,6 +72,10 @@ export default {
               {value: 59, label: "McLaren 570S GT4"},
               {value: 60, label: "Mercedes AMG GT4"},
               {value: 61, label: "Porsche 718 Cayman GT4"}
+              {value: 62, label: "Lamborghini Huracán Super Trofeo EVO2"}
+              {value: 63, label: "Ferrari 488 GT3 Challenge Evo"}
+              {value: 64, label: "Porsche 911 GT3 Cup (Type 992)"}
+              {value: 65, label: "BMW M2 CS Racing"}
             ],
             drivers: []
         };
