@@ -81,6 +81,7 @@ export default {
                 {value: "GT3", label: "Mode GT3"},
                 {value: "GT4", label: "Mode GT4"},
                 {value: "GTC", label: "Mode GTC"},
+		{value: "TCX", label: "Mode TCX"},
             ],
             carGroup: "FreeForAll"
         };
