@@ -38,32 +38,13 @@ import field from "../field.vue";
 import selection from "../selection.vue";
 import session from "./session.vue";
 import checkbox from "../checkbox.vue";
+import tracks from "../../data/tracks";
 
 export default {
     components: {collapsible, field, selection, session, checkbox},
     data() {
     	  return {
-            tracks: [
-                {value: "barcelona", label: "Barcelona"},
-                {value: "brands_hatch", label: "Brands Hatch"},
-                {value: "donington", label: "Donnington"},
-                {value: "hungaroring", label: "Hungaroring"},
-                {value: "imola", label: "Imola"},
-                {value: "kyalami", label: "Kyalami"},
-                {value: "laguna_seca", label: "Laguna Seca"},
-                {value: "misano", label: "Misano"},
-                {value: "monza", label: "Monza"},
-                {value: "mount_panorama", label: "Mount Panorama"},
-                {value: "nurburgring", label: "Nürburgring GP"},
-                {value: "oulton_park", label: "Outlon Park"},
-                {value: "paul_ricard", label: "Paul Ricard"},
-                {value: "silverstone", label: "Silverstone"},
-                {value: "snetterton", label: "Snetterton"},
-                {value: "spa", label: "Spa"},
-                {value: "suzuka", label: "Suzuka"},
-                {value: "zandvoort", label: "Zandvoort"},
-                {value: "zolder", label: "Zolder"},
-            ],
+            tracks: tracks,
             track: "barcelona",
             preRaceWaitingTimeSeconds: 15,
             sessionOverTimeSeconds: 120,
@@ -217,9 +198,9 @@ export default {
         "weatherrandomness_label": "Weather randomness",
         "postqualyseconds_label": "Post Qualy Seconds",
         "postraceseconds_label": "Post Race Seconds",
-		    "simracerWeatherConditions_label": "Simracer Weather Conditions",
-		    "isFixedConditionQualification_label": "Is Fixed Weather Conditions in Qualification",
-		    "add_session_button": "Add session",
+        "simracerWeatherConditions_label": "Simracer Weather Conditions",
+        "isFixedConditionQualification_label": "Is Fixed Weather Conditions in Qualification",
+        "add_session_button": "Add session",
         "add_sessions_q_r_button": "Add sessions (Q/R)",
         "add_sessions_p_q_r_button": "Add sessions (P/Q/R)"
     }

@@ -1,11 +1,14 @@
 # Changelog
 
-## next
+## 1.17.0
 * Link logo to front page.
 * Add title attribute to "log out"-button. 
 * Group small input fields together to avoid long lists of wide input fields.
 * Reorder fields to group similar functionality together and group them visually.
 * Add PublicIP field to the configuration json file.
+* Add new Challengers Pack DLC content
+* Add nationality field to the drivers entry list.
+
 
 ## 1.16.2
 * Fix server password handler.
