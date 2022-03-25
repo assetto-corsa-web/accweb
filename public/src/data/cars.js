@@ -29,7 +29,7 @@ const cars = {
     "26": {id: 26, model: "Ferrari 488 Challenge Evo", brand: "ferrari"},
     "27": {id: 27, model: "BMW M2 CS Racing", brand: "bmw"},
     "28": {id: 28, model: "Porsche 911 GT3 Cup (Type 992)", brand: "porsche"},
-    "29": {id: 29, model: "Lamborghini Huracán Super Trofeo EVO2", brand: "lLamborghini"},
+    "29": {id: 29, model: "Lamborghini Huracán Super Trofeo EVO2", brand: "lamborghini"},
     "31": {id: 31, model: "Audi R8 LMS GT3 evo II", brand: "audi"},
     "30": {id: 30, model: "BMW M4 GT3", brand: "bmw"},
     "50": {id: 50, model: "Alpine A110 GT4", brand: "alpine"},
