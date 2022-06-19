@@ -6,6 +6,7 @@
             v-on:remove="removeEntry"></entry>
         <checkbox :label="$t('forceentrylist_label')" v-model="forceEntryList"></checkbox>
         <button v-on:click="addEntry">{{$t("add_entry_button")}}</button>
+        <button v-on:click="clearEntries">{{$t("clear_entries_button")}}</button>
     </collapsible>
 </template>
 
@@ -44,7 +45,6 @@ export default {
                 });
                 this.entryIndex++;
             }
-
             this.forceEntryList = data.forceEntryList;
         },
         getData() {
@@ -98,7 +98,13 @@ export default {
                     break;
                 }
             }
+        },
+        clearEntries(){
+            while(this.entries.length > 0) {
+                this.entries.splice(this.entries[this.entries.length - 1], 1);
+            }
         }
+        
     }
 }
 </script>
@@ -108,7 +114,8 @@ export default {
     "en": {
         "title": "Entry List",
         "forceentrylist_label": "Force Entry List",
-        "add_entry_button": "Add Entry"
+        "add_entry_button": "Add Entry",
+        "clear_entries_button": "Clear all Entries"
     }
 }
 </i18n>
