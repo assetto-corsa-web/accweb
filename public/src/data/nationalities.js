@@ -51,7 +51,7 @@ const nationalities = {
     "63": {id: 63, country: "Nepal"},
     "12": {id: 12, country: "Netherlands"},
     "64": {id: 64, country: "New Caledonia"},
-    "40": {id: 40, country: "New Zeeland"},
+    "40": {id: 40, country: "New Zealand"},
     "65": {id: 65, country: "Nigeria"},
     "66": {id: 66, country: "Northern Ireland"},
     "24": {id: 24, country: "Norway"},
