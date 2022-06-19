@@ -20,6 +20,9 @@ webserver:
   write_timeout: 5
   read_timeout: 5
 
+  # Configurable timeout - in minutes
+  webserver_timeout: 20
+  
 auth:
   # Set the admin, moderator and read only user password.
   # accweb won't start without an admin password.
@@ -44,6 +47,7 @@ acc:
   # Name of the server executable within the server installation directory.
   # You don't need to change this (except the ACC devs change its name for some reason).
   server_exe: accServer.exe
+
 
 # TECHNICAL STUFF FROM HERE ON
 
