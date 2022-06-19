@@ -29,7 +29,8 @@ export default {
             disableAutoPitLimiter: false,
             disableAutoGear: false,
             disableAutoClutch: false,
-            disableIdealLine: false
+            disableIdealLine: false,
+            configVersion: 1
         };
     },
     methods: {
@@ -54,7 +55,8 @@ export default {
                 disableAutoPitLimiter: this.disableAutoPitLimiter ? 1 : 0,
                 disableAutoGear: this.disableAutoGear ? 1 : 0,
                 disableAutoClutch: this.disableAutoClutch ? 1 : 0,
-                disableIdealLine: this.disableIdealLine ? 1 : 0
+                disableIdealLine: this.disableIdealLine ? 1 : 0,
+                configVersion: 1
             };
         }
     }

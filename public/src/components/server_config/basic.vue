@@ -27,7 +27,8 @@ export default {
             maxConnections: 10,
             registerToLobby: true,
             lanDiscovery: false,
-            publicIP: ""
+            publicIP: "",
+            configVersion: 1
         };
     },
     methods: {
@@ -46,7 +47,8 @@ export default {
                 maxConnections: parseInt(this.maxConnections),
                 registerToLobby: this.registerToLobby ? 1 : 0,
                 lanDiscovery: this.lanDiscovery ? 1 : 0,
-                publicIP: this.publicIP
+                publicIP: this.publicIP,
+                configVersion: 1
             };
         }
     }

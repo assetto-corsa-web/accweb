@@ -57,6 +57,7 @@ export default {
             postRaceSeconds: 0,
             simracerWeatherConditions: false,
             isFixedConditionQualification: false,
+            configVersion: 1,
             sessionIndex: 0,
             sessions: []
         };
@@ -104,7 +105,8 @@ export default {
                 postRaceSeconds: parseInt(this.postRaceSeconds),
                 simracerWeatherConditions: this.simracerWeatherConditions ? 1 : 0,
                 isFixedConditionQualification: this.isFixedConditionQualification ? 1 : 0,
-                sessions: this.getSessionData()
+                sessions: this.getSessionData(),
+                configVersion: 1
             };
       	},
         getSessionData() {

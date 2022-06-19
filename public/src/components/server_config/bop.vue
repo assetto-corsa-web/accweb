@@ -19,6 +19,7 @@ export default {
     data() {
     	return {
     		entryIndex: 0,
+            configVersion: 1,
             entries: []
     	};
     },
@@ -48,7 +49,8 @@ export default {
 				carModel: parseInt(this.carModel),
 				ballastKg: parseInt(this.ballastKg),
 				restrictor: parseInt(this.restrictor),				
-                entries: this.getEntryData()
+                entries: this.getEntryData(),
+                configVersion: 1
     		};
     	},
         getEntryData() {

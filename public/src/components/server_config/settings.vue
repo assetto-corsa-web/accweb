@@ -52,6 +52,7 @@ export default {
     data() {
         return {
             serverName: "Servername (by accweb)",
+            configVersion: 1,
             password: "",
             passwordIsEmpty: true,
             adminPassword: "",
@@ -139,7 +140,8 @@ export default {
                 allowAutoDQ: this.allowAutoDQ ? 1 : 0,
                 dumpEntryList: this.dumpEntryList ? 1 : 0,
                 formationLapType: parseInt(this.formationLapType),
-                carGroup: this.carGroup
+                carGroup: this.carGroup,
+                configVersion: 1
             };
         }
     }

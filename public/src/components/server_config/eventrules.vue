@@ -42,7 +42,8 @@ export default {
         isRefuellingTimeFixed: false,
         isMandatoryPitstopRefuellingRequired: false,
         isMandatoryPitstopTyreChangeRequired: false,
-        isMandatoryPitstopSwapDriverRequired: false
+        isMandatoryPitstopSwapDriverRequired: false,
+        configVersion: 1
       };
     },
     methods: {
@@ -73,7 +74,8 @@ export default {
                 isRefuellingTimeFixed: this.isRefuellingTimeFixed,
                 isMandatoryPitstopRefuellingRequired: this.isMandatoryPitstopRefuellingRequired,
                 isMandatoryPitstopTyreChangeRequired: this.isMandatoryPitstopTyreChangeRequired,
-                isMandatoryPitstopSwapDriverRequired: this.isMandatoryPitstopSwapDriverRequired
+                isMandatoryPitstopSwapDriverRequired: this.isMandatoryPitstopSwapDriverRequired,
+                configVersion: 1
             };
         }
     }

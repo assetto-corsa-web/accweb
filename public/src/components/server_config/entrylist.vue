@@ -21,7 +21,8 @@ export default {
         return {
             entryIndex: 0,
             entries: [],
-            forceEntryList: 0
+            forceEntryList: 0,
+            configVersion: 1
         };
     },
     methods: {
@@ -50,7 +51,8 @@ export default {
         getData() {
             return {
                 entries: this.getEntryData(),
-                forceEntryList: this.forceEntryList ? 1 : 0
+                forceEntryList: this.forceEntryList ? 1 : 0,
+                configVersion: 1
             };
         },
         getEntryData() {
