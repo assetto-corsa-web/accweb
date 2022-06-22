@@ -2,10 +2,12 @@ package server_manager
 
 import (
 	"errors"
-	"io/ioutil"
+	"fmt"
+	"io/fs"
 	"os"
 	"path"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -48,10 +50,22 @@ func (s *Service) LoadAll() error {
 		return helper.WrapErrors(ErrCantCreateConfigDir, err)
 	}
 
-	dir, err := ioutil.ReadDir(s.config.ConfigBaseDir)
+	dir, err := os.ReadDir(s.config.ConfigBaseDir)
 	if err != nil {
 		return err
 	}
+
+	//filter out all tmp folders used by google drive
+	var newdirs []fs.DirEntry
+
+	for index := range dir {
+		logrus.Info("accweb1: " + dir[index].Name() + " - " + fmt.Sprint(index))
+		if dir[index].IsDir() && !strings.Contains(dir[index].Name(), ".tmp.") {
+			logrus.Info("accweb2: " + dir[index].Name())
+			newdirs = append(newdirs, dir[index])
+		}
+	}
+	dir = newdirs
 
 	// reset servers attribute
 	s.servers = make(map[string]*instance.Instance, len(dir))
