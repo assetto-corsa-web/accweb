@@ -183,7 +183,7 @@ export default {
         },
         toFloat(value) {
             if(typeof value === "string") {
-                return parseFloat(value.replace(",", "."));
+                return Number.getFloat64value(value.replace(",", "."));
             }
 
             return value;
