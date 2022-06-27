@@ -50,7 +50,7 @@ export default {
                 "udp_port": {label: "UDP Port", field: "udpPort", order: "asc"},
                 "tcp_port": {label: "TCP Port", field: "tcpPort", order: "asc"},
                 "is_running": {label: "Is Running", field: "isRunning", order: "desc"},
-                "nr_clients": {label: "Drivers Quantity", field: "nrClients", order: "desc"}
+                "nr_clients": {label: "Driver Count", field: "nrClients", order: "desc"}
             },
             sorting: "name"
         };
