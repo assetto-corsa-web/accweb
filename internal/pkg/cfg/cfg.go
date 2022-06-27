@@ -14,8 +14,11 @@ var logLevel = map[string]logrus.Level{
 	"error": logrus.ErrorLevel,
 }
 
+var skipWine bool
+
 type Config struct {
 	Dev        bool      `yaml:"dev"`
+	SkipWine   bool      `yaml:"skip_wine"`
 	Loglevel   string    `yaml:"loglevel"`
 	ConfigPath string    `yaml:"config_path"`
 	Webserver  Webserver `yaml:"webserver"`
@@ -73,5 +76,11 @@ func Load(file string) *Config {
 		config.Auth.PublicKeyPath = "secrets/token.public"
 	}
 
+	skipWine = config.SkipWine
+
 	return &config
+}
+
+func SkipWine() bool {
+	return skipWine
 }
