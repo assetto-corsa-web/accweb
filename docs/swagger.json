@@ -611,6 +611,9 @@
                 "sessionPhase": {
                     "type": "string"
                 },
+                "sessionRemaining": {
+                    "type": "integer"
+                },
                 "sessionType": {
                     "type": "string"
                 },
@@ -651,6 +654,9 @@
                 },
                 "sessionPhase": {
                     "type": "string"
+                },
+                "sessionRemaining": {
+                    "type": "integer"
                 },
                 "sessionType": {
                     "type": "string"
@@ -865,6 +871,9 @@
                 "maxConnections": {
                     "type": "integer"
                 },
+                "publicIP": {
+                    "type": "string"
+                },
                 "registerToLobby": {
                     "type": "integer"
                 },
@@ -887,6 +896,9 @@
                 },
                 "lastName": {
                     "type": "string"
+                },
+                "nationality": {
+                    "type": "integer"
                 },
                 "playerID": {
                     "type": "string"

@@ -25,7 +25,7 @@
                 <b>{{$t("state")}}: </b>{{$t(server.serverState)}} &bull;
                 <b>{{$t("number_of_drivers")}}: </b>{{formattedServerClientCount}} &bull;
                 <b>{{$t("session")}}: </b>
-                <span v-if="server.sessionType">{{server.sessionType}} ({{server.sessionPhase}})</span>
+                <span v-if="server.sessionType">{{server.sessionType}} ({{server.sessionPhase}}) - {{server.sessionRemaining}} min(s)</span>
                 <span v-else>{{$t('not_detected')}}</span>
             </div>
         </div>

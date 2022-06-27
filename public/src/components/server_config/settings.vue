@@ -1,6 +1,5 @@
 <template>
     <collapsible :title="$t('title')" with-import="true" import-filename="settings.json" @load="setDataFile">
-        <field :label="$t('servername_label')" v-model="serverName"></field>
         <div class="pwd">
             <field v-if="!passwordIsEmpty" type="password" :label="$t('password_label')" v-model="password" :disabled="passwordIsEmpty"></field>
             <checkbox :label="$t('password_empty_label')" v-model="passwordIsEmpty"></checkbox>
@@ -51,7 +50,6 @@ export default {
     components: {collapsible, field, selection, checkbox},
     data() {
         return {
-            serverName: "Servername (by accweb)",
             password: "",
             passwordIsEmpty: true,
             adminPassword: "",
@@ -88,7 +86,6 @@ export default {
     },
     methods: {
         setData(data) {
-            this.serverName = data.serverName;
             this.password = data.password;
             this.passwordIsEmpty = data.passwordIsEmpty;
             this.adminPassword = data.adminPassword;
@@ -119,7 +116,6 @@ export default {
         },
         getData() {
             return {
-                serverName: this.serverName,
                 password: this.password,
                 passwordIsEmpty: this.passwordIsEmpty,
                 adminPassword: this.adminPassword,
@@ -150,7 +146,6 @@ export default {
 {
     "en": {
         "title": "Server settings",
-        "servername_label": "Servername",
         "password_label": "Password (leave empty to not update)",
         "password_empty_label": "Password is Empty",
         "adminpassword_label": "Admin password (leave empty to not update)",
