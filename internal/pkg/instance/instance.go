@@ -30,6 +30,7 @@ const (
 	logDir                 = "logs"
 	logTimeFormat          = "20060102_150405"
 	logExt                 = ".log"
+	accCarsDir             = "cars"
 )
 
 var (
@@ -284,6 +285,22 @@ func (s *Instance) prepareInstanceDir() error {
 		if err := helper.Copy(path.Join(s.Path, name), path.Join(s.Path, accCfgDir, name)); err != nil {
 			return err
 		}
+	}
+
+	// Copy Cars folder
+	carsTargetDir := path.Join(path.Join(s.Path, accCfgDir), accCarsDir)
+	carsSourceDir := path.Join(s.Path, accCarsDir)
+
+	if err := helper.CreateIfNotExists(carsSourceDir, 0755); err != nil {
+		return err
+	}
+
+	if err := helper.CreateIfNotExists(carsTargetDir, 0755); err != nil {
+		return err
+	}
+
+	if err := helper.CopyDirectory(carsSourceDir, carsTargetDir); err != nil {
+		return err
 	}
 
 	return nil
