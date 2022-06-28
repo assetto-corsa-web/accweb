@@ -137,6 +137,7 @@ export default {
                     sessionPhase: "",
                     sessionRemaining: 0,
                     cars: {},
+                    chats: []
                 }
             },
         };
