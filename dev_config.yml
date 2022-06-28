@@ -18,6 +18,7 @@ acc:
 
 config_path: config/
 dev: true
+skip_wine: true
 loglevel: debug
 cors:
   origins: "*"

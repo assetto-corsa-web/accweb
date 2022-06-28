@@ -56,11 +56,11 @@ func makeLogMatchers() []*logMatcher {
 		newLogMatcher(`^Creating new car connection: carId (\d+), carModel (\d+), raceNumber #(\d+)$`, handleNewCar),
 		newLogMatcher(`^Sent handshake response for car (\d+) connection (\d+) with`, handleHandshake),
 		newLogMatcher(`Removing dead connection (\d+)`, handleDeadConnection),
-		//newLogMatcher(`^car (\d+) has no driving connection anymore, will remove it$`, handleLogger),
 		newLogMatcher(`^Purging car_id (\d+)$`, handleCarPurge),
 		newLogMatcher(`Lap carId (\d+), driverId (\d+), lapTime (\d+):(\d+):(\d+), timestampMS (\d+)\.\d+, flags: (.*?)(, S1 (\d+:\d+:\d+))(, S2 (\d+:\d+:\d+))(, S3 (\d+:\d+:\d+)), fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?`, handleLap),
 		newLogMatcher(`Lap  ?carId (\d+), driverId (\d+), lapTime (35791):(23):(647), timestampMS (\d+)\.\d+, flags: (.*?)(, S1 (\d+:\d+:\d+))?(, S2 (\d+:\d+:\d+))?(, S3 (\d+:\d+:\d+))?, fuel (\d+)\.\d+(, hasCut )?(, InLap )?(, OutLap )?(, SessionOver)?`, handleCurrLap),
 		newLogMatcher(`^\s*Car (\d+) Pos (\d+)$`, handleGridPosition),
+		newLogMatcher(`^CHAT (.*?): (.*)$`, handleChat),
 		newLogMatcher(`^Updated leaderboard for \d+ clients \(([A-Za-z ]+)-<([-A-Za-z ]+)> (\d+) min\)$`, handleSessionUpdate),
 	}
 }
@@ -217,4 +217,8 @@ func handleGridPosition(l *LiveState, p []string) {
 
 func handleResettingRace(l *LiveState, _ []string) {
 	l.advanceSession()
+}
+
+func handleChat(l *LiveState, p []string) {
+	l.addChat(p[1], p[2])
 }

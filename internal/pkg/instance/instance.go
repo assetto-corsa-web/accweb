@@ -19,6 +19,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
+	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
 )
 
@@ -320,7 +321,7 @@ func (s *Instance) prepareCommandAndArgs() {
 	command := "." + string(filepath.Separator) + accDedicatedServerFile
 	var args []string
 
-	if runtime.GOOS == "linux" {
+	if runtime.GOOS == "linux" && !cfg.SkipWine() {
 		command = "wine"
 		args = []string{accDedicatedServerFile}
 	}
