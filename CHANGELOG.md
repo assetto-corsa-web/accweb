@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.18.0
+* Add sorting by number of players.
+* Add session remaining time in the servers list.
+* Move server name to the beggining of the create/update server settings.
+
 ## 1.17.0
 * Link logo to front page.
 * Add title attribute to "log out"-button. 

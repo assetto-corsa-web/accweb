@@ -47,6 +47,8 @@ definitions:
         type: string
       sessionPhase:
         type: string
+      sessionRemaining:
+        type: integer
       sessionType:
         type: string
       tcpPort:
@@ -74,6 +76,8 @@ definitions:
         type: string
       sessionPhase:
         type: string
+      sessionRemaining:
+        type: integer
       sessionType:
         type: string
       tcpPort:
@@ -213,6 +217,8 @@ definitions:
         type: integer
       maxConnections:
         type: integer
+      publicIP:
+        type: string
       registerToLobby:
         type: integer
       tcpPort:
@@ -228,6 +234,8 @@ definitions:
         type: string
       lastName:
         type: string
+      nationality:
+        type: integer
       playerID:
         type: string
       shortName:

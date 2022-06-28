@@ -618,6 +618,9 @@ const docTemplate = `{
                 "sessionPhase": {
                     "type": "string"
                 },
+                "sessionRemaining": {
+                    "type": "integer"
+                },
                 "sessionType": {
                     "type": "string"
                 },
@@ -658,6 +661,9 @@ const docTemplate = `{
                 },
                 "sessionPhase": {
                     "type": "string"
+                },
+                "sessionRemaining": {
+                    "type": "integer"
                 },
                 "sessionType": {
                     "type": "string"
@@ -872,6 +878,9 @@ const docTemplate = `{
                 "maxConnections": {
                     "type": "integer"
                 },
+                "publicIP": {
+                    "type": "string"
+                },
                 "registerToLobby": {
                     "type": "integer"
                 },
@@ -894,6 +903,9 @@ const docTemplate = `{
                 },
                 "lastName": {
                     "type": "string"
+                },
+                "nationality": {
+                    "type": "integer"
                 },
                 "playerID": {
                     "type": "string"
