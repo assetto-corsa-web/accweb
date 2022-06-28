@@ -15,7 +15,7 @@
                 {{$t('sorting')}}
 
                 <select v-model="sorting">
-                    <option v-for="(o, k) in sortingOptions" v-bind:value="k">{{o.label}}</option>
+                    <option v-for="(o, k) in sortingOptions" v-bind:key="k" v-bind:value="k">{{o.label}}</option>
                 </select>
             </label>
         </div>
@@ -50,6 +50,7 @@ export default {
                 "udp_port": {label: "UDP Port", field: "udpPort", order: "asc"},
                 "tcp_port": {label: "TCP Port", field: "tcpPort", order: "asc"},
                 "is_running": {label: "Is Running", field: "isRunning", order: "desc"},
+                "nr_clients": {label: "Driver Count", field: "nrClients", order: "desc"}
             },
             sorting: "name"
         };
