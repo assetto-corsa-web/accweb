@@ -13,7 +13,7 @@ auth:
   moderator_password: mod
   read_only_password: ro
 acc:
-  server_path: "/mnt/d/SteamLibrary/steamapps/common/Assetto Corsa Competizione Dedicated Server/server"
+  server_path: "/app/fake-accserver/build/osx"
   server_exe: accServer.exe
 
 config_path: config/

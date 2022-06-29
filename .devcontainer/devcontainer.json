@@ -1,0 +1,12 @@
+{
+    "build": { "dockerfile": "Dockerfile" },
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "golang.go",
+                "Vue.volar"
+            ]
+        }
+      },
+    "forwardPorts": [3000]
+}
