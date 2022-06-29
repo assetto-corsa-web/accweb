@@ -81,6 +81,12 @@ type LapState struct {
 	SessionOver bool         `json:"sessionOver"`
 }
 
+type ServerChat struct {
+	Timestamp time.Time `json:"ts"`
+	Name      string    `json:"name"`
+	Message   string    `json:"message"`
+}
+
 type LiveState struct {
 	ServerState      ServerState       `json:"serverState"`
 	NrClients        int               `json:"nrClients"`
@@ -90,6 +96,7 @@ type LiveState struct {
 	SessionRemaining int               `json:"sessionRemaining"`
 	Cars             map[int]*CarState `json:"cars"`
 	UpdatedAt        time.Time         `json:"updatedAt"`
+	Chats            []ServerChat      `json:"chats"`
 
 	// drivers waiting to be assigned to a car, key: ConnectionID
 	connections map[int]*DriverState
@@ -101,6 +108,7 @@ func NewLiveState() *LiveState {
 		Cars:        map[int]*CarState{},
 		connections: map[int]*DriverState{},
 		UpdatedAt:   time.Now().UTC(),
+		Chats:       []ServerChat{},
 	}
 }
 
@@ -306,5 +314,21 @@ func (l *LiveState) recalculatePositions() {
 		if cars[i].Position != i+1 {
 			cars[i].Position = i + 1
 		}
+	}
+}
+
+func (l *LiveState) addChat(name, message string) {
+	l.Chats = append(l.Chats, ServerChat{
+		Timestamp: time.Now().UTC(),
+		Name:      name,
+		Message:   message,
+	})
+
+	nrMsg := 30
+
+	t := len(l.Chats)
+
+	if t > nrMsg {
+		l.Chats = l.Chats[t-nrMsg : t]
 	}
 }

@@ -97,6 +97,16 @@
                         </tr>
                     </table>
                 </div>
+
+                <div id="chat">
+                    <h3>Chat</h3>
+
+                    <div class="message" v-for="item in data.live.chats.slice().reverse()" :key="item.ts">
+                        <div class="ts">{{new Date(item.ts).toLocaleString()}}</div>
+                        <div class="name">{{item.name}}:</div> 
+                        <div class="msg">{{item.message}}</div>
+                    </div>
+                </div>
             </div>
         </div>
     </layout>
@@ -127,6 +137,7 @@ export default {
                     sessionPhase: "",
                     sessionRemaining: 0,
                     cars: {},
+                    chats: []
                 }
             },
         };
@@ -277,6 +288,23 @@ td, th {
 
 tr:nth-child(odd) {
   background-color: #1f2936;
+}
+
+#chat .message div {
+    display: inline;
+    margin-right: 10px;
+} 
+
+#chat .message {
+    margin-bottom: 5px;
+} 
+
+.message .ts {
+    color: #304363;
+}
+
+.message .name {
+    font-weight: bold;
 }
 </style>
 
