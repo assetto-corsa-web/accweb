@@ -1,7 +1,8 @@
 export default [
     {value: "barcelona", label: "Barcelona"},
     {value: "brands_hatch", label: "Brands Hatch"},
-    {value: "donington", label: "Donnington"},
+    {value: "cota", label: "Circuit of the Americas"},
+    {value: "donington", label: "Donington"},
     {value: "hungaroring", label: "Hungaroring"},
     {value: "imola", label: "Imola"},
     {value: "kyalami", label: "Kyalami"},
