@@ -1,9 +1,11 @@
 export default [
     {value: "barcelona", label: "Barcelona"},
     {value: "brands_hatch", label: "Brands Hatch"},
+    {value: "cota", label: "Circuit of the Americas"},
     {value: "donington", label: "Donnington"},
     {value: "hungaroring", label: "Hungaroring"},
     {value: "imola", label: "Imola"},
+    {value: "indianapolis", label: "Indianapolis"},
     {value: "kyalami", label: "Kyalami"},
     {value: "laguna_seca", label: "Laguna Seca"},
     {value: "misano", label: "Misano"},
@@ -16,9 +18,7 @@ export default [
     {value: "snetterton", label: "Snetterton"},
     {value: "spa", label: "Spa"},
     {value: "suzuka", label: "Suzuka"},
+    {value: "watkins_glen", label: "Watkins Glen"},
     {value: "zandvoort", label: "Zandvoort"},
     {value: "zolder", label: "Zolder"},
-    {value: "cota", label: "Cota"},
-    {value: "indianapolis", label: "Indianapolis"},
-    {value: "watkins_glen", label: "Watkins glen"},
 ];
