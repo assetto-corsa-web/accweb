@@ -1128,6 +1128,12 @@ const docTemplate = `{
                         "$ref": "#/definitions/instance.CarState"
                     }
                 },
+                "chats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/instance.ServerChat"
+                    }
+                },
                 "nrClients": {
                     "type": "integer"
                 },
@@ -1147,6 +1153,20 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "instance.ServerChat": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "ts": {
                     "type": "string"
                 }
             }
@@ -1245,7 +1265,7 @@ const docTemplate = `{
 
 // SwaggerInfo holds exported Swagger Info so clients can modify it
 var SwaggerInfo = &swag.Spec{
-	Version:          "1.16",
+	Version:          "1.18",
 	Host:             "localhost:8080",
 	BasePath:         "/api",
 	Schemes:          []string{},

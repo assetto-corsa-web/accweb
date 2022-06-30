@@ -4,6 +4,11 @@
 * Add sorting by number of players.
 * Add session remaining time in the servers list.
 * Move server name to the beggining of the create/update server settings.
+* Add live sessions chat to the view.
+* Add config `skip_wine` to skip wine usage even on linux (good for development on windows).
+* Update js libraries versions.
+* [Add devcontainer to development environment (vscode)](https://code.visualstudio.com/docs/remote/containers).
+* Add America DLC Tracks
 
 ## 1.17.0
 * Link logo to front page.

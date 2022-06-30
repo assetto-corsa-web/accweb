@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Launch accweb",
+            "name": "Accweb Backend",
             "type": "go",
             "request": "launch",
             "mode": "auto",

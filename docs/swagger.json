@@ -12,7 +12,7 @@
             "name": "MIT",
             "url": "https://github.com/assetto-corsa-web/accweb/blob/master/LICENSE"
         },
-        "version": "1.16"
+        "version": "1.18"
     },
     "host": "localhost:8080",
     "basePath": "/api",
@@ -1121,6 +1121,12 @@
                         "$ref": "#/definitions/instance.CarState"
                     }
                 },
+                "chats": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/instance.ServerChat"
+                    }
+                },
                 "nrClients": {
                     "type": "integer"
                 },
@@ -1140,6 +1146,20 @@
                     "type": "string"
                 },
                 "updatedAt": {
+                    "type": "string"
+                }
+            }
+        },
+        "instance.ServerChat": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "ts": {
                     "type": "string"
                 }
             }

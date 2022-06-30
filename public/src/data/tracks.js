@@ -5,6 +5,7 @@ export default [
     {value: "donington", label: "Donington"},
     {value: "hungaroring", label: "Hungaroring"},
     {value: "imola", label: "Imola"},
+    {value: "indianapolis", label: "Indianapolis Motor Speedway"},
     {value: "kyalami", label: "Kyalami"},
     {value: "laguna_seca", label: "Laguna Seca"},
     {value: "misano", label: "Misano"},
@@ -17,6 +18,7 @@ export default [
     {value: "snetterton", label: "Snetterton"},
     {value: "spa", label: "Spa"},
     {value: "suzuka", label: "Suzuka"},
+    {value: "watkins_glen", label: "Watkins Glen"},
     {value: "zandvoort", label: "Zandvoort"},
     {value: "zolder", label: "Zolder"},
 ];

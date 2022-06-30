@@ -1,7 +1,6 @@
 # Assetto Corsa Competizione Server Web Interface
 
 [![Discord Shield](https://discordapp.com/api/guilds/913752018588422174/widget.png?style=shield)](https://discord.gg/AVWdF56t6c)
-[![Gitpod Ready-to-Code](https://img.shields.io/badge/Gitpod-Ready--to--Code-blue?logo=gitpod)](https://gitpod.io/#https://github.com/assetto-corsa-web/accweb) 
 [![CircleCI](https://circleci.com/gh/assetto-corsa-web/accweb.svg?style=svg)](https://circleci.com/gh/assetto-corsa-web/accweb)
 [![Go Report Card](https://goreportcard.com/badge/github.com/assetto-corsa-web/accweb)](https://goreportcard.com/report/github.com/assetto-corsa-web/accweb)
 
@@ -146,6 +145,10 @@ Use the following command to run the backend on your terminal.
 make run-dev-backend
 ```
 Keep in mind that you need to restart the command for see the changes that you made in the code working (or not :zany_face:) 
+
+### Visual Studio Code - Remote container
+
+There is a pre-built development environment setup for ACCWeb for Visual Studio Code and Remote Containers. Please, check here how to setup and use: https://code.visualstudio.com/docs/remote/containers
 
 ## Build release
 <a name="release" />
