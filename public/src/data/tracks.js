@@ -5,7 +5,7 @@ export default [
     {value: "donington", label: "Donnington"},
     {value: "hungaroring", label: "Hungaroring"},
     {value: "imola", label: "Imola"},
-    {value: "indianapolis", label: "Indianapolis"},
+    {value: "indianapolis", label: "Indianapolis Motor Speedway"},
     {value: "kyalami", label: "Kyalami"},
     {value: "laguna_seca", label: "Laguna Seca"},
     {value: "misano", label: "Misano"},
