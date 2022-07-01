@@ -183,9 +183,9 @@ export default {
         },
         toFloat(value) {
             if(typeof value === "string") {
-                return Number.getFloat64value(value.replace(",", "."));
+                return parseFloat(value.replace(",", "."), 64);
             }
-
+            
             return value;
         }
     }
