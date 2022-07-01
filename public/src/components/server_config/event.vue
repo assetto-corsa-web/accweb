@@ -175,9 +175,9 @@ export default {
         },
         toFloat(value) {
             if(typeof value === "string") {
-                return parseFloat(value.replace(",", "."));
+                return parseFloat(value.replace(",", "."), 64);
             }
-
+            
             return value;
         }
     }
