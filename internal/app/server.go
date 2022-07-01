@@ -99,9 +99,8 @@ func StartServer(config *cfg.Config, sM *server_manager.Service) {
 
 func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config) {
 	h := Handler{sm: sM}
-
+	basedir := "public"
 	if config.Dev {
-		basedir := "public"
 		r.StaticFile("/", basedir+"/xindex.html")
 		r.Static("/static", basedir+"/static")
 		r.Static("/dist", basedir+"/dist")
@@ -110,7 +109,7 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 			c.FileFromFS("xindex.html", http.FS(public.Content))
 		})
 		r.StaticFS("/static", my("static", http.FS(public.Content)))
-		r.StaticFS("/dist", my("dist", http.FS(public.Content)))
+		r.Static("/dist", basedir+"/dist")
 	}
 
 	authMW := setupAuthRouters(r, config)
