@@ -34,7 +34,7 @@ cp README.md "$DIR/README.md"
 cp build/sample_config.yml "$DIR/config.yml"
 
 # make scripts and accweb executable
-chmod +x "$DIR/accweb"
+# chmod +x "$DIR/accweb"
 chmod +x "$DIR/accweb.exe"
 
 cd "$RDIR"
