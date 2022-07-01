@@ -5,6 +5,7 @@
             :entry="entry"
             v-on:remove="removeEntry"></entry>
         <button v-on:click="addEntry">{{$t("add_entry_button")}}</button>
+        <button v-on:click="clearEntries">{{$t("clear_entries_button")}}</button>
     </collapsible>
 </template>
 
@@ -91,6 +92,11 @@ export default {
             }
 
             return value;
+        },
+        clearEntries(){
+            while(this.entries.length > 0) {
+                this.entries.splice(this.entries[this.entries.length - 1], 1);
+            }
         }
     }
 }
@@ -104,7 +110,8 @@ export default {
         "carModel_label": "Car Model #",
         "ballast_label": "Ballast: 0 to 100kg max.",
 		"restrictor_label": "Motor Restrictor: 0 to 20% max.",
-		"add_entry_button": "Add BOP"
+		"add_entry_button": "Add BOP",
+        "clear_entries_button": "Clear all BOP"
     }
 }
 </i18n>
