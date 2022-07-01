@@ -43,7 +43,7 @@ export default {
             entrylistJson: null,
             bopJson: null,
             assistRulesJson: null,
-            is_running: true
+            is_running: false
         };
     },
     mounted() {
@@ -64,7 +64,7 @@ export default {
 
                 this.is_running = r.data.is_running;
                 this.servername = r.data.acc.settings.serverName;
-                this.$refs.accweb.setData(r.data)
+                this.$refs.accweb.setData(r.data.accWeb)
                 this.$refs.basic.setData(r.data.acc.configuration);
                 this.$refs.settings.setData(r.data.acc.settings);
                 this.$refs.event.setData(r.data.acc.event);

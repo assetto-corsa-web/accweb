@@ -36,6 +36,8 @@ const (
 var (
 	ErrServerCantBeRunning = errors.New("server instance cant be running to perform this action")
 	ErrServerDirIsInvalid  = errors.New("server directory is invalid")
+	ErrInvalidCoreAffinity = errors.New("invalid core affinity value")
+	ErrInvalidCpuPriority  = errors.New("invalid cpu priority value")
 )
 
 type Instance struct {
@@ -108,13 +110,35 @@ func (s *Instance) GetProcessID() int {
 	return 0
 }
 
-func (s *Instance) Save() error {
+func (s *Instance) CanSaveSettings(aw AccWebSettingsJson, ac AccConfigFiles) error {
 	if s.IsRunning() {
 		return ErrServerCantBeRunning
 	}
 
-	if s.Cfg.Settings.CoreAffinity == 0 {
-		s.Cfg.Settings.CoreAffinity = DefaultCoreAffinity
+	if s.Cfg.Settings.EnableAdvWinCfg {
+		if s.Cfg.Settings.AdvWindowsCfg == nil {
+			return errors.New("where are the Advanced Windows Config definitions?")
+		}
+
+		if s.Cfg.Settings.AdvWindowsCfg.CoreAffinity > DefaultCoreAffinity {
+			return ErrInvalidCoreAffinity
+		}
+
+		if _, ok := CpuPriorities[int(s.Cfg.Settings.AdvWindowsCfg.CpuPriority)]; !ok {
+			return ErrInvalidCpuPriority
+		}
+	}
+
+	return nil
+}
+
+func (s *Instance) Save() error {
+	if err := s.CanSaveSettings(s.Cfg.Settings, s.AccCfg); err != nil {
+		return err
+	}
+
+	if s.Cfg.Settings.AdvWindowsCfg != nil && s.Cfg.Settings.AdvWindowsCfg.CoreAffinity == 0 {
+		s.Cfg.Settings.AdvWindowsCfg.CoreAffinity = DefaultCoreAffinity
 	}
 
 	fileList := map[string]interface{}{

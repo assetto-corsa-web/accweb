@@ -2,6 +2,7 @@ package app
 
 import (
 	"net/http"
+	"runtime"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
 
@@ -78,4 +79,20 @@ func (h *Handler) StopAllServers(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, nil)
+}
+
+// Metadata Show some useful informations
+// @Summary Show some useful informations
+// @Schemes
+// @Description Metadata informations
+// @Tags servers
+// @Produce json
+// @Success 200
+// @Router /metadata [get]
+// @Security JWT
+func (h *Handler) Metadata(c *gin.Context) {
+	c.JSON(http.StatusOK, &InstanceOS{
+		Name:   runtime.GOOS,
+		NumCPU: runtime.NumCPU(),
+	})
 }

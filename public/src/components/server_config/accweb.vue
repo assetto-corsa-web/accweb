@@ -4,21 +4,22 @@
             <div>
                 <checkbox :label="$t('autostart_label')" v-model="autoStart"></checkbox>
 
-                <div v-if="os.name != 'windows'">
-                    <checkbox :label="$t('enable_adv_windows_conf')" v-model="enableAdvWinCfg"></checkbox>
+                <div v-if="os.name == 'windows'">
+                    <checkbox :label="$t('enable_adv_windows_conf')" v-model="enableAdvWindowsCfg"></checkbox>
 
-                    <div v-if="enableAdvWinCfg" style="padding: 10px;">
+                    <div v-if="enableAdvWindowsCfg" style="padding: 10px;">
+                        <div class="alert">{{$t('adv_windows_alert')}}</div>
+
                         <div class="server-settings-container two-columns">
-                            <selection :label="$t('priority_label')" :options="priorities" v-model="priority"></selection>
+                            <selection :label="$t('cpu_priority_label')" :options="priorities" v-model="advWindowsCfg.cpuPriority"></selection>
 
-                            <checkbox :label="$t('enable_windows_firewall')" v-model="enableWindowsFirewall"></checkbox>
+                            <checkbox :label="$t('enable_windows_firewall')" v-model="advWindowsCfg.enableWindowsFirewall"></checkbox>
                         </div>        
             
-                        <label>Core Affinity:</label> <br /> 
+                        <label>Core Affinity: (Empty means ALL CPUs)</label> <br /> 
                         <div class="server-settings-container four-columns">
                             <checkbox :label="'CPU '+(n-1)" v-for="n in os.numCpu" :key="n" v-model="coreAffinityCPU[n-1]"></checkbox>
                         </div>
-                        <div>Empty means ALL</div>
                     </div>
                 </div>
             </div>
@@ -28,18 +29,33 @@
     </collapsible>
 </template>
 
+<style>
+.alert {
+    border: 1px solid #3f0b0b;
+    padding: 5px;
+    background-color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+</style>
+
 <script>
 import collapsible from "../collapsible.vue";
 import checkbox from "../checkbox.vue";
 import selection from "../selection.vue";
+import axios from "axios";
 
 export default {
     components: {collapsible, checkbox, selection},
     data() {
         return {
-            enableAdvWinCfg: false,
-            enableWindowsFirewall: false,
             autoStart: false,
+            enableAdvWindowsCfg: false,
+            advWindowsCfg: {
+                enableWindowsFirewall: false,
+                cpuPriority: 32,
+                coreAffinity: 0
+            },
             priorities: [
                 {value: 256, label: "Realtime"},
                 {value: 128, label: "High"},
@@ -48,8 +64,6 @@ export default {
                 {value: 16384, label: "Below Normal"},
                 {value: 64, label: "Low"},
             ],
-            priority: 32,
-            coreAffinity: 0,
             coreAffinityCPU: [],
             os: {
                 name: "",
@@ -57,11 +71,25 @@ export default {
             }
         };
     },
+    mounted() {
+        axios.get("/api/metadata")
+            .then(r => {
+                this.os = r.data;
+
+                for (let i = 0; i <= this.os.numCpu; i++) {
+                    this.coreAffinityCPU[i] = this.hasCPUAffinity(i)
+                }
+            })
+    },
     methods: {
         hasCPUAffinity(n) {
-            return this.coreAffinity & Math.pow(2, n) ? true : false;
+            if (this.advWindowsCfg.coreAffinity == 0) {
+                this.advWindowsCfg.coreAffinity = Math.pow(2, this.os.numCpu) - 1;
+            }
+
+            return this.advWindowsCfg.coreAffinity & Math.pow(2, n) ? true : false;
         },
-        calculatedAffinity() {
+        calculateAffinity() {
             let total = 0;
             for (const i in this.coreAffinityCPU) {
                 if (Object.hasOwnProperty.call(this.coreAffinityCPU, i)) {
@@ -75,18 +103,23 @@ export default {
             return total;
         },
         setData(data) {
-            this.autoStart = data.accWeb.autoStart;
-            this.coreAffinity = data.accWeb.coreAffinity;
-            this.os = data.os;
+            this.autoStart = data.autoStart;
+            this.enableAdvWindowsCfg = data.enableAdvWindowsCfg;
 
-            for (let i = 0; i <= this.os.numCpu; i++) {
-                this.coreAffinityCPU[i] = this.hasCPUAffinity(i)
+            if (data.advWindowsCfg !== null) {
+                this.advWindowsCfg = data.advWindowsCfg;
             }
         },
         getData() {
+            if (this.enableAdvWindowsCfg) {
+                this.advWindowsCfg.coreAffinity = this.calculateAffinity();
+                this.advWindowsCfg.cpuPriority = parseInt(this.advWindowsCfg.cpuPriority);
+            }
+
             return {
-              autoStart: this.autoStart,
-              coreAffinity: this.calculatedAffinity()
+                autoStart: this.autoStart,
+                enableAdvWindowsCfg: this.enableAdvWindowsCfg,
+                advWindowsCfg: this.advWindowsCfg
             };
         }
     }
@@ -99,8 +132,9 @@ export default {
         "title": "ACC Web configuration",
         "autostart_label": "Server instance auto start.",
         "enable_adv_windows_conf": "Advanced Windows Configurations",
-        "priority_label": "Process priority",
-        "enable_windows_firewall": "Enable Windows Firewall"
+        "cpu_priority_label": "Process priority",
+        "enable_windows_firewall": "Enable Windows Firewall",
+        "adv_windows_alert": "CAUTION: If you are not familiarized with this terms, DISABLE this feature!"
     }
 }
 </i18n>

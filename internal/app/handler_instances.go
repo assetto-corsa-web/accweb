@@ -4,7 +4,6 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
-	"runtime"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
@@ -25,7 +24,6 @@ type InstancePayload struct {
 	Settings         instance.AccWebSettingsJson `json:"accWeb"`
 	AccSettings      instance.AccConfigFiles     `json:"acc"`
 	AccExtraSettings ExtraAccSettings            `json:"accExtraSettings"`
-	OS               InstanceOS                  `json:"os"`
 }
 
 type InstanceOS struct {
@@ -47,10 +45,6 @@ func NewInstancePayload(srv *instance.Instance) InstancePayload {
 		PID:         srv.GetProcessID(),
 		Settings:    srv.Cfg.Settings,
 		AccSettings: srv.AccCfg,
-		OS: InstanceOS{
-			Name:   runtime.GOOS,
-			NumCPU: runtime.NumCPU(),
-		},
 	}
 
 	res.AccExtraSettings.PasswordIsEmpty = res.AccSettings.Settings.Password == ""
@@ -143,11 +137,6 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 		return
 	}
 
-	if srv.IsRunning() {
-		c.JSON(http.StatusBadRequest, newAccWError(instance.ErrServerCantBeRunning.Error()))
-		return
-	}
-
 	var json SaveInstancePayload
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
@@ -170,6 +159,11 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 		json.Acc.Settings.AdminPassword = ""
 	} else if json.Acc.Settings.AdminPassword == "" {
 		json.Acc.Settings.AdminPassword = srv.AccCfg.Settings.AdminPassword
+	}
+
+	if err := srv.CanSaveSettings(json.AccWeb, json.Acc); err != nil {
+		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
+		return
 	}
 
 	srv.AccCfg = json.Acc

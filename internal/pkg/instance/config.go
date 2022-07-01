@@ -12,6 +12,24 @@ const (
 	bopJsonName           = "bop.json"
 	assistRulesJsonName   = "assistRules.json"
 	configVersion         = 1
+
+	WinCpuPriorityRealtime    = 256
+	WinCpuPriorityHigh        = 128
+	WinCpuPriorityAboveNormal = 32768
+	WinCpuPriorityNormal      = 32
+	WinCpuPriorityBelowNormal = 16384
+	WinCpuPriorityLow         = 64
+)
+
+var (
+	CpuPriorities = map[int]bool{
+		WinCpuPriorityRealtime:    true,
+		WinCpuPriorityHigh:        true,
+		WinCpuPriorityAboveNormal: true,
+		WinCpuPriorityNormal:      true,
+		WinCpuPriorityBelowNormal: true,
+		WinCpuPriorityLow:         true,
+	}
 )
 
 type AccConfigFiles struct {
@@ -34,8 +52,15 @@ type AccWebConfigJson struct {
 }
 
 type AccWebSettingsJson struct {
-	AutoStart    bool `json:"autoStart"`
-	CoreAffinity int  `json:"coreAffinity"`
+	AutoStart       bool                          `json:"autoStart"`
+	EnableAdvWinCfg bool                          `json:"enableAdvWindowsCfg"`
+	AdvWindowsCfg   *AccWebAdvWindowsSettingsJson `json:"advWindowsCfg"`
+}
+
+type AccWebAdvWindowsSettingsJson struct {
+	CpuPriority  uint `json:"cpuPriority"`
+	CoreAffinity uint `json:"coreAffinity"`
+	EnableWinFW  bool `json:"enableWindowsFirewall"`
 }
 
 func (a *AccWebConfigJson) SetUpdateAt() {
