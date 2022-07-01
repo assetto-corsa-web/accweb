@@ -25,11 +25,17 @@ type AccConfigFiles struct {
 }
 
 type AccWebConfigJson struct {
-	ID        string    `json:"id"`
-	Md5Sum    string    `json:"md5Sum"`
-	AutoStart bool      `json:"autoStart"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID        string             `json:"id"`
+	Md5Sum    string             `json:"md5Sum"`
+	AutoStart bool               `json:"autoStart"` // backward compatibility
+	Settings  AccWebSettingsJson `json:"settings"`
+	CreatedAt time.Time          `json:"createdAt"`
+	UpdatedAt time.Time          `json:"updatedAt"`
+}
+
+type AccWebSettingsJson struct {
+	AutoStart    bool `json:"autoStart"`
+	CoreAffinity int  `json:"coreAffinity"`
 }
 
 func (a *AccWebConfigJson) SetUpdateAt() {

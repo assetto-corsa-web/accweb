@@ -3,7 +3,7 @@
         <div class="title">
             <h1>{{servername}}</h1>
             <div class="menu">
-                <button class="primary" v-on:click="save" v-if="is_admin"><i class="fas fa-save"></i> {{$t("save")}}</button>
+                <button class="primary" v-on:click="save" v-if="is_admin && !is_running"><i class="fas fa-save"></i> {{$t("save")}}</button>
                 <button v-on:click="$router.push('/')" v-if="is_admin"><i class="fas fa-ban"></i> {{$t("cancel")}}</button>
                 <button class="primary" v-on:click="$router.push('/')" v-if="!is_admin"><i class="fas fa-arrow-left"></i> {{$t("back")}}</button>
             </div>
@@ -42,7 +42,8 @@ export default {
             eventRulesJson: null,
             entrylistJson: null,
             bopJson: null,
-            assistRulesJson: null
+            assistRulesJson: null,
+            is_running: true
         };
     },
     mounted() {
@@ -61,8 +62,9 @@ export default {
                 settings.adminPasswordIsEmpty = r.data.accExtraSettings.adminPasswordIsEmpty
                 settings.spectatorPasswordIsEmpty = r.data.accExtraSettings.spectatorPasswordIsEmpty
 
+                this.is_running = r.data.is_running;
                 this.servername = r.data.acc.settings.serverName;
-                this.$refs.accweb.setData(r.data.accWeb)
+                this.$refs.accweb.setData(r.data)
                 this.$refs.basic.setData(r.data.acc.configuration);
                 this.$refs.settings.setData(r.data.acc.settings);
                 this.$refs.event.setData(r.data.acc.event);
@@ -111,7 +113,7 @@ export default {
                 this.$router.push("/");
             })
             .catch(e => {
-                this.$store.commit("toast", this.$t("save_error"))
+                this.$store.commit("toast", this.$t("save_error") + ' ERROR: ' + e.response.data.error);
             });
         }
     }

@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"runtime"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
@@ -17,19 +18,25 @@ type ExtraAccSettings struct {
 }
 
 type InstancePayload struct {
-	ID               string                    `json:"id"`
-	Path             string                    `json:"path"`
-	IsRunning        bool                      `json:"is_running"`
-	PID              int                       `json:"pid"`
-	Settings         instance.AccWebConfigJson `json:"accWeb"`
-	AccSettings      instance.AccConfigFiles   `json:"acc"`
-	AccExtraSettings ExtraAccSettings          `json:"accExtraSettings"`
+	ID               string                      `json:"id"`
+	Path             string                      `json:"path"`
+	IsRunning        bool                        `json:"is_running"`
+	PID              int                         `json:"pid"`
+	Settings         instance.AccWebSettingsJson `json:"accWeb"`
+	AccSettings      instance.AccConfigFiles     `json:"acc"`
+	AccExtraSettings ExtraAccSettings            `json:"accExtraSettings"`
+	OS               InstanceOS                  `json:"os"`
+}
+
+type InstanceOS struct {
+	Name   string `json:"name"`
+	NumCPU int    `json:"numCpu"`
 }
 
 type SaveInstancePayload struct {
-	AccWeb           instance.AccWebConfigJson `json:"accWeb"`
-	Acc              instance.AccConfigFiles   `json:"acc"`
-	AccExtraSettings ExtraAccSettings          `json:"accExtraSettings"`
+	AccWeb           instance.AccWebSettingsJson `json:"accWeb"`
+	Acc              instance.AccConfigFiles     `json:"acc"`
+	AccExtraSettings ExtraAccSettings            `json:"accExtraSettings"`
 }
 
 func NewInstancePayload(srv *instance.Instance) InstancePayload {
@@ -38,8 +45,12 @@ func NewInstancePayload(srv *instance.Instance) InstancePayload {
 		Path:        srv.Path,
 		IsRunning:   srv.IsRunning(),
 		PID:         srv.GetProcessID(),
-		Settings:    srv.Cfg,
+		Settings:    srv.Cfg.Settings,
 		AccSettings: srv.AccCfg,
+		OS: InstanceOS{
+			Name:   runtime.GOOS,
+			NumCPU: runtime.NumCPU(),
+		},
 	}
 
 	res.AccExtraSettings.PasswordIsEmpty = res.AccSettings.Settings.Password == ""
@@ -98,7 +109,7 @@ func (h *Handler) NewInstance(c *gin.Context) {
 		return
 	}
 
-	srv, err := h.sm.Create(&json.Acc, json.AccWeb.AutoStart)
+	srv, err := h.sm.Create(&json.Acc, json.AccWeb)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
@@ -132,6 +143,11 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 		return
 	}
 
+	if srv.IsRunning() {
+		c.JSON(http.StatusBadRequest, newAccWError(instance.ErrServerCantBeRunning.Error()))
+		return
+	}
+
 	var json SaveInstancePayload
 	if err := c.ShouldBindJSON(&json); err != nil {
 		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
@@ -157,7 +173,7 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 	}
 
 	srv.AccCfg = json.Acc
-	srv.Cfg.AutoStart = json.AccWeb.AutoStart
+	srv.Cfg.Settings = json.AccWeb
 
 	if err := srv.Save(); err != nil {
 		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))

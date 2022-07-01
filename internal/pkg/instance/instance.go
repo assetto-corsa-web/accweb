@@ -113,6 +113,10 @@ func (s *Instance) Save() error {
 		return ErrServerCantBeRunning
 	}
 
+	if s.Cfg.Settings.CoreAffinity == 0 {
+		s.Cfg.Settings.CoreAffinity = DefaultCoreAffinity
+	}
+
 	fileList := map[string]interface{}{
 		accwebConfigJsonName:  &s.Cfg,
 		configurationJsonName: &s.AccCfg.Configuration,
