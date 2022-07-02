@@ -177,6 +177,9 @@ export default {
             }
         },
         clearSessions() {
+            if (!window.confirm(this.$t("confirm_clear_sessions"))) {
+                return;
+            }
             while(this.sessions.length > 0) {
                 this.sessions.splice(this.sessions[this.sessions.length - 1], 1);
             }
@@ -212,6 +215,7 @@ export default {
         "add_sessions_q_r_button": "Add sessions (Q/R)",
         "add_sessions_p_q_r_button": "Add sessions (P/Q/R)",
         "clear_sessions_button": "Clear all Sessions"
+        "confirm_clear_sessions": "Do you really want to remove all sessions?",
     }
 }
 </i18n>
