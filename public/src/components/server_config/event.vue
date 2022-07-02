@@ -212,8 +212,8 @@ export default {
         "add_session_button": "Add session",
         "add_sessions_q_r_button": "Add sessions (Q/R)",
         "add_sessions_p_q_r_button": "Add sessions (P/Q/R)",
-        "clear_sessions_button": "Clear all Sessions"
-        "confirm_clear_sessions": "Do you really want to remove all sessions?",
+        "clear_sessions_button": "Clear all Sessions",
+        "confirm_clear_sessions": "Do you really want to remove all sessions?"
     }
 }
 </i18n>

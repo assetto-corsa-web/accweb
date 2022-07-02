@@ -118,8 +118,8 @@ export default {
         "title": "Entry List",
         "forceentrylist_label": "Force Entry List",
         "add_entry_button": "Add Entry",
-        "clear_entries_button": "Clear all Entries"
-        "confirm_clear_entries": "Do you really want to remove all entries?",
+        "clear_entries_button": "Clear all Entries",
+        "confirm_clear_entries": "Do you really want to remove all entries?"
     }
 }
 </i18n>
