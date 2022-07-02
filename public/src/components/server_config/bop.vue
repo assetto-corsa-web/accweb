@@ -94,6 +94,9 @@ export default {
             return value;
         },
         clearEntries(){
+            if (!window.confirm(this.$t("confirm_clear_entries"))) {
+                return;
+            }
             while(this.entries.length > 0) {
                 this.entries.splice(this.entries[this.entries.length - 1], 1);
             }
@@ -112,6 +115,7 @@ export default {
 		"restrictor_label": "Motor Restrictor: 0 to 20% max.",
 		"add_entry_button": "Add BOP",
         "clear_entries_button": "Clear all BOP"
+        "confirm_clear_entries": "Do you really want to remove all BOP?",
     }
 }
 </i18n>
