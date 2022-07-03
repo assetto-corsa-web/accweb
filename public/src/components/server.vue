@@ -13,24 +13,24 @@
 							</span>
 							<v-divider></v-divider>
 							</div>
-							<v-list-item-title class="text-h5 mb-1" v-if="server.pid">
+							<v-list-item-title class="text-h6 mb-1" v-if="server.pid">
 								PID: {{ server.pid }}
 								<v-divider></v-divider>
 							</v-list-item-title>
-							<v-list-item-title class="text-h6 mb-4">
+							<v-list-item-title class="text-h6 mb-1">
 								UDP: {{ server.udpPort }} TCP: {{ server.tcpPort }}
 								<v-divider></v-divider>
 								{{ $t("track") }}: {{ server.track }}
 							</v-list-item-title>
-							<v-list-item-title class="text-h5 mb-1" v-if="!ro">
-							<v-divider></v-divider>
+							<v-list-item-title class="text-h6 mb-1" v-if="!ro">
 								{{ $t("configuration_directory") }}: {{ server.id }}
+								<v-divider></v-divider>
 							</v-list-item-title>
 							<div class="info state" v-if="server.pid">
-							<v-divider></v-divider>
 								<b>{{ $t("state") }}: </b>{{ $t(server.serverState) }} &bull;
-								<b>{{ $t("number_of_drivers") }}: </b
-								>{{ formattedServerClientCount }} &bull;
+								<b>{{ $t("number_of_drivers") }}: </b>
+								{{ formattedServerClientCount }}
+								<v-divider></v-divider>
 								<b>{{ $t("session") }}: </b>
 								<span v-if="server.sessionType"
 									>{{ server.sessionType }} ({{ server.sessionPhase }}) -
