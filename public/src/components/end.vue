@@ -1,9 +1,13 @@
 <template>
-    <div class="end">
-        <a href="https://github.com/assetto-corsa-web/accweb" target="_blank">accweb Version %VERSION% (%COMMIT%)</a>
-    </div>
+  <v-footer padless>
+    <v-col
+      class="text-center"
+      cols="12"
+    >
+      {{ new Date().getFullYear() }} — <strong>accweb Version %VERSION% (%COMMIT%)</strong>
+    </v-col>
+  </v-footer>
 </template>
-
 <script>
 export default {}
 </script>

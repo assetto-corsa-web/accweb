@@ -64,6 +64,16 @@
 									elevation="2"
 									x-small
 									mx-2
+									v-on:click="live"
+									v-if="is_mod && !ro && server.pid"
+									><i class="fas fa-tv"></i>{{ $t("view_live") }}</v-btn
+								>
+							</v-col>							
+							<v-col>
+								<v-btn
+									elevation="2"
+									x-small
+									mx-2
 									v-on:click="deleteServer"
 									v-if="is_admin && !ro"
 									><i class="fas fa-trash"></i>Del</v-btn

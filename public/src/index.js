@@ -18,7 +18,7 @@ Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueI18n);
 Vue.config.productionTip = false;
-Vue.config.devtools = false;
+Vue.config.devtools = true;
 Vue.component('tabs', Tabs);
 Vue.component('tab', Tab);
 Vue.use(VueSplit);
