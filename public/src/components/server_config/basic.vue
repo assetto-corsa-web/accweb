@@ -17,7 +17,6 @@
 import collapsible from "../collapsible.vue";
 import field from "../field.vue";
 import checkbox from "../checkbox.vue";
-
 export default {
     components: {collapsible, field, checkbox},
     data() {
@@ -47,10 +46,8 @@ export default {
                 registerToLobby: this.registerToLobby ? 1 : 0,
                 lanDiscovery: this.lanDiscovery ? 1 : 0,
                 publicIP: this.publicIP
-            };         
-        },
-        created: function() {},
-        methods: {}      
+            };
+        }
     }
 }
 </script>
