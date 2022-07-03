@@ -1,48 +1,66 @@
 <template>
-    <div class="server">
-        <div>
-            <div class="name">
-                {{server.name}}
-                <span v-if="is_ro">
-                    <i class="fas fa-tv" v-if="server.pid" v-on:click="live" :title="$t('view_live')"></i>
-                </span>
-                <span v-if="!ro">
-                    <i class="fas fa-cog" v-on:click="edit" :title="$t('change_config')"></i>
-                    <i class="fas fa-terminal" v-on:click="logs" :title="$t('view_logs')"></i>
-                    <i class="fas fa-copy" v-on:click="copyConfig" v-if="is_admin" :title="$t('copy_config')"></i>
-                    <i class="fas fa-file-download" v-on:click="exportConfig" :title="$t('export_config')"></i>
-                    <i class="fas fa-trash" v-on:click="deleteServer" v-if="is_admin" :title="$t('delete_server')"></i>
-                </span>
-            </div>
-            <div class="info">
-                <span v-if="server.pid">PID: {{server.pid}}</span>
-                UDP: {{server.udpPort}} &bull;
-                TCP: {{server.tcpPort}} &bull;
-                {{$t("track")}}: {{server.track}}
-                <span v-if="!ro">&bull; {{$t("configuration_directory")}}: {{server.id}}</span>
-            </div>
-            <div class="info state" v-if="server.pid">
-                <b>{{$t("state")}}: </b>{{$t(server.serverState)}} &bull;
-                <b>{{$t("number_of_drivers")}}: </b>{{formattedServerClientCount}} &bull;
-                <b>{{$t("session")}}: </b>
-                <span v-if="server.sessionType">{{server.sessionType}} ({{server.sessionPhase}}) - {{server.sessionRemaining}} min(s)</span>
-                <span v-else>{{$t('not_detected')}}</span>
-            </div>
-        </div>
-        <button class="start" v-on:click="start" v-if="is_mod && !ro && !server.pid">{{$t("start_server")}}</button>
-        <button class="stop" v-on:click="stop" v-if="is_mod && !ro && server.pid">{{$t("stop_server")}}</button>
-        <div class="online" v-if="ro && server.pid">{{$t("running")}}</div>
-        <div class="offline" v-if="ro && !server.pid">{{$t("offline")}}</div>
-    </div>
+	<v-container fluid>
+		<v-row no-gutters>
+			<v-col md="6">
+				<v-card>
+					<v-list-item three-line>
+						<v-list-item-content>
+							<div class="text-overline mb-4">
+								{{ server.name }}
+							</div>
+							<v-list-item-title class="text-h5 mb-1" v-if="server.pid">
+								PID: {{ server.pid }}
+							</v-list-item-title>
+							<v-list-item-title class="text-h6 mb-4">
+								UDP: {{ server.udpPort }} TCP: {{ server.tcpPort }} {{ $t("track") }}:
+								{{ server.track }}
+							</v-list-item-title>
+							<v-list-item-title class="text-h5 mb-1" v-if="!ro">
+								{{ $t("configuration_directory") }}: {{ server.id }}
+							</v-list-item-title>
+							<div class="info state" v-if="server.pid">
+								<b>{{ $t("state") }}: </b>{{ $t(server.serverState) }} &bull;
+								<b>{{ $t("number_of_drivers") }}: </b
+								>{{ formattedServerClientCount }} &bull;
+								<b>{{ $t("session") }}: </b>
+								<span v-if="server.sessionType"
+									>{{ server.sessionType }} ({{ server.sessionPhase }}) -
+									{{ server.sessionRemaining }} min(s)</span
+								>
+								<span v-else>{{ $t("not_detected") }}</span>
+							</div>
+						</v-list-item-content>
+					</v-list-item>
+
+					<v-card-actions>
+						<v-btn
+							class="start"
+							v-on:click="start"
+							v-if="is_mod && !ro && !server.pid"
+							>{{ $t("start_server") }}</v-btn
+						>
+						<v-btn
+							class="stop"
+							v-on:click="stop"
+							v-if="is_mod && !ro && server.pid"
+							>{{ $t("stop_server") }}</v-btn
+						>
+						<div class="online" v-if="ro && server.pid">{{ $t("running") }}</div>
+						<div class="offline" v-if="ro && !server.pid">{{ $t("offline") }}</div>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+		</v-row>
+	</v-container>
 </template>
 
 <style>
 .state {
-    margin-top: 10px;
+	margin-top: 10px;
 }
 
 .state b {
-    color: #505050;
+	color: #00ff14;
 }
 </style>
 
@@ -50,68 +68,80 @@
 import axios from "axios";
 
 export default {
-    props: ["server", "ro"],
-    computed: {
-        formattedServerClientCount: function () {
-            return this.server.serverState === 'not_registered' ? '-' : this.server.nrClients;
-        }
-    },
-    methods: {
-        edit() {
-            this.$router.push(`/server?id=${this.server.id}`);
-        },
-        logs() {
-            this.$router.push(`/logs?id=${this.server.id}`);
-        },
-        live() {
-            this.$router.push(`/live?id=${this.server.id}`);
-        },
-        copyConfig() {
-            axios.post(`/api/instance/${this.server.id}/clone`)
-            .then(() => {
-                this.$emit("copied");
-            })
-            .catch(e => {
-                this.$store.commit("toast", this.$t("copy_server_error"))
-            });
-        },
-        exportConfig() {
-            let link = document.createElement("a");
-            link.setAttribute("type", "hidden");
-            link.href = `/api/instance/${this.server.id}/export?token=${this.$store.state.auth.token}`;
-            document.body.appendChild(link);
-            link.click();
-            link.remove();
-        },
-        deleteServer() {
-            axios.delete(`/api/instance/${this.server.id}`)
-            .then(() => {
-                this.$emit("deleted");
-            })
-            .catch(e => {
-                this.$store.commit("toast", this.$t("delete_server_error"))
-            });
-        },
-        start() {
-            axios.post(`/api/instance/${this.server.id}/start`)
-            .then(() => {
-                this.$emit("started");
-            })
-            .catch(e => {
-                this.$store.commit("toast", this.$t("start_server_error"))
-            });
-        },
-        stop() {
-            axios.post(`/api/instance/${this.server.id}/stop`)
-            .then(() => {
-                this.$emit("stopped");
-            })
-            .catch(e => {
-                this.$store.commit("toast", this.$t("stop_server_error"))
-            });
-        }
-    }
-}
+	props: ["server", "ro"],
+	data: () => ({
+		justify: ["start", "center", "end", "space-around", "space-between"],
+        value: 1
+	}),
+	computed: {
+		formattedServerClientCount: function() {
+			return this.server.serverState === "not_registered"
+				? "-"
+				: this.server.nrClients;
+		}
+	},
+	methods: {
+		edit() {
+			this.$router.push(`/server?id=${this.server.id}`);
+		},
+		logs() {
+			this.$router.push(`/logs?id=${this.server.id}`);
+		},
+		live() {
+			this.$router.push(`/live?id=${this.server.id}`);
+		},
+		copyConfig() {
+			axios
+				.post(`/api/instance/${this.server.id}/clone`)
+				.then(() => {
+					this.$emit("copied");
+				})
+				.catch(e => {
+					this.$store.commit("toast", this.$t("copy_server_error"));
+				});
+		},
+		exportConfig() {
+			let link = document.createElement("a");
+			link.setAttribute("type", "hidden");
+			link.href = `/api/instance/${this.server.id}/export?token=${
+				this.$store.state.auth.token
+			}`;
+			document.body.appendChild(link);
+			link.click();
+			link.remove();
+		},
+		deleteServer() {
+			axios
+				.delete(`/api/instance/${this.server.id}`)
+				.then(() => {
+					this.$emit("deleted");
+				})
+				.catch(e => {
+					this.$store.commit("toast", this.$t("delete_server_error"));
+				});
+		},
+		start() {
+			axios
+				.post(`/api/instance/${this.server.id}/start`)
+				.then(() => {
+					this.$emit("started");
+				})
+				.catch(e => {
+					this.$store.commit("toast", this.$t("start_server_error"));
+				});
+		},
+		stop() {
+			axios
+				.post(`/api/instance/${this.server.id}/stop`)
+				.then(() => {
+					this.$emit("stopped");
+				})
+				.catch(e => {
+					this.$store.commit("toast", this.$t("stop_server_error"));
+				});
+		}
+	}
+};
 </script>
 
 <i18n>

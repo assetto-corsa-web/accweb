@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')" with-import="true" import-filename="event.json" @load="setData">
+    <div :title="$t('title')" with-import="true" import-filename="event.json" @load="setData">
         <div style="margin-bottom: 1.0rem;">
             <selection :label="$t('track_label')" :options="tracks" v-model="track"></selection>
         </div>
@@ -29,7 +29,7 @@
           <button v-on:click="addDefaultSessions('Q/R')">{{$t("add_sessions_q_r_button")}}</button>
           <button v-on:click="addDefaultSessions('P/Q/R')">{{$t("add_sessions_p_q_r_button")}}</button>
         </div>
-    </collapsible>
+    </div>
 </template>
 
 <script>

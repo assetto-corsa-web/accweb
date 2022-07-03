@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')" with-import="true" import-filename="configuration.json" @load="setData">
+    <div :title="$t('title')" with-import="true" import-filename="configuration.json" @load="setData">
         <div class="server-settings-container two-columns">
             <field type="number" :label="$t('udp_label')" v-model="udpPort"></field>
             <field type="number" :label="$t('tcp_label')" v-model="tcpPort"></field>
@@ -10,7 +10,7 @@
         </div>
         <checkbox :label="$t('registertolobby_label')" v-model="registerToLobby"></checkbox>
         <checkbox :label="$t('landiscovery_label')" v-model="lanDiscovery"></checkbox>
-    </collapsible>
+    </div>
 </template>
 
 <script>
@@ -47,8 +47,10 @@ export default {
                 registerToLobby: this.registerToLobby ? 1 : 0,
                 lanDiscovery: this.lanDiscovery ? 1 : 0,
                 publicIP: this.publicIP
-            };
-        }
+            };         
+        },
+        created: function() {},
+        methods: {}      
     }
 }
 </script>

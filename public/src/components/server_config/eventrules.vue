@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')" with-import="true" import-filename="eventRules.json" @load="setData">
+    <div :title="$t('title')" with-import="true" import-filename="eventRules.json" @load="setData">
         <selection :label="$t('qualifyStandingType_label')" :options="qualifyStandingTypes" v-model="qualifyStandingType"></selection>
         <div class="server-settings-container three-columns" style="margin-top: 1.0rem;">
             <field type="number" :label="$t('pitWindowLengthSec_label')" v-model="pitWindowLengthSec"></field>
@@ -14,7 +14,7 @@
         <checkbox :label="$t('isMandatoryPitstopRefuellingRequired_label')" v-model="isMandatoryPitstopRefuellingRequired"></checkbox>
         <checkbox :label="$t('isMandatoryPitstopTyreChangeRequired_label')" v-model="isMandatoryPitstopTyreChangeRequired"></checkbox>
         <checkbox :label="$t('isMandatoryPitstopSwapDriverRequired_label')" v-model="isMandatoryPitstopSwapDriverRequired"></checkbox>
-    </collapsible>
+    </div>
 </template>
 
 <script>

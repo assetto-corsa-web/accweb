@@ -1,10 +1,7 @@
 <template>
 	<layout small="true">
-		<div class="title">
-			<h1>{{$t("title")}}</h1>
-		</div>
 		<form v-on:submit.prevent="login">
-			<field type="password" :label="$t('password_label')" :placeholder="$t('password_placeholder')" :error="error" v-model="password"></field>
+			<field type="password" :placeholder="$t('password_placeholder')" :error="error" v-model="password"></field>
 			<input class="primary" type="submit" :value="$t('submit_value')" />
 		</form>
 	</layout>

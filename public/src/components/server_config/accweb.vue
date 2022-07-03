@@ -1,7 +1,7 @@
 <template>
-    <collapsible :title="$t('title')">
+    <div :title="$t('title')">
         <checkbox :label="$t('autostart_label')" v-model="autoStart"></checkbox>
-    </collapsible>
+    </div>
 </template>
 
 <script>

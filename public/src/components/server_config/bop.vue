@@ -1,11 +1,11 @@
 <template>
-    <collapsible :title="$t('title')" with-import="true" import-filename="bop.json" @load="setData">
+    <div :title="$t('title')" with-import="true" import-filename="bop.json" @load="setData">
         <entry v-for="entry in entries"
             :key="entry.index"
             :entry="entry"
             v-on:remove="removeEntry"></entry>
         <button v-on:click="addEntry">{{$t("add_entry_button")}}</button>
-    </collapsible>
+    </div>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-    <collapsible :title="$t('title')" with-import="true" import-filename="settings.json" @load="setDataFile">
+    <div :title="$t('title')" with-import="true" import-filename="settings.json" @load="setDataFile">
         <div class="pwd">
             <field v-if="!passwordIsEmpty" type="password" :label="$t('password_label')" v-model="password" :disabled="passwordIsEmpty"></field>
             <checkbox :label="$t('password_empty_label')" v-model="passwordIsEmpty"></checkbox>
@@ -37,7 +37,7 @@
 
         <field type="text" :label="$t('centralentrylistpath_label')" v-model="centralEntryListPath"></field>
         <checkbox :label="$t('dumpentrylist_label')" v-model="dumpEntryList"></checkbox>
-    </collapsible>
+    </div>
 </template>
 
 <script>

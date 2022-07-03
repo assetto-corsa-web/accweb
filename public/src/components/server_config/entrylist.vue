@@ -1,12 +1,12 @@
 <template>
-    <collapsible :title="$t('title')" with-import="true" import-filename="entrylist.json" @load="setData">
+    <div :title="$t('title')" with-import="true" import-filename="entrylist.json" @load="setData">
         <entry v-for="entry in entries"
             :key="entry.index"
             :entry="entry"
             v-on:remove="removeEntry"></entry>
         <checkbox :label="$t('forceentrylist_label')" v-model="forceEntryList"></checkbox>
         <button v-on:click="addEntry">{{$t("add_entry_button")}}</button>
-    </collapsible>
+    </div>
 </template>
 
 <script>

@@ -4,6 +4,11 @@ import Vuex from "vuex";
 import VueI18n from "vue-i18n";
 import axios from "axios";
 
+import {Tabs, Tab} from 'vue-tabs-component';
+import VueSplit from 'vue-split-panel'
+import Vuetify from 'vuetify'
+import 'vuetify/dist/vuetify.min.css'
+
 import "./main.scss";
 import NewStore from "./store/store.js";
 import * as pages from "./pages";
@@ -14,6 +19,10 @@ Vue.use(Vuex);
 Vue.use(VueI18n);
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
+Vue.component('tabs', Tabs);
+Vue.component('tab', Tab);
+Vue.use(VueSplit);
+Vue.use(Vuetify);
 
 // token interceptor for every request
 axios.interceptors.request.use((config) => {
@@ -95,5 +104,6 @@ new Vue({
 	el: "#app",
 	store: NewStore(),
 	router,
-	i18n
+	i18n,
+
 });

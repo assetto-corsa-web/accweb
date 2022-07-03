@@ -98,7 +98,7 @@
                     </table>
                 </div>
 
-                <div id="chat">
+                <div id="chat" class="main">
                     <h3>Chat</h3>
 
                     <div class="message" v-for="item in data.live.chats.slice().reverse()" :key="item.ts">
@@ -298,6 +298,10 @@ tr:nth-child(odd) {
 #chat .message {
     margin-bottom: 5px;
 } 
+#chat {
+    border: 1px solid;
+    margin-top: 30px;
+}
 
 .message .ts {
     color: #304363;
@@ -306,6 +310,7 @@ tr:nth-child(odd) {
 .message .name {
     font-weight: bold;
 }
+
 </style>
 
 <i18n>

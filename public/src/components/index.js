@@ -12,3 +12,4 @@ export {default as eventrules} from "./server_config/eventrules.vue";
 export {default as entrylist} from "./server_config/entrylist.vue";
 export {default as bop} from "./server_config/bop.vue";
 export {default as assistrules} from "./server_config/assistrules.vue";
+export {default as filereader} from "./filereader.vue";
