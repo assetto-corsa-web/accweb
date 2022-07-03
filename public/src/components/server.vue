@@ -1,17 +1,13 @@
 <template>
-<v-container fluid>
+	<v-container fluid>
+		<v-row dense>
 			<v-col md="6">
 				<v-card>
 					<v-list-item three-line>
 						<v-list-item-content>
 							<div class="text-overline mb-4">
 								{{ server.name }}
-							<span v-if="!ro">
-								<i class="fas fa-terminal" v-on:click="logs" :title="$t('view_logs')"></i>
-								<i class="fas fa-copy" v-on:click="copyConfig" v-if="is_admin" :title="$t('copy_config')"></i>
-								<i class="fas fa-file-download" v-on:click="exportConfig" :title="$t('export_config')"></i>
-							</span>
-							<v-divider></v-divider>
+								<v-divider></v-divider>
 							</div>
 							<v-list-item-title class="text-h6 mb-1" v-if="server.pid">
 								PID: {{ server.pid }}
@@ -42,26 +38,86 @@
 					</v-list-item>
 
 					<v-card-actions>
-						<v-btn
-							class="start"
-							v-on:click="start"
-							v-if="is_mod && !ro && !server.pid"
-							>{{ $t("start_server") }}</v-btn
-						>
-						<v-btn
-							class="stop"
-							v-on:click="stop"
-							v-if="is_mod && !ro && server.pid"
-							>{{ $t("stop_server") }}</v-btn
-						>
-						<v-btn v-on:click="deleteServer" v-if="is_admin && !ro"><i class="fas fa-trash"></i>{{ $t('delete_server')}}</v-btn>
-						<v-btn v-on:click="edit" v-if="is_admin && !ro"><i class="fas fa-cog"></i>{{ $t('change_config')}}</v-btn>						
-						<div class="online" v-if="ro && server.pid">{{ $t("running") }}</div>
-						<div class="offline" v-if="ro && !server.pid">{{ $t("offline") }}</div>
+						<v-row dense>
+							<v-btn
+								elevation="2"
+								x-small
+								mx-2
+								class="start"
+								v-on:click="start"
+								v-if="is_mod && !ro && !server.pid"
+								><i class="fas fa-play"></i>{{ $t("start_server") }}</v-btn
+							>
+							<v-col>
+								<v-btn
+									elevation="2"
+									x-small
+									mx-2
+									class="stop"
+									v-on:click="stop"
+									v-if="is_mod && !ro && server.pid"
+									><i class="fas fa-stop"></i>{{ $t("stop_server") }}</v-btn
+								>
+							</v-col>
+							<v-col>
+								<v-btn
+									elevation="2"
+									x-small
+									mx-2
+									v-on:click="deleteServer"
+									v-if="is_admin && !ro"
+									><i class="fas fa-trash"></i>Del</v-btn
+								></v-col
+							>
+							<v-col>
+								<v-btn
+									elevation="2"
+									x-small
+									mx-2
+									v-on:click="edit"
+									v-if="is_admin && !ro"
+									><i class="fas fa-cog"></i>Settings</v-btn
+								></v-col
+							>
+							<v-col>
+								<v-btn
+									elevation="2"
+									x-small
+									mx-2
+									v-on:click="logs"
+									v-if="is_admin && !ro"
+									><i class="fas fa-terminal"></i>Logs</v-btn
+								></v-col
+							>
+							<v-col>
+								<v-btn
+									elevation="2"
+									x-small
+									mx-2
+									v-on:click="copyConfig"
+									v-if="is_admin && !ro"
+									><i class="fas fa-copy"></i>Copy CFG</v-btn
+								></v-col
+							>
+							<v-col>
+								<v-btn
+									elevation="2"
+									x-small
+									mx-2
+									v-on:click="exportConfig"
+									v-if="is_admin && !ro"
+									><i class="fas fa-file-download"></i>Download CFG</v-btn
+								></v-col
+							>
+
+							<v-col><div class="online" v-if="ro && server.pid">{{ $t("running") }}</div></v-col>
+							<v-col><div class="offline" v-if="ro && !server.pid">{{ $t("offline") }}</div></v-col>
+						</v-row>
 					</v-card-actions>
 				</v-card>
 			</v-col>
-</v-container>		
+		</v-row>
+	</v-container>
 </template>
 
 <style>
@@ -72,7 +128,6 @@
 .state b {
 	color: #00ff14;
 }
-.container {display: flex}
 </style>
 
 <script>
@@ -82,7 +137,7 @@ export default {
 	props: ["server", "ro"],
 	data: () => ({
 		justify: ["start", "center", "end", "space-around", "space-between"],
-        value: 1
+		value: 1
 	}),
 	computed: {
 		formattedServerClientCount: function() {
