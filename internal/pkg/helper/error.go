@@ -13,7 +13,7 @@ func (e *wrapError) Unwrap() error {
 }
 
 func WrapErrors(errs ...error) error {
-	if errs == nil || len(errs) == 0 {
+	if len(errs) == 0 {
 		return nil
 	}
 

@@ -75,6 +75,10 @@ func (s *Instance) Start() error {
 		return err
 	}
 
+	if s.HasAdvancedWindowsConfig() {
+		s.startWithAdvWindows()
+	}
+
 	s.Live.setServerState(ServerStateStarting)
 
 	logrus.WithField("server_id", s.GetID()).WithField("pid", s.GetProcessID()).Info("acc server started")
@@ -84,6 +88,28 @@ func (s *Instance) Start() error {
 	return nil
 }
 
+func (s *Instance) startWithAdvWindows() {
+	cfg := s.Cfg.Settings.AdvWindowsCfg
+	l := logrus.WithField("server_id", s.GetID()).WithField("PID", s.GetProcessID())
+
+	l.Infof("Defining core affinity to %d", cfg.CoreAffinity)
+	if err := helper.SetCoreAffinity(s.GetProcessID(), cfg.CoreAffinity); err != nil {
+		l.Errorf("failed to define affinity with value: %d. ERROR: %s", cfg.CoreAffinity, err.Error())
+	}
+
+	l.Infof("Defining cpu priority to %d", cfg.CpuPriority)
+	if err := helper.SetCpuPriority(s.GetProcessID(), cfg.CpuPriority); err != nil {
+		l.Errorf("failed to define cpu priority with value: %d. ERROR: %s", cfg.CpuPriority, err.Error())
+	}
+
+	if cfg.EnableWinFW {
+		l.Info("Add Firewall Rules")
+		if err := helper.AddFirewallRules(s.GetProcessID(), s.AccCfg.Configuration.TcpPort, s.AccCfg.Configuration.UdpPort); err != nil {
+			l.Errorf("Failed to add accserver firewall rule. ERROR: %s", err.Error())
+		}
+	}
+}
+
 func (s *Instance) Stop() error {
 	if !s.IsRunning() {
 		return nil
@@ -91,8 +117,14 @@ func (s *Instance) Stop() error {
 
 	if err := s.cmd.Process.Signal(os.Interrupt); err != nil {
 		if err := s.cmd.Process.Kill(); err != nil {
-			return err
+			logrus.WithField("server_id", s.GetID()).
+				WithError(err).
+				Error("Failed to kill the accserver process.")
 		}
+	}
+
+	if s.HasAdvancedWindowsConfig() {
+		s.stopWithAdvWindows()
 	}
 
 	s.Live.serverOffline()
@@ -100,6 +132,17 @@ func (s *Instance) Stop() error {
 	logrus.WithField("server_id", s.GetID()).Info("acc server stopped")
 
 	return nil
+}
+
+func (s *Instance) stopWithAdvWindows() {
+	if !s.Cfg.Settings.AdvWindowsCfg.EnableWinFW {
+		return
+	}
+
+	logrus.Info("Removing Firewall Rules")
+	if err := helper.DelFirewallRules(s.GetProcessID()); err != nil {
+		logrus.Errorf("Failed to add accserver firewall rule for TCP. ERROR: %s", err.Error())
+	}
 }
 
 func (s *Instance) GetProcessID() int {
@@ -374,4 +417,8 @@ func (s *Instance) prepareCmdLogHandler() error {
 	}()
 
 	return nil
+}
+
+func (s *Instance) HasAdvancedWindowsConfig() bool {
+	return runtime.GOOS == "windows" && s.Cfg.Settings.EnableAdvWinCfg
 }
