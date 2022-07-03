@@ -1,24 +1,33 @@
 <template>
-	<v-container fluid>
-		<v-row no-gutters>
+<v-container fluid>
 			<v-col md="6">
 				<v-card>
 					<v-list-item three-line>
 						<v-list-item-content>
 							<div class="text-overline mb-4">
 								{{ server.name }}
+							<span v-if="!ro">
+								<i class="fas fa-terminal" v-on:click="logs" :title="$t('view_logs')"></i>
+								<i class="fas fa-copy" v-on:click="copyConfig" v-if="is_admin" :title="$t('copy_config')"></i>
+								<i class="fas fa-file-download" v-on:click="exportConfig" :title="$t('export_config')"></i>
+							</span>
+							<v-divider></v-divider>
 							</div>
 							<v-list-item-title class="text-h5 mb-1" v-if="server.pid">
 								PID: {{ server.pid }}
+								<v-divider></v-divider>
 							</v-list-item-title>
 							<v-list-item-title class="text-h6 mb-4">
-								UDP: {{ server.udpPort }} TCP: {{ server.tcpPort }} {{ $t("track") }}:
-								{{ server.track }}
+								UDP: {{ server.udpPort }} TCP: {{ server.tcpPort }}
+								<v-divider></v-divider>
+								{{ $t("track") }}: {{ server.track }}
 							</v-list-item-title>
 							<v-list-item-title class="text-h5 mb-1" v-if="!ro">
+							<v-divider></v-divider>
 								{{ $t("configuration_directory") }}: {{ server.id }}
 							</v-list-item-title>
 							<div class="info state" v-if="server.pid">
+							<v-divider></v-divider>
 								<b>{{ $t("state") }}: </b>{{ $t(server.serverState) }} &bull;
 								<b>{{ $t("number_of_drivers") }}: </b
 								>{{ formattedServerClientCount }} &bull;
@@ -45,13 +54,14 @@
 							v-if="is_mod && !ro && server.pid"
 							>{{ $t("stop_server") }}</v-btn
 						>
+						<v-btn v-on:click="deleteServer" v-if="is_admin && !ro"><i class="fas fa-trash"></i>{{ $t('delete_server')}}</v-btn>
+						<v-btn v-on:click="edit" v-if="is_admin && !ro"><i class="fas fa-cog"></i>{{ $t('change_config')}}</v-btn>						
 						<div class="online" v-if="ro && server.pid">{{ $t("running") }}</div>
 						<div class="offline" v-if="ro && !server.pid">{{ $t("offline") }}</div>
 					</v-card-actions>
 				</v-card>
 			</v-col>
-		</v-row>
-	</v-container>
+</v-container>		
 </template>
 
 <style>
@@ -62,6 +72,7 @@
 .state b {
 	color: #00ff14;
 }
+.container {display: flex}
 </style>
 
 <script>
