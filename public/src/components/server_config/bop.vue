@@ -117,7 +117,7 @@ export default {
 		"restrictor_label": "Motor Restrictor: 0 to 20% max.",
 		"add_entry_button": "Add BOP",
         "clear_entries_button": "Clear all BOP",
-        "confirm_clear_entries": "Do you really want to remove all BOP?"
+        "confirm_clear_entries": "Do you really want to remove all BOP?"    
     }
 }
 </i18n>
