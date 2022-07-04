@@ -28,6 +28,7 @@
           <button v-on:click="addSession">{{$t("add_session_button")}}</button>
           <button v-on:click="addDefaultSessions('Q/R')">{{$t("add_sessions_q_r_button")}}</button>
           <button v-on:click="addDefaultSessions('P/Q/R')">{{$t("add_sessions_p_q_r_button")}}</button>
+          <button v-on:click="clearSessions">{{$t("clear_sessions_button")}}</button>
         </div>
     </collapsible>
 </template>
@@ -173,6 +174,14 @@ export default {
                 }
             }
         },
+        clearSessions() {
+            if (!window.confirm(this.$t("confirm_clear_sessions"))) {
+                return;
+            }
+            while(this.sessions.length > 0) {
+                this.sessions.splice(this.sessions[this.sessions.length - 1], 1);
+            }
+        },
         toFloat(value) {
             if(typeof value === "string") {
                 return parseFloat(value.replace(",", "."), 64);
@@ -202,7 +211,9 @@ export default {
         "isFixedConditionQualification_label": "Is Fixed Weather Conditions in Qualification",
         "add_session_button": "Add session",
         "add_sessions_q_r_button": "Add sessions (Q/R)",
-        "add_sessions_p_q_r_button": "Add sessions (P/Q/R)"
+        "add_sessions_p_q_r_button": "Add sessions (P/Q/R)",
+        "clear_sessions_button": "Clear all Sessions",
+        "confirm_clear_sessions": "Do you really want to remove all sessions?"
     }
 }
 </i18n>
