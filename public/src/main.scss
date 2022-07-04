@@ -61,7 +61,7 @@ body {
 			display: flex;
 			justify-content: center;
 			align-items: center;
-			height: 40px;
+			height: 80px;
 
 			button {
 				margin: 0 2px;
@@ -264,8 +264,8 @@ label {
 }
 
 .primary {
-	background: $dark_green !important;
-	color: $green !important;
+    background: #000000ad !important;
+    color: #ffffff !important;
 }
 
 .disabled {
@@ -424,5 +424,7 @@ table, th {
 .container {
 	display: flex;
 }
+
+
 
 }
