@@ -1,9 +1,9 @@
 <template>
-    <div class="error-toast" v-show="message">
-        <div class="error-content">
-            {{message}}
-        </div>
+<div class="error-toast" v-show="message">
+    <div class="error-content">
+        {{message}}
     </div>
+</div>
 </template>
 
 <script>

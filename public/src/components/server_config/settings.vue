@@ -1,43 +1,43 @@
 <template>
-    <div :title="$t('title')" with-import="true" import-filename="settings.json" @load="setDataFile">
-        <div class="pwd">
-            <field v-if="!passwordIsEmpty" type="password" :label="$t('password_label')" v-model="password" :disabled="passwordIsEmpty"></field>
-            <checkbox :label="$t('password_empty_label')" v-model="passwordIsEmpty"></checkbox>
-        </div>
-        <div class="pwd">
-            <field v-if="!adminPasswordIsEmpty" type="password" :label="$t('adminpassword_label')" v-model="adminPassword" :disabled="adminPasswordIsEmpty"></field>
-            <checkbox :label="$t('adminpassword_empty_label')" v-model="adminPasswordIsEmpty"></checkbox>
-        </div>
-        <div class="pwd">
-            <field v-if="!spectatorPasswordIsEmpty" type="password" :label="$t('spectatorpassword_label')" v-model="spectatorPassword" :disabled="spectatorPasswordIsEmpty"></field>
-            <checkbox :label="$t('spectatorpassword_empty_label')" v-model="spectatorPasswordIsEmpty"></checkbox>
-        </div>
-        <div class="server-settings-container three-columns" style="margin-top: 1.0rem;">
-            <field type="number" :label="$t('trackmedalsrequirement_label')" v-model="trackMedalsRequirement"></field>
-            <field type="number" :label="$t('safetyratingrequirement_label')" v-model="safetyRatingRequirement"></field>
-            <field type="number" :label="$t('racecraftratingrequirement_label')" v-model="racecraftRatingRequirement"></field>
-        </div>
-        <div class="server-settings-container two-columns">
-            <field type="number" :label="$t('maxcarslots_label')" v-model="maxCarSlots"></field>
-            <field type="number" :label="$t('ignorePrematureDisconnects_label')" v-model="ignorePrematureDisconnects"></field>
-        </div>
-        <checkbox :label="$t('dumpleaderboards_label')" v-model="dumpLeaderboards"></checkbox>
-        <checkbox :label="$t('isracelocked_label')" v-model="isRaceLocked"></checkbox>
-        <checkbox :label="$t('randomizetrackwhenempty_label')" v-model="randomizeTrackWhenEmpty"></checkbox>
-        <checkbox :label="$t('allowautodq_label')" v-model="allowAutoDQ"></checkbox>
-
-        <div class="server-settings-group">
-            <selection :label="$t('cargroup_label')" :options="carGroups" v-model="carGroup"></selection>
-        </div>
-
-        <div class="server-settings-group">
-            <selection :label="$t('formationlaptype_label')" :options="formationLapTypes" v-model="formationLapType"></selection>
-            <checkbox :label="$t('shortformationlap_label')" v-model="shortFormationLap"></checkbox>
-        </div>
-
-        <field type="text" :label="$t('centralentrylistpath_label')" v-model="centralEntryListPath"></field>
-        <checkbox :label="$t('dumpentrylist_label')" v-model="dumpEntryList"></checkbox>
+<div :title="$t('title')" with-import="true" import-filename="settings.json" @load="setDataFile">
+    <div class="pwd">
+        <field v-if="!passwordIsEmpty" type="password" :label="$t('password_label')" v-model="password" :disabled="passwordIsEmpty"></field>
+        <checkbox :label="$t('password_empty_label')" v-model="passwordIsEmpty"></checkbox>
     </div>
+    <div class="pwd">
+        <field v-if="!adminPasswordIsEmpty" type="password" :label="$t('adminpassword_label')" v-model="adminPassword" :disabled="adminPasswordIsEmpty"></field>
+        <checkbox :label="$t('adminpassword_empty_label')" v-model="adminPasswordIsEmpty"></checkbox>
+    </div>
+    <div class="pwd">
+        <field v-if="!spectatorPasswordIsEmpty" type="password" :label="$t('spectatorpassword_label')" v-model="spectatorPassword" :disabled="spectatorPasswordIsEmpty"></field>
+        <checkbox :label="$t('spectatorpassword_empty_label')" v-model="spectatorPasswordIsEmpty"></checkbox>
+    </div>
+    <div class="server-settings-container three-columns" style="margin-top: 1.0rem;">
+        <field type="number" :label="$t('trackmedalsrequirement_label')" v-model="trackMedalsRequirement"></field>
+        <field type="number" :label="$t('safetyratingrequirement_label')" v-model="safetyRatingRequirement"></field>
+        <field type="number" :label="$t('racecraftratingrequirement_label')" v-model="racecraftRatingRequirement"></field>
+    </div>
+    <div class="server-settings-container two-columns">
+        <field type="number" :label="$t('maxcarslots_label')" v-model="maxCarSlots"></field>
+        <field type="number" :label="$t('ignorePrematureDisconnects_label')" v-model="ignorePrematureDisconnects"></field>
+    </div>
+    <checkbox :label="$t('dumpleaderboards_label')" v-model="dumpLeaderboards"></checkbox>
+    <checkbox :label="$t('isracelocked_label')" v-model="isRaceLocked"></checkbox>
+    <checkbox :label="$t('randomizetrackwhenempty_label')" v-model="randomizeTrackWhenEmpty"></checkbox>
+    <checkbox :label="$t('allowautodq_label')" v-model="allowAutoDQ"></checkbox>
+
+    <div class="server-settings-group">
+        <selection :label="$t('cargroup_label')" :options="carGroups" v-model="carGroup"></selection>
+    </div>
+
+    <div class="server-settings-group">
+        <selection :label="$t('formationlaptype_label')" :options="formationLapTypes" v-model="formationLapType"></selection>
+        <checkbox :label="$t('shortformationlap_label')" v-model="shortFormationLap"></checkbox>
+    </div>
+
+    <field type="text" :label="$t('centralentrylistpath_label')" v-model="centralEntryListPath"></field>
+    <checkbox :label="$t('dumpentrylist_label')" v-model="dumpEntryList"></checkbox>
+</div>
 </template>
 
 <script>
@@ -47,7 +47,12 @@ import selection from "../selection.vue";
 import checkbox from "../checkbox.vue";
 
 export default {
-    components: {collapsible, field, selection, checkbox},
+    components: {
+        collapsible,
+        field,
+        selection,
+        checkbox
+    },
     data() {
         return {
             password: "",
@@ -68,18 +73,40 @@ export default {
             shortFormationLap: false,
             allowAutoDQ: false,
             dumpEntryList: false,
-            formationLapTypes: [
-                {value: 0, label: "Old with limiter"},
-                {value: 1, label: "Free No Limiter"},
-                {value: 3, label: "New Position control and UI"},
+            formationLapTypes: [{
+                    value: 0,
+                    label: "Old with limiter"
+                },
+                {
+                    value: 1,
+                    label: "Free No Limiter"
+                },
+                {
+                    value: 3,
+                    label: "New Position control and UI"
+                },
             ],
             formationLapType: 3,
-            carGroups: [
-                {value: "FreeForAll", label: "Mode FreeForAll"},
-                {value: "GT3", label: "Mode GT3"},
-                {value: "GT4", label: "Mode GT4"},
-                {value: "GTC", label: "Mode GTC"},
-                {value: "TCX", label: "Mode TCX"},
+            carGroups: [{
+                    value: "FreeForAll",
+                    label: "Mode FreeForAll"
+                },
+                {
+                    value: "GT3",
+                    label: "Mode GT3"
+                },
+                {
+                    value: "GT4",
+                    label: "Mode GT4"
+                },
+                {
+                    value: "GTC",
+                    label: "Mode GTC"
+                },
+                {
+                    value: "TCX",
+                    label: "Mode TCX"
+                },
             ],
             carGroup: "FreeForAll"
         };
@@ -165,7 +192,8 @@ export default {
         "allowautodq_label": "Allow Auto DQ",
         "dumpentrylist_label": "Dump Entry List",
         "formationlaptype_label": "Formation Lap Type",
-		"cargroup_label": "Car Group"
+
+"cargroup_label": "Car Group"
     }
 }
 </i18n>

@@ -1,15 +1,14 @@
 <template>
-    <div>
-        <label>
-            {{label}}
+<div>
+    <label>
+        {{label}}
 
-            <select v-bind:value="value"
-                v-on:input="$emit('input', $event.target.value)">
-                <option v-for="o in options" v-bind:value="o.value">{{o.label}}</option>
-            </select>
-        </label>
-        <div class="error" v-show="error">{{error}}</div>
-    </div>
+        <select class="select" v-bind:value="value" v-on:input="$emit('input', $event.target.value)">
+            <option v-for="o in options" v-bind:value="o.value">{{o.label}}</option>
+        </select>
+    </label>
+    <div class="error" v-show="error">{{error}}</div>
+</div>
 </template>
 
 <script>
@@ -22,3 +21,10 @@ export default {
     }
 }
 </script>
+
+<style>
+.select {
+    -webkit-appearance: auto;
+    border-style: solid;
+}
+</style>

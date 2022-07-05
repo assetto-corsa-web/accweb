@@ -1,10 +1,10 @@
 <template>
-    <div v-bind:class="{main: true, 'main-small': small}">
-        <router-link to="/"><img src="static/logo.png" alt="" class="logo" /></router-link>
-        <slot></slot>
-        <end></end>
-        <error></error>
-    </div>
+<div v-bind:class="{main: true, 'main-small': small}">
+    <router-link to="/"><img src="static/logo.png" alt="" class="logo" /></router-link>
+    <slot></slot>
+    <end></end>
+    <error></error>
+</div>
 </template>
 
 <script>
@@ -12,7 +12,20 @@ import end from "./end.vue";
 import error from "./error.vue";
 
 export default {
-    components: {end, error},
+    components: {
+        end,
+        error
+    },
     props: ["small"]
 }
 </script>
+
+<style>
+.logo {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    /* remove extra space below image */
+
+}
+</style>

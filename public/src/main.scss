@@ -225,8 +225,8 @@ input, select, textarea {
 	box-sizing: border-box;
 	font-size: $font_size;
 	font-family: $font_family;
-	color: #ff00d4;
-	border: 1px solid $medium_blue;
+	color: #00ff2b;
+	border: 1px solid #ffffff;
 	border-radius: 1px;
 	padding: 6px;
 	margin: 4px 0;
@@ -408,7 +408,7 @@ table, th {
   @media (min-width: 700px) {
 	.tabs-component-panels {
 	  border-top-left-radius: 0;
-	  background-color: #000;
+	  background-color: rgba(0, 0, 0, 0.219);
 	  border: solid 1px #8ddfa6d9;
 	  border-radius: 0 6px 6px 6px;
 	  box-shadow: 0 0 10px rgba(0, 0, 0, .05);
@@ -425,5 +425,4 @@ table, th {
 .container {
 	display: flex;
 }
-
 }

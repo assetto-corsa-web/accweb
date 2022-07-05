@@ -1,22 +1,18 @@
 <template>
-    <div class="box">
-        <field type="number" :label="$t('racenumber_label')" v-model="entry.raceNumber"></field>
-        <selection :label="$t('forcedcarmodel_label')" :options="carModels" v-model="entry.forcedCarModel"></selection>
-        <checkbox :label="$t('overridedriverinfo_label')" v-model="entry.overrideDriverInfo"></checkbox>
-        <checkbox :label="$t('isserveradmin_label')" v-model="entry.isServerAdmin"></checkbox>
-        <field type="text" :label="$t('customcar_label')" v-model="entry.customCar"></field>
-        <checkbox :label="$t('overridecarmodelforcustomcar_label')" v-model="entry.overrideCarModelForCustomCar"></checkbox>
-        <field type="number" :label="$t('ballast_label')" v-model="entry.ballastKg"></field>
-        <field type="number" :label="$t('restrictor_label')" v-model="entry.restrictor"></field>
-        <field type="number" :label="$t('defaultgridposition_label')" v-model="entry.defaultGridPosition"></field>
-        <driver v-for="driver in drivers"
-            :key="driver.index"
-            :driver="driver"
-            v-on:update="updateDriver"
-            v-on:remove="removeDriver"></driver>
-        <button v-on:click="addDriver">{{$t("add_driver_button")}}</button>
-        <button v-on:click="$emit('remove', entry.index)">{{$t("remove_button")}}</button>
-    </div>
+<div class="box">
+    <field type="number" :label="$t('racenumber_label')" v-model="entry.raceNumber"></field>
+    <selection :label="$t('forcedcarmodel_label')" :options="carModels" v-model="entry.forcedCarModel"></selection>
+    <checkbox :label="$t('overridedriverinfo_label')" v-model="entry.overrideDriverInfo"></checkbox>
+    <checkbox :label="$t('isserveradmin_label')" v-model="entry.isServerAdmin"></checkbox>
+    <field type="text" :label="$t('customcar_label')" v-model="entry.customCar"></field>
+    <checkbox :label="$t('overridecarmodelforcustomcar_label')" v-model="entry.overrideCarModelForCustomCar"></checkbox>
+    <field type="number" :label="$t('ballast_label')" v-model="entry.ballastKg"></field>
+    <field type="number" :label="$t('restrictor_label')" v-model="entry.restrictor"></field>
+    <field type="number" :label="$t('defaultgridposition_label')" v-model="entry.defaultGridPosition"></field>
+    <driver v-for="driver in drivers" :key="driver.index" :driver="driver" v-on:update="updateDriver" v-on:remove="removeDriver"></driver>
+    <v-btn small v-on:click="addDriver">{{$t("add_driver_button")}}</v-btn>
+    <v-btn small v-on:click="$emit('remove', entry.index)">{{$t("remove_button")}}</v-btn>
+</div>
 </template>
 
 <script>
@@ -28,22 +24,33 @@ import cars from "../../data/cars";
 import _ from "lodash";
 
 export default {
-    components: {field, driver, selection, checkbox},
+    components: {
+        field,
+        driver,
+        selection,
+        checkbox
+    },
     props: ["entry"],
     data() {
         return {
             driverIndex: 0,
             carModels: _.sortBy(
-                _.mapValues(cars, function(o) { return {value: o.id.toString(), label: o.model, brand: o.brand}; }),
+                _.mapValues(cars, function (o) {
+                    return {
+                        value: o.id.toString(),
+                        label: o.model,
+                        brand: o.brand
+                    };
+                }),
                 ["brand", "label"]),
             drivers: []
         };
     },
     mounted() {
-        if(this.entry && this.entry.drivers) {
+        if (this.entry && this.entry.drivers) {
             this.drivers = this.entry.drivers;
 
-            for(let i = 0; i < this.drivers.length; i++) {
+            for (let i = 0; i < this.drivers.length; i++) {
                 this.drivers[i].index = this.driverIndex = i;
             }
         }
@@ -52,8 +59,8 @@ export default {
         updateDriver(driver) {
             let index = parseInt(driver.index);
 
-            for(let i = 0; i < this.drivers.length; i++) {
-                if(this.drivers[i].index === index) {
+            for (let i = 0; i < this.drivers.length; i++) {
+                if (this.drivers[i].index === index) {
                     this.drivers[i] = driver;
                     break;
                 }
@@ -76,8 +83,8 @@ export default {
         removeDriver(index) {
             index = parseInt(index);
 
-            for(let i = 0; i < this.drivers.length; i++) {
-                if(this.drivers[i].index === index) {
+            for (let i = 0; i < this.drivers.length; i++) {
+                if (this.drivers[i].index === index) {
                     this.drivers.splice(i, 1);
                     break;
                 }

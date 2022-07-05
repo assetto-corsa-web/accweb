@@ -1,17 +1,17 @@
 <template>
-    <div class="box">
-        <div class="server-settings-container three-columns">
-            <field type="text" :label="$t('firstname_label')" v-model="firstName"></field>
-            <field type="text" :label="$t('lastname_label')" v-model="lastName"></field>
-            <field type="text" :label="$t('shortname_label')" v-model="shortName"></field>
-        </div>
-        <div class="server-settings-container three-columns">
-            <selection :label="$t('nationality_label')" :options="nationalities" v-model="nationality"></selection>
-            <selection :label="$t('drivercategory_label')" :options="driverCategoryTypes" v-model="driverCategory"></selection>
-            <field type="text" :label="$t('playerid_label')" v-model="playerID"></field>
-        </div>
-        <button v-on:click="$emit('remove', driver.index)">{{$t("remove_button")}}</button> 
+<div class="box">
+    <div class="server-settings-container three-columns">
+        <field type="text" :label="$t('firstname_label')" v-model="firstName"></field>
+        <field type="text" :label="$t('lastname_label')" v-model="lastName"></field>
+        <field type="text" :label="$t('shortname_label')" v-model="shortName"></field>
     </div>
+    <div class="server-settings-container three-columns">
+        <selection :label="$t('nationality_label')" :options="nationalities" v-model="nationality"></selection>
+        <selection :label="$t('drivercategory_label')" :options="driverCategoryTypes" v-model="driverCategory"></selection>
+        <field type="text" :label="$t('playerid_label')" v-model="playerID"></field>
+    </div>
+    <v-btn small v-on:click="$emit('remove', driver.index)">{{$t("remove_button")}}</v-btn>
+</div>
 </template>
 
 <script>
@@ -21,7 +21,10 @@ import nationalities from "../../data/nationalities";
 import _ from "lodash";
 
 export default {
-    components: {field, selection},
+    components: {
+        field,
+        selection
+    },
     props: ["driver"],
     watch: {
         firstName(value) {
@@ -54,15 +57,31 @@ export default {
             firstName: "",
             lastName: "",
             shortName: "",
-            driverCategoryTypes: [
-              {value: 0, label: "Bronze"},
-              {value: 1, label: "Silver"},
-              {value: 2, label: "Gold"},
-              {value: 3, label: "Platinum"}
+            driverCategoryTypes: [{
+                    value: 0,
+                    label: "Bronze"
+                },
+                {
+                    value: 1,
+                    label: "Silver"
+                },
+                {
+                    value: 2,
+                    label: "Gold"
+                },
+                {
+                    value: 3,
+                    label: "Platinum"
+                }
             ],
             driverCategory: 0,
             playerID: "",
-            nationalities: _.mapValues(nationalities, function(o) { return {value: o.id, label: o.country}; }),
+            nationalities: _.mapValues(nationalities, function (o) {
+                return {
+                    value: o.id,
+                    label: o.country
+                };
+            }),
             nationality: 0,
         };
     },

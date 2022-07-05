@@ -1,35 +1,32 @@
 <template>
-    <div :title="$t('title')" with-import="true" import-filename="event.json" @load="setData">
-        <div style="margin-bottom: 1.0rem;">
-            <selection :label="$t('track_label')" :options="tracks" v-model="track"></selection>
+<div :title="$t('title')" with-import="true" import-filename="event.json" @load="setData">
+    <div style="margin-bottom: 1.0rem;">
+        <selection :label="$t('track_label')" :options="tracks" v-model="track"></selection>
+    </div>
+    <div class="server-settings-container two-columns">
+        <div>
+            <field type="number" :label="$t('ambienttemp_label')" v-model="ambientTemp"></field>
+            <field type="number" :label="$t('tracktemp_label')" v-model="trackTemp"></field>
+            <field type="number" :label="$t('cloudlevel_label')" :step="0.01" v-model="cloudLevel"></field>
+            <field type="number" :label="$t('rain_label')" :step="0.01" v-model="rain"></field>
+            <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
+            <checkbox :label="$t('simracerWeatherConditions_label')" v-model="simracerWeatherConditions"></checkbox>
+            <checkbox :label="$t('isFixedConditionQualification_label')" v-model="isFixedConditionQualification"></checkbox>
         </div>
-        <div class="server-settings-container two-columns">
-            <div>
-                <field type="number" :label="$t('ambienttemp_label')" v-model="ambientTemp"></field>
-                <field type="number" :label="$t('tracktemp_label')" v-model="trackTemp"></field>
-                <field type="number" :label="$t('cloudlevel_label')" :step="0.01" v-model="cloudLevel"></field>
-                <field type="number" :label="$t('rain_label')" :step="0.01" v-model="rain"></field>
-                <field type="number" :label="$t('weatherrandomness_label')" v-model="weatherRandomness"></field>
-                <checkbox :label="$t('simracerWeatherConditions_label')" v-model="simracerWeatherConditions"></checkbox>
-                <checkbox :label="$t('isFixedConditionQualification_label')" v-model="isFixedConditionQualification"></checkbox>
-            </div>
-            <div>
-                <field type="number" :label="$t('preracewaitingtimeseconds_label')" v-model="preRaceWaitingTimeSeconds"></field>
-                <field type="number" :label="$t('sessionovertimeseconds_label')" v-model="sessionOverTimeSeconds"></field>
-                <field type="number" :label="$t('postqualyseconds_label')" v-model="postQualySeconds"></field>
-                <field type="number" :label="$t('postraceseconds_label')" v-model="postRaceSeconds"></field>
-            </div>
-        </div>
-        <session v-for="session in sessions"
-            :key="session.index"
-            :session="session"
-            v-on:remove="removeSession"></session>
-        <div class="button-row">
-          <button v-on:click="addSession">{{$t("add_session_button")}}</button>
-          <button v-on:click="addDefaultSessions('Q/R')">{{$t("add_sessions_q_r_button")}}</button>
-          <button v-on:click="addDefaultSessions('P/Q/R')">{{$t("add_sessions_p_q_r_button")}}</button>
+        <div>
+            <field type="number" :label="$t('preracewaitingtimeseconds_label')" v-model="preRaceWaitingTimeSeconds"></field>
+            <field type="number" :label="$t('sessionovertimeseconds_label')" v-model="sessionOverTimeSeconds"></field>
+            <field type="number" :label="$t('postqualyseconds_label')" v-model="postQualySeconds"></field>
+            <field type="number" :label="$t('postraceseconds_label')" v-model="postRaceSeconds"></field>
         </div>
     </div>
+    <session v-for="session in sessions" :key="session.index" :session="session" v-on:remove="removeSession"></session>
+    <div class="button-row">
+        <v-btn small v-on:click="addSession">{{$t("add_session_button")}}</v-btn>
+        <v-btn small v-on:click="addDefaultSessions('Q/R')">{{$t("add_sessions_q_r_button")}}</v-btn>
+        <v-btn small v-on:click="addDefaultSessions('P/Q/R')">{{$t("add_sessions_p_q_r_button")}}</v-btn>
+    </div>
+</div>
 </template>
 
 <script>
@@ -41,9 +38,15 @@ import checkbox from "../checkbox.vue";
 import tracks from "../../data/tracks";
 
 export default {
-    components: {collapsible, field, selection, session, checkbox},
+    components: {
+        collapsible,
+        field,
+        selection,
+        session,
+        checkbox
+    },
     data() {
-    	  return {
+        return {
             tracks: tracks,
             track: "barcelona",
             preRaceWaitingTimeSeconds: 15,
@@ -78,7 +81,7 @@ export default {
             this.setSessionData(data.sessions);
         },
         setSessionData(data) {
-            for(let i = 0; i < data.length; i++) {
+            for (let i = 0; i < data.length; i++) {
                 this.sessions.push({
                     index: this.sessionIndex,
                     hourOfDay: data[i].hourOfDay,
@@ -90,8 +93,8 @@ export default {
                 this.sessionIndex++;
             }
         },
-    	  getData() {
-    		    return {
+        getData() {
+            return {
                 track: this.track,
                 preRaceWaitingTimeSeconds: parseInt(this.preRaceWaitingTimeSeconds),
                 sessionOverTimeSeconds: parseInt(this.sessionOverTimeSeconds),
@@ -106,11 +109,11 @@ export default {
                 isFixedConditionQualification: this.isFixedConditionQualification ? 1 : 0,
                 sessions: this.getSessionData()
             };
-      	},
+        },
         getSessionData() {
             let sessions = [];
 
-            for(let i = 0; i < this.sessions.length; i++) {
+            for (let i = 0; i < this.sessions.length; i++) {
                 sessions.push({
                     hourOfDay: parseInt(this.sessions[i].hourOfDay),
                     dayOfWeekend: parseInt(this.sessions[i].dayOfWeekend),
@@ -166,15 +169,15 @@ export default {
         removeSession(index) {
             index = parseInt(index);
 
-            for(let i = 0; i < this.sessions.length; i++) {
-                if(this.sessions[i].index === index) {
+            for (let i = 0; i < this.sessions.length; i++) {
+                if (this.sessions[i].index === index) {
                     this.sessions.splice(i, 1);
                     break;
                 }
             }
         },
         toFloat(value) {
-            if(typeof value === "string") {
+            if (typeof value === "string") {
                 return parseFloat(value.replace(",", "."));
             }
 

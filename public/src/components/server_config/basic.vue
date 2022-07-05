@@ -1,16 +1,16 @@
 <template>
-    <div :title="$t('title')" with-import="true" import-filename="configuration.json" @load="setData">
-        <div class="server-settings-container two-columns">
-            <field type="number" :label="$t('udp_label')" v-model="udpPort"></field>
-            <field type="number" :label="$t('tcp_label')" v-model="tcpPort"></field>
-        </div>
-        <div class="server-settings-container two-columns">
-            <field type="number" :label="$t('maxconnections_label')" v-model="maxConnections"></field>
-            <field :label="$t('publicip_label')" v-model="publicIP"></field>
-        </div>
-        <checkbox :label="$t('registertolobby_label')" v-model="registerToLobby"></checkbox>
-        <checkbox :label="$t('landiscovery_label')" v-model="lanDiscovery"></checkbox>
+<div :title="$t('title')" with-import="true" import-filename="configuration.json" @load="setData">
+    <div class="server-settings-container two-columns">
+        <field type="number" :label="$t('udp_label')" v-model="udpPort"></field>
+        <field type="number" :label="$t('tcp_label')" v-model="tcpPort"></field>
     </div>
+    <div class="server-settings-container two-columns">
+        <field type="number" :label="$t('maxconnections_label')" v-model="maxConnections"></field>
+        <field :label="$t('publicip_label')" v-model="publicIP"></field>
+    </div>
+    <checkbox :label="$t('registertolobby_label')" v-model="registerToLobby"></checkbox>
+    <checkbox :label="$t('landiscovery_label')" v-model="lanDiscovery"></checkbox>
+</div>
 </template>
 
 <script>
@@ -18,7 +18,11 @@ import collapsible from "../collapsible.vue";
 import field from "../field.vue";
 import checkbox from "../checkbox.vue";
 export default {
-    components: {collapsible, field, checkbox},
+    components: {
+        collapsible,
+        field,
+        checkbox
+    },
     data() {
         return {
             udpPort: 9600,

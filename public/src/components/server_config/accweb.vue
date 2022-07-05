@@ -1,7 +1,7 @@
 <template>
-    <div :title="$t('title')">
-        <checkbox :label="$t('autostart_label')" v-model="autoStart"></checkbox>
-    </div>
+<div :title="$t('title')">
+    <checkbox :label="$t('autostart_label')" v-model="autoStart"></checkbox>
+</div>
 </template>
 
 <script>
@@ -9,7 +9,10 @@ import collapsible from "../collapsible.vue";
 import checkbox from "../checkbox.vue";
 
 export default {
-    components: {collapsible, checkbox},
+    components: {
+        collapsible,
+        checkbox
+    },
     data() {
         return {
             autoStart: false
@@ -21,7 +24,7 @@ export default {
         },
         getData() {
             return {
-              autoStart: this.autoStart
+                autoStart: this.autoStart
             };
         }
     }
