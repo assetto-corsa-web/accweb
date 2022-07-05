@@ -1,8 +1,96 @@
 <template>
-	<v-container fluid>
-		<v-row dense>
-			<v-col cols="20">
+			<v-col md="6">			
 				<v-card>
+					<div data-app>
+					          <v-app-bar dense
+            flat
+            color="rgba(0, 0, 0, 0)"
+          >
+
+            <v-toolbar-title class="text-h6 white--text pl-0 text-center">
+              ID : {{ server.id }}
+            </v-toolbar-title>
+
+            <v-spacer></v-spacer>
+
+      <v-menu
+        bottom
+        left
+      >
+        <template v-slot:activator="{ on, attrs }">
+          <v-btn
+            icon
+            color="yellow"
+            v-bind="attrs"
+            v-on="on"
+          >
+            <v-icon>mdi-dots-vertical</v-icon>
+          </v-btn>
+        </template>
+
+        <v-list>
+          <v-list-item>
+								<v-btn
+									elevation="2"
+									x-small
+									color="primary"
+									rounded	
+									v-on:click="deleteServer"
+									v-if="is_admin && !ro"
+									><i class="fas fa-trash"></i>Del</v-btn
+								>
+          </v-list-item>
+
+          <v-list-item>
+								<v-btn
+									elevation="2"
+									x-small
+									color="primary"
+									rounded
+									v-on:click="edit"
+									v-if="is_admin && !ro"
+									><i class="fas fa-cog"></i>Settings</v-btn
+								>
+          </v-list-item>
+
+          <v-list-item>
+								<v-btn
+									elevation="2"
+									x-small
+									color="primary"
+									rounded
+									v-on:click="logs"
+									v-if="is_admin && !ro"
+									><i class="fas fa-terminal"></i>Logs</v-btn
+								>	
+          </v-list-item>
+
+          <v-list-item>
+								<v-btn
+									elevation="2"
+									x-small
+									color="primary"
+									rounded						
+									v-on:click="copyConfig"
+									v-if="is_admin && !ro"
+									><i class="fas fa-copy"></i>Copy CFG</v-btn
+								>
+          </v-list-item>
+
+          <v-list-item>
+            								<v-btn
+									elevation="2"
+									x-small
+									color="primary"
+									rounded
+									v-on:click="exportConfig"
+									v-if="is_admin && !ro"
+									><i class="fas fa-file-download"></i>Download CFG</v-btn
+								>
+          </v-list-item>
+        </v-list>
+      </v-menu>
+          </v-app-bar>
 					<v-list-item active-class>
 						<v-list-item-content>
 							<div class="text-overline mb-4">
@@ -17,9 +105,6 @@
 								UDP: {{ server.udpPort }} TCP: {{ server.tcpPort }}
 								<v-divider></v-divider>
 								{{ $t("track") }}: {{ server.track }}
-							</v-list-item-title>
-							<v-list-item-title class="text-h6 mb-1" v-if="!ro">
-								{{ $t("configuration_directory") }}: {{ server.id }}
 								<v-divider></v-divider>
 							</v-list-item-title>
 							<div class="info state" v-if="server.pid">
@@ -71,63 +156,14 @@
 									><i class="fas fa-tv"></i>{{ $t("view_live") }}</v-btn
 								>
 
-								<v-btn
-									elevation="2"
-									x-small
-									color="primary"
-									rounded	
-									v-on:click="deleteServer"
-									v-if="is_admin && !ro"
-									><i class="fas fa-trash"></i>Del</v-btn
-								>
-
-								<v-btn
-									elevation="2"
-									x-small
-									color="primary"
-									rounded
-									v-on:click="edit"
-									v-if="is_admin && !ro"
-									><i class="fas fa-cog"></i>Settings</v-btn
-								>
-
-								<v-btn
-									elevation="2"
-									x-small
-									color="primary"
-									rounded
-									v-on:click="logs"
-									v-if="is_admin && !ro"
-									><i class="fas fa-terminal"></i>Logs</v-btn
-								>	
-
-								<v-btn
-									elevation="2"
-									x-small
-									color="primary"
-									rounded						
-									v-on:click="copyConfig"
-									v-if="is_admin && !ro"
-									><i class="fas fa-copy"></i>Copy CFG</v-btn
-								>
-
-								<v-btn
-									elevation="2"
-									x-small
-									color="primary"
-									rounded
-									v-on:click="exportConfig"
-									v-if="is_admin && !ro"
-									><i class="fas fa-file-download"></i>Download CFG</v-btn
-								>
 							<div class="online" v-if="ro && server.pid">{{ $t("running") }}</div>
 							<div class="offline" v-if="ro && !server.pid">{{ $t("offline") }}</div>
+			
 						</v-row>
 					</v-card-actions>
+					</div>
 				</v-card>
 			</v-col>
-		</v-row>
-	</v-container>
 </template>
 
 <style>
@@ -137,6 +173,11 @@
 
 .state b {
 	color: #00ff14;
+}
+
+input, select, textarea {
+    background-color: #ffffff00;
+    border-style: solid;
 }
 
 </style>

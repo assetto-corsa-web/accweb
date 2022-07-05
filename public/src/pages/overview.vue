@@ -54,6 +54,9 @@
 			</label>
 		</div>
 
+<v-container fluid>
+		<v-row dense>
+
 		<server
 			v-for="s in orderedServers"
 			:key="s.id"
@@ -65,6 +68,8 @@
 			v-on:stopped="loadServer"
 		></server>
 		<p v-if="!servers || !servers.length">No servers found.</p>
+		</v-row>
+</v-container>
 	</layout>
 </template>
 

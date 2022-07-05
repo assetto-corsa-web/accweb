@@ -7,3 +7,7 @@ releases/
 accweb
 accweb.exe
 config.yml
+public/dist/main.css
+public/dist/build.js.LICENSE.txt
+public/dist/build.js
+cmd/__debug_bin

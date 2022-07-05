@@ -6,8 +6,7 @@ import axios from "axios";
 
 import {Tabs, Tab} from 'vue-tabs-component';
 import VueSplit from 'vue-split-panel'
-import Vuetify from 'vuetify'
-import 'vuetify/dist/vuetify.min.css'
+import Vuetify from "vuetify"; //<----
 
 import "./main.scss";
 import NewStore from "./store/store.js";
@@ -22,7 +21,8 @@ Vue.config.devtools = true;
 Vue.component('tabs', Tabs);
 Vue.component('tab', Tab);
 Vue.use(VueSplit);
-Vue.use(Vuetify);
+Vue.use(Vuetify); //<----
+import "vuetify/dist/vuetify.min.css";
 
 // token interceptor for every request
 axios.interceptors.request.use((config) => {
@@ -105,5 +105,5 @@ new Vue({
 	store: NewStore(),
 	router,
 	i18n,
-
+	vuetify: new Vuetify(), //<-----,
 });
