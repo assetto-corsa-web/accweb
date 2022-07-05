@@ -16,18 +16,15 @@ jobs:
         uses: actions/setup-go@v2
         with:
           go-version: '^1.17.7'
-      - name: Get the version
-        id: get_version
-        run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}
       - name: Build accweb release
-        run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${{ steps.get_version.outputs.VERSION }}
+        run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${{ github.event.pull_request.head.sha }}
       - uses: actions/upload-artifact@v2
         with:
-          name: accweb_${{ steps.get_version.outputs.VERSION }}.zip
-          path: releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
+          name: accweb_${{ github.event.pull_request.head.sha }}.zip
+          path: releases/accweb_${{ github.event.pull_request.head.sha }}.zip
       - name: comment PR
         uses: machine-learning-apps/pr-comment@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          path: releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
+          path: releases/accweb_${{ github.event.pull_request.head.sha }}.zip
