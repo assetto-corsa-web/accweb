@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.19.0
+* Fix some typo errors. #210 #212
+* Fix float point handling for rain and cloud. #211
+* Introducing the advance windows features as Firewall management, custom core affinity and cpu priority. #213
+
+
 ## 1.18.0
 * Add sorting by number of players.
 * Add session remaining time in the servers list.

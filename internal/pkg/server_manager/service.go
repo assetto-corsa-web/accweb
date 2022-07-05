@@ -74,7 +74,7 @@ func (s *Service) LoadAll() error {
 
 func (s *Service) AutoStart() error {
 	for _, s := range s.servers {
-		if !s.Cfg.AutoStart {
+		if !s.Cfg.Settings.AutoStart {
 			continue
 		}
 
@@ -194,7 +194,7 @@ func (s *Service) GetServerByID(id string) (*instance.Instance, error) {
 	return nil, ErrServerNotFound
 }
 
-func (s *Service) Create(accConfig *instance.AccConfigFiles, autoStart bool) (*instance.Instance, error) {
+func (s *Service) Create(accConfig *instance.AccConfigFiles, accWebSettings instance.AccWebSettingsJson) (*instance.Instance, error) {
 	id := strconv.FormatInt(time.Now().Unix(), 10)
 	baseDir := path.Join(s.config.ConfigBaseDir, id)
 
@@ -206,7 +206,7 @@ func (s *Service) Create(accConfig *instance.AccConfigFiles, autoStart bool) (*i
 		Path: baseDir,
 		Cfg: instance.AccWebConfigJson{
 			ID:        id,
-			AutoStart: autoStart,
+			Settings:  accWebSettings,
 			CreatedAt: time.Now().UTC(),
 			UpdatedAt: time.Now().UTC(),
 		},
@@ -259,5 +259,5 @@ func (s *Service) Duplicate(srcId string) (*instance.Instance, error) {
 	cfg := srcSrv.AccCfg
 	cfg.Settings.ServerName += " (COPY)"
 
-	return s.Create(&cfg, srcSrv.Cfg.AutoStart)
+	return s.Create(&cfg, srcSrv.Cfg.Settings)
 }

@@ -2,12 +2,16 @@ package instance
 
 import (
 	"errors"
+	"math"
 	"path/filepath"
+	"runtime"
 	"syscall"
 	"time"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
 )
+
+var DefaultCoreAffinity = uint(math.Pow(2, float64(runtime.NumCPU()))) - 1
 
 // LoadServerFromPath load the server configuration data based on baseDir and returns a Instance instance
 func LoadServerFromPath(baseDir string) (*Instance, error) {
@@ -47,10 +51,33 @@ func loadAccWebConfig(baseDir string) (*AccWebConfigJson, error) {
 				ID:        filepath.Base(baseDir),
 				Md5Sum:    "",
 				AutoStart: false,
+				Settings:  AccWebSettingsJson{},
 				CreatedAt: time.Now().UTC(),
 				UpdatedAt: time.Now().UTC(),
 			}
 		} else {
+			return nil, err
+		}
+	}
+
+	changes := false
+
+	// For backward compatibility
+	if cfg.AutoStart && !cfg.Settings.AutoStart {
+		cfg.AutoStart = false
+		cfg.Settings.AutoStart = true
+		changes = true
+	}
+
+	if cfg.Settings.AdvWindowsCfg != nil {
+		if cfg.Settings.AdvWindowsCfg.CoreAffinity == 0 || cfg.Settings.AdvWindowsCfg.CoreAffinity > DefaultCoreAffinity {
+			cfg.Settings.AdvWindowsCfg.CoreAffinity = DefaultCoreAffinity
+			changes = true
+		}
+	}
+
+	if changes {
+		if err := helper.SaveToPath(baseDir, accwebConfigJsonName, cfg); err != nil {
 			return nil, err
 		}
 	}
