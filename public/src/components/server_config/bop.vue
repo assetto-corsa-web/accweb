@@ -2,6 +2,7 @@
 <div :title="$t('title')" with-import="true" import-filename="bop.json" @load="setData">
     <entry v-for="entry in entries" :key="entry.index" :entry="entry" v-on:remove="removeEntry"></entry>
     <v-btn small v-on:click="addEntry">{{$t("add_entry_button")}}</v-btn>
+    <v-btn small v-on:click="clearEntries">{{$t("clear_entries_button")}}</v-btn>
 </div>
 </template>
 
@@ -93,6 +94,14 @@ export default {
             }
 
             return value;
+        },
+        clearEntries(){
+            if (!window.confirm(this.$t("confirm_clear_entries"))) {
+                return;
+            }
+            while(this.entries.length > 0) {
+                this.entries.splice(this.entries[this.entries.length - 1], 1);
+            }            
         }
     }
 }
@@ -105,10 +114,10 @@ export default {
         "track_label": "Track",
         "carModel_label": "Car Model #",
         "ballast_label": "Ballast: 0 to 100kg max.",
-
-"restrictor_label": "Motor Restrictor: 0 to 20% max.",
-
-"add_entry_button": "Add BOP"
+        "restrictor_label": "Motor Restrictor: 0 to 20% max.",
+        "add_entry_button": "Add BOP",
+        "clear_entries_button": "Clear all BOP",
+        "confirm_clear_entries": "Do you really want to remove all BOP?"  
     }
 }
 </i18n>

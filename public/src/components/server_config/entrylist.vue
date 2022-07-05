@@ -3,6 +3,7 @@
     <entry v-for="entry in entries" :key="entry.index" :entry="entry" v-on:remove="removeEntry"></entry>
     <checkbox :label="$t('forceentrylist_label')" v-model="forceEntryList"></checkbox>
     <v-btn small v-on:click="addEntry">{{$t("add_entry_button")}}</v-btn>
+    <v-btn small v-on:click="clearEntries">{{$t("clear_entries_button")}}</v-btn>
 </div>
 </template>
 
@@ -100,6 +101,14 @@ export default {
                     break;
                 }
             }
+        },
+        clearEntries(){
+            if (!window.confirm(this.$t("confirm_clear_entries"))) {
+                return;
+            }
+            while(this.entries.length > 0) {
+                this.entries.splice(this.entries[this.entries.length - 1], 1);
+            }            
         }
     }
 }
@@ -110,7 +119,9 @@ export default {
     "en": {
         "title": "Entry List",
         "forceentrylist_label": "Force Entry List",
-        "add_entry_button": "Add Entry"
+        "add_entry_button": "Add Entry",
+        "clear_entries_button": "Clear all Entries",
+        "confirm_clear_entries": "Do you really want to remove all entries?"
     }
 }
 </i18n>
