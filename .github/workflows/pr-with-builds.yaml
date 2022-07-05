@@ -23,14 +23,13 @@ jobs:
         run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${{ steps.get_version.outputs.VERSION }}
       - uses: actions/upload-artifact@v2
         with:
-          name: my-artifact
+          name: accweb
           path: releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
-      - name: add artifact links to pull request and related issues step
-        uses: tonyhallett/artifacts-url-comments@v1.1.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: gavv/pull-request-artifacts@v1.0.0
+        if: ${{ github.event_name == 'pull_request' }}
         with:
-          prefix: Here are the artifacts 
-          suffix: Have a nice day.
-          format: name
-          addTo: pullandissues
+          commit: ${{ github.event.pull_request.head.sha }}
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          artifacts-branch: artifacts
+          artifacts: |
+            releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
