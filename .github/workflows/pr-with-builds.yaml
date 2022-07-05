@@ -23,12 +23,11 @@ jobs:
         run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${{ steps.get_version.outputs.VERSION }}
       - uses: actions/upload-artifact@v2
         with:
-          name: accweb
+          name: accweb_${{ steps.get_version.outputs.VERSION }}.zip
           path: releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
-      - uses: gavv/pull-request-artifacts@v1.0.0
-        if: ${{ github.event_name == 'pull_request' }}
+      - name: comment PR
+        uses: machine-learning-apps/pr-comment@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          commit: ${{ github.event.pull_request.head.sha }}
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts: |
-            releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
+          path: releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
