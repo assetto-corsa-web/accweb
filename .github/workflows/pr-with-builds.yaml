@@ -25,12 +25,3 @@ jobs:
         with:
           name: my-artifact
           path: releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
-      - name: Post comment to pull request with its artifacts
-        uses: tonyhallett/artifacts-url-comments@v1.1.0
-        env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-            prefix: Here are the artifacts 
-            suffix: Have a nice day.
-            format: name
-
