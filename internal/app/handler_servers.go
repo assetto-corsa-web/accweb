@@ -81,8 +81,8 @@ func (h *Handler) StopAllServers(c *gin.Context) {
 	c.JSON(http.StatusOK, nil)
 }
 
-// Metadata Show some useful informations
-// @Summary Show some useful informations
+// Metadata Returns server OS informations
+// @Summary Returns server OS informations
 // @Schemes
 // @Description Metadata informations
 // @Tags servers
