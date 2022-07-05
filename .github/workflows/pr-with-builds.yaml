@@ -23,6 +23,7 @@ jobs:
         run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${{ steps.get_version.outputs.VERSION }}
       - name: Post comment to pull request with its artifacts
         uses: montogeek/github-action-comment-artifacts@1.0
+        id: message
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
