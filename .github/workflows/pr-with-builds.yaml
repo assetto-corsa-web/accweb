@@ -22,15 +22,15 @@ jobs:
       - name: Build accweb release
         run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${{ steps.get_version.outputs.VERSION }}
       - uses: actions/upload-artifact@v2
-        id: upload
         with:
           name: my-artifact
           path: releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
       - name: Post comment to pull request with its artifacts
-        uses: montogeek/github-action-comment-artifacts@1.0
-        id: message
+        uses: tonyhallett/artifacts-url-comments@v1.1.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          prefix: "Find your attachments below: "
+            prefix: Here are the artifacts 
+            suffix: Have a nice day.
+            format: name
 
