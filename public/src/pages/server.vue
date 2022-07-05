@@ -40,7 +40,7 @@
                     <bop ref="bop"></bop>
                 </v-col>
             </tab>
-            <tab name="assistrules">
+            <tab name="Assistrules">
                 <assistrules ref="assistrules"></assistrules>
             </tab>
         </tabs>
