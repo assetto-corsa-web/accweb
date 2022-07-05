@@ -30,6 +30,5 @@ jobs:
         with:
           commit: ${{ github.event.pull_request.head.sha }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
-          artifacts-branch: artifacts
           artifacts: |
             releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip
