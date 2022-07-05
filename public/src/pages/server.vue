@@ -1,7 +1,7 @@
 <template>
 <layout>
     <div class="title">
-        <h1>{{ servername }}</h1>
+        <h2>{{ servername }}</h2>
         <div class="menu">
             <v-btn small class="primary" v-on:click="save" v-if="is_admin">
                 <i class="fas fa-save"></i> {{ $t("save") }}

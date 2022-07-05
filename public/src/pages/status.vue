@@ -1,7 +1,7 @@
 <template>
 <layout>
     <div class="title">
-        <h1>{{ $t("title") }}</h1>
+        <h2>{{ $t("title") }}</h2>
         <div class="menu">
             <v-btn small v-on:click="loadServer(true)"><i class="fas fa-sync"></i> {{ $t("refresh") }}</v-btn>
         </div>

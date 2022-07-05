@@ -1,7 +1,7 @@
 <template>
 <layout small="true">
     <div class="title">
-        <h1>{{ $t("title") }}</h1>
+        <h2>{{ $t("title") }}</h2>
     </div>
     <p>{{ $t("message") }}</p>
 </layout>

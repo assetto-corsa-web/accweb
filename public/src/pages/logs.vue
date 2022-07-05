@@ -1,7 +1,7 @@
 <template>
 <layout>
     <div class="title">
-        <h1>{{ servername }}</h1>
+        <h2>{{ servername }}</h2>
         <div class="menu">
             <v-btn small v-on:click="loadLogs"><i class="fas fa-sync"></i> {{ $t("refresh") }}</v-btn>
             <v-btn small class="primary" v-on:click="$router.push('/')"><i class="fas fa-arrow-left"></i> {{ $t("back") }}</v-btn>
