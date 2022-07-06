@@ -20,7 +20,7 @@
             <div id="updatedat"><strong>Last Update:</strong> {{new Date(data.live.updatedAt).toLocaleString()}}</div>
         </div>
 
-        <div class="body">
+        <div class="body" style="overflow-x:auto;">
             <table id="leaderboard">
                 <tr class="tbl-header">
                     <th>Pos</th>
@@ -99,8 +99,10 @@
                 <h3>Chat</h3>
 
                 <div class="message" v-for="item in data.live.chats.slice().reverse()" :key="item.ts">
+                <v-divider></v-divider>
                     <div class="ts">{{new Date(item.ts).toLocaleString()}}</div>
                     <div class="name">{{item.name}}:</div>
+                    <v-divider></v-divider>
                     <div class="msg">{{item.message}}</div>
                 </div>
             </div>
