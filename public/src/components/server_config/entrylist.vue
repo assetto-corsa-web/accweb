@@ -47,7 +47,6 @@ export default {
                 });
                 this.entryIndex++;
             }
-
             this.forceEntryList = data.forceEntryList;
         },
         getData() {
@@ -110,6 +109,7 @@ export default {
                 this.entries.splice(this.entries[this.entries.length - 1], 1);
             }            
         }
+        
     }
 }
 </script>

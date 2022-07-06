@@ -184,12 +184,12 @@ export default {
             while(this.sessions.length > 0) {
                 this.sessions.splice(this.sessions[this.sessions.length - 1], 1);
             }
-        },        
+        },
         toFloat(value) {
-            if (typeof value === "string") {
+            if(typeof value === "string") {
                 return parseFloat(value.replace(",", "."), 64);
             }
-
+            
             return value;
         }
     }

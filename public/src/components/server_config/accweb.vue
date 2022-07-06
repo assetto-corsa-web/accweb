@@ -1,5 +1,5 @@
 <template>
-<div :title="$t('title')">
+    <div :title="$t('title')">
         <div class="server-settings-container two-columns">
             <div>
                 <checkbox :label="$t('autostart_label')" v-model="autoStart"></checkbox>
@@ -15,7 +15,7 @@
 
                             <checkbox :label="$t('enable_windows_firewall')" v-model="advWindowsCfg.enableWindowsFirewall"></checkbox>
                         </div>        
-
+            
                         <label>Core Affinity: (Empty means ALL CPUs)</label> <br /> 
                         <div class="server-settings-container four-columns">
                             <checkbox :label="'CPU '+(n-1)" v-for="n in os.numCpu" :key="n" v-model="coreAffinityCPU[n-1]"></checkbox>
@@ -23,11 +23,21 @@
                     </div>
                 </div>
             </div>
-
+            
             <div></div>
         </div>
-</div>
+    <div>
 </template>
+
+<style>
+.alert {
+    border: 1px solid #3f0b0b;
+    padding: 5px;
+    background-color: red;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+</style>
 
 <script>
 import collapsible from "../collapsible.vue";
@@ -36,11 +46,7 @@ import selection from "../selection.vue";
 import axios from "axios";
 
 export default {
-    components: {
-        collapsible,
-        checkbox,
-        selection
-    },
+    components: {collapsible, checkbox, selection},
     data() {
         return {
             autoStart: false,
@@ -73,7 +79,7 @@ export default {
                     this.coreAffinityCPU[i] = this.hasCPUAffinity(i)
                 }
             })
-    },    
+    },
     methods: {
         hasCPUAffinity(n) {
             if (this.advWindowsCfg.coreAffinity == 0) {
@@ -93,19 +99,21 @@ export default {
                 }
             }
             return total;
-        },        
+        },
         setData(data) {
             this.autoStart = data.autoStart;
             this.enableAdvWindowsCfg = data.enableAdvWindowsCfg;
+
             if (data.advWindowsCfg !== null) {
                 this.advWindowsCfg = data.advWindowsCfg;
-            }            
+            }
         },
         getData() {
             if (this.enableAdvWindowsCfg) {
                 this.advWindowsCfg.coreAffinity = this.calculateAffinity();
                 this.advWindowsCfg.cpuPriority = parseInt(this.advWindowsCfg.cpuPriority);
-            }            
+            }
+
             return {
                 autoStart: this.autoStart,
                 enableAdvWindowsCfg: this.enableAdvWindowsCfg,

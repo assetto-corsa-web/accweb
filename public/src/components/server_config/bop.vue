@@ -1,9 +1,12 @@
 <template>
-<div :title="$t('title')" with-import="true" import-filename="bop.json" @load="setData">
-    <entry v-for="entry in entries" :key="entry.index" :entry="entry" v-on:remove="removeEntry"></entry>
-    <v-btn small v-on:click="addEntry">{{$t("add_entry_button")}}</v-btn>
-    <v-btn small v-on:click="clearEntries">{{$t("clear_entries_button")}}</v-btn>
-</div>
+    <collapsible :title="$t('title')" with-import="true" import-filename="bop.json" @load="setData">
+        <entry v-for="entry in entries"
+            :key="entry.index"
+            :entry="entry"
+            v-on:remove="removeEntry"></entry>
+        <button v-on:click="addEntry">{{$t("add_entry_button")}}</button>
+        <button v-on:click="clearEntries">{{$t("clear_entries_button")}}</button>
+    </collapsible>
 </template>
 
 <script>
@@ -13,17 +16,12 @@ import selection from "../selection.vue";
 import entry from "./bopsession.vue";
 
 export default {
-    components: {
-        collapsible,
-        field,
-        selection,
-        entry
-    },
+    components: {collapsible, field, selection, entry},
     data() {
-        return {
-            entryIndex: 0,
+    	return {
+    		entryIndex: 0,
             entries: []
-        };
+    	};
     },
     methods: {
         setData(data) {
@@ -34,35 +32,35 @@ export default {
             this.setEntryData(data.entries);
         },
         setEntryData(data) {
-            for (let i = 0; i < data.length; i++) {
+            for(let i = 0; i < data.length; i++) {
                 this.entries.push({
                     index: this.entryIndex,
                     track: data[i].track,
                     carModel: data[i].carModel,
                     ballastKg: data[i].ballastKg,
-                    restrictor: data[i].restrictor
+                    restrictor: data[i].restrictor                    
                 });
                 this.entryIndex++;
             }
         },
-        getData() {
-            return {
-                track: this.track,
-                carModel: parseInt(this.carModel),
-                ballastKg: parseInt(this.ballastKg),
-                restrictor: parseInt(this.restrictor),
+    	getData() {
+    		return {
+				track: this.track,
+				carModel: parseInt(this.carModel),
+				ballastKg: parseInt(this.ballastKg),
+				restrictor: parseInt(this.restrictor),				
                 entries: this.getEntryData()
-            };
-        },
+    		};
+    	},
         getEntryData() {
             let entries = [];
 
-            for (let i = 0; i < this.entries.length; i++) {
+            for(let i = 0; i < this.entries.length; i++) {
                 entries.push({
                     track: this.entries[i].track,
                     carModel: parseInt(this.entries[i].carModel),
                     ballastKg: parseInt(this.entries[i].ballastKg),
-                    restrictor: parseInt(this.entries[i].restrictor)
+					restrictor: parseInt(this.entries[i].restrictor)
                 });
             }
 
@@ -81,15 +79,15 @@ export default {
         removeEntry(index) {
             index = parseInt(index);
 
-            for (let i = 0; i < this.entries.length; i++) {
-                if (this.entries[i].index === index) {
+            for(let i = 0; i < this.entries.length; i++) {
+                if(this.entries[i].index === index) {
                     this.entries.splice(i, 1);
                     break;
                 }
             }
         },
         toFloat(value) {
-            if (typeof value === "string") {
+            if(typeof value === "string") {
                 return parseFloat(value.replace(",", "."));
             }
 
@@ -101,7 +99,7 @@ export default {
             }
             while(this.entries.length > 0) {
                 this.entries.splice(this.entries[this.entries.length - 1], 1);
-            }            
+            }
         }
     }
 }
@@ -117,7 +115,7 @@ export default {
         "restrictor_label": "Motor Restrictor: 0 to 20% max.",
         "add_entry_button": "Add BOP",
         "clear_entries_button": "Clear all BOP",
-        "confirm_clear_entries": "Do you really want to remove all BOP?"  
+        "confirm_clear_entries": "Do you really want to remove all BOP?"    
     }
 }
 </i18n>

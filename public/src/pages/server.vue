@@ -155,14 +155,13 @@ export default {
                 url += "/" + this.id;
             }
 
-            axios
-                .post(url, data)
-                .then(() => {
-                    this.$router.push("/");
-                })
-                .catch(e => {
-                    this.$store.commit("toast", this.$t("save_error") + ' ERROR: ' + e.response.data.error);
-                });
+            axios.post(url, data)
+            .then(() => {
+                this.$router.push("/");
+            })
+            .catch(e => {
+                this.$store.commit("toast", this.$t("save_error") + ' ERROR: ' + e.response.data.error);
+            });
         }
     }
 };

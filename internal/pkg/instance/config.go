@@ -12,6 +12,24 @@ const (
 	bopJsonName           = "bop.json"
 	assistRulesJsonName   = "assistRules.json"
 	configVersion         = 1
+
+	WinCpuPriorityRealtime    = 256
+	WinCpuPriorityHigh        = 128
+	WinCpuPriorityAboveNormal = 32768
+	WinCpuPriorityNormal      = 32
+	WinCpuPriorityBelowNormal = 16384
+	WinCpuPriorityLow         = 64
+)
+
+var (
+	CpuPriorities = map[int]bool{
+		WinCpuPriorityRealtime:    true,
+		WinCpuPriorityHigh:        true,
+		WinCpuPriorityAboveNormal: true,
+		WinCpuPriorityNormal:      true,
+		WinCpuPriorityBelowNormal: true,
+		WinCpuPriorityLow:         true,
+	}
 )
 
 type AccConfigFiles struct {
@@ -25,11 +43,24 @@ type AccConfigFiles struct {
 }
 
 type AccWebConfigJson struct {
-	ID        string    `json:"id"`
-	Md5Sum    string    `json:"md5Sum"`
-	AutoStart bool      `json:"autoStart"`
-	CreatedAt time.Time `json:"createdAt"`
-	UpdatedAt time.Time `json:"updatedAt"`
+	ID        string             `json:"id"`
+	Md5Sum    string             `json:"md5Sum"`
+	AutoStart bool               `json:"autoStart"` // backward compatibility
+	Settings  AccWebSettingsJson `json:"settings"`
+	CreatedAt time.Time          `json:"createdAt"`
+	UpdatedAt time.Time          `json:"updatedAt"`
+}
+
+type AccWebSettingsJson struct {
+	AutoStart       bool                          `json:"autoStart"`
+	EnableAdvWinCfg bool                          `json:"enableAdvWindowsCfg"`
+	AdvWindowsCfg   *AccWebAdvWindowsSettingsJson `json:"advWindowsCfg"`
+}
+
+type AccWebAdvWindowsSettingsJson struct {
+	CpuPriority  uint `json:"cpuPriority"`
+	CoreAffinity uint `json:"coreAffinity"`
+	EnableWinFW  bool `json:"enableWindowsFirewall"`
 }
 
 func (a *AccWebConfigJson) SetUpdateAt() {
