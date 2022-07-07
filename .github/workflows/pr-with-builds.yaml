@@ -18,7 +18,21 @@ jobs:
           go-version: '^1.17.7'
       - name: Build accweb release
         run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${{ github.event.pull_request.head.sha }}
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         with:
           name: accweb
           path: releases/accweb_${{ github.event.pull_request.head.sha }}.zip
+      - name: add artifact links to pull request and related issues step
+        uses: actions/github-script@v6
+        github-token: ${{ secrets.GITHUB_TOKEN }}
+        with:
+           script: |
+            let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
+               owner: context.repo.owner,
+               repo: context.repo.repo,
+               run_id: context.payload.workflow_run.id,
+            });
+            let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
+              return artifact.name == "accweb"
+            })[0];
+            console.log(matchArtifact);
