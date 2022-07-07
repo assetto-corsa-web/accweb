@@ -16,7 +16,7 @@ import (
 // @title           ACCWeb API documentation
 // @description     ACCweb api documentation
 // @termsOfService  http://swagger.io/terms/
-// @version         1.18
+// @version         1.19
 
 // @contact.name   ACCWeb project
 // @contact.url    https://github.com/assetto-corsa-web/accweb
