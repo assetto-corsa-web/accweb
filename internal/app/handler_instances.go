@@ -221,15 +221,11 @@ func (h *Handler) DeleteInstance(c *gin.Context) {
 // @Router /instance/{id}/start [post]
 // @Security JWT
 func (h *Handler) StartInstance(c *gin.Context) {
-	id := c.Param("id")
-
-	srv, err := h.sm.GetServerByID(id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, nil)
-		return
-	}
-
-	if err := srv.Start(); err != nil {
+	if err := h.sm.Start(c.Param("id")); err != nil {
+		if errors.Is(err, server_manager.ErrServerNotFound) {
+			c.JSON(http.StatusNotFound, nil)
+			return
+		}
 		if errors.Is(err, instance.ErrServerCantBeRunning) {
 			c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
 			return
