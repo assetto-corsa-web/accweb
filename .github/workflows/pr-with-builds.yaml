@@ -22,13 +22,3 @@ jobs:
         with:
           name: accweb
           path: releases/accweb_${{ github.event.pull_request.head.sha }}.zip
-      - uses: actions/download-artifact@v1
-        with:
-          name: accweb
-      - name: comment PR
-        uses: fuzzbuzz/pr-comment@1.0.2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          path: releases/accweb_${{ github.event.pull_request.head.sha }}.zip
-          prefix: Acc Web custom build for testing
