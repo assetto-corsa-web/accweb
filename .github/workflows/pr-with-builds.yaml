@@ -24,9 +24,9 @@ jobs:
           path: releases/accweb_${{ github.event.pull_request.head.sha }}.zip
       - name: add artifact links to pull request and related issues step
         uses: actions/github-script@v6
-        github-token: ${{ secrets.GITHUB_TOKEN }}
         with:
-           script: |
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
             let allArtifacts = await github.rest.actions.listWorkflowRunArtifacts({
                owner: context.repo.owner,
                repo: context.repo.repo,
