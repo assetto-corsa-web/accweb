@@ -2,7 +2,7 @@ name: Comment with artifact link
 
 on:
   workflow_run:
-    workflows: [PR with builds]
+    workflows: [BuildPR]
     types:
       - completed
 
@@ -23,3 +23,4 @@ jobs:
             let matchArtifact = allArtifacts.data.artifacts.filter((artifact) => {
               return artifact.name == "accweb"
             })[0];
+            console.log(matchArtifact);

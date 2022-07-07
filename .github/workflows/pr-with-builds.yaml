@@ -1,4 +1,4 @@
-name: PR with builds
+name: BuildPR
 on:
   pull_request:
     branches:
