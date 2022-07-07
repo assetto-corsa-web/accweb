@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"golang.org/x/text/encoding/charmap"
@@ -50,6 +51,8 @@ type Instance struct {
 	cmd       *exec.Cmd
 	logFile   *os.File
 	cmdOut    io.ReadCloser
+
+	lock sync.Mutex
 }
 
 func (s *Instance) GetID() string {
@@ -57,6 +60,9 @@ func (s *Instance) GetID() string {
 }
 
 func (s *Instance) Start() error {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	if s.IsRunning() {
 		return ErrServerCantBeRunning
 	}
