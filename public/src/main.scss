@@ -293,7 +293,8 @@ a {
 .server-settings-container {
 	display: grid;
 	grid-gap: 2.0rem;
-	margin-bottom: 1.0rem;
+	margin-bottom: 2.0rem;
+	align-items: end;
 }
 
 .server-settings-group {
