@@ -98,7 +98,7 @@ export default {
                 this.$emit("started");
             })
             .catch(e => {
-                this.$store.commit("toast", this.$t("start_server_error"))
+                this.$store.commit("toast", this.$t("start_server_error", {error: e.response.data.error}))
             });
         },
         stop() {
@@ -107,7 +107,7 @@ export default {
                 this.$emit("stopped");
             })
             .catch(e => {
-                this.$store.commit("toast", this.$t("stop_server_error"))
+                this.$store.commit("toast", this.$t("stop_server_error", {error: e.response.data.error}))
             });
         }
     }
@@ -127,8 +127,8 @@ export default {
         "delete_server": "Delete server",
         "copy_server_error": "Error copying server configuration.",
         "delete_server_error": "Error deleting server configuration.",
-        "start_server_error": "Error starting server, please check the logs.",
-        "stop_server_error": "Error stopping server.",
+        "start_server_error": "Error starting server, please check the logs. ERROR: {error}",
+        "stop_server_error": "Error stopping server. ERROR: {error}",
         "track": "Track",
         "configuration_directory": "Config dir",
         "running": "Running",

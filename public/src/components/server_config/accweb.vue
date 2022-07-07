@@ -71,19 +71,10 @@ export default {
             }
         };
     },
-    mounted() {
-        axios.get("/api/metadata")
-            .then(r => {
-                this.os = r.data;
-
-                for (let i = 0; i <= this.os.numCpu; i++) {
-                    this.coreAffinityCPU[i] = this.hasCPUAffinity(i)
-                }
-            })
-    },
     methods: {
         hasCPUAffinity(n) {
-            if (this.advWindowsCfg.coreAffinity == 0) {
+            if (this.advWindowsCfg.coreAffinity === 0) {
+                console.log("CPU Affinity was ZERO!");
                 this.advWindowsCfg.coreAffinity = Math.pow(2, this.os.numCpu) - 1;
             }
 
@@ -109,6 +100,15 @@ export default {
             if (data.advWindowsCfg !== null) {
                 this.advWindowsCfg = data.advWindowsCfg;
             }
+
+            axios.get("/api/metadata")
+                .then(r => {
+                    this.os = r.data;
+
+                    for (let i = 0; i <= this.os.numCpu; i++) {
+                        this.coreAffinityCPU[i] = this.hasCPUAffinity(i)
+                    }
+                });
         },
         getData() {
             if (this.enableAdvWindowsCfg) {
