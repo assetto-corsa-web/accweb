@@ -4,8 +4,8 @@
             :key="entry.index"
             :entry="entry"
             v-on:remove="removeEntry"></entry>
-        <button v-on:click="addEntry">{{$t("add_entry_button")}}</button>
-        <button v-on:click="clearEntries">{{$t("clear_entries_button")}}</button>
+        <v-btn small v-on:click="addEntry">{{$t("add_entry_button")}}</v-btn>
+        <v-btn small v-on:click="clearEntries">{{$t("clear_entries_button")}}</v-btn>
     </collapsible>
 </template>
 
