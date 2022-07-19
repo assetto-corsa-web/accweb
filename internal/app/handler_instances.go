@@ -17,19 +17,24 @@ type ExtraAccSettings struct {
 }
 
 type InstancePayload struct {
-	ID               string                    `json:"id"`
-	Path             string                    `json:"path"`
-	IsRunning        bool                      `json:"is_running"`
-	PID              int                       `json:"pid"`
-	Settings         instance.AccWebConfigJson `json:"accWeb"`
-	AccSettings      instance.AccConfigFiles   `json:"acc"`
-	AccExtraSettings ExtraAccSettings          `json:"accExtraSettings"`
+	ID               string                      `json:"id"`
+	Path             string                      `json:"path"`
+	IsRunning        bool                        `json:"is_running"`
+	PID              int                         `json:"pid"`
+	Settings         instance.AccWebSettingsJson `json:"accWeb"`
+	AccSettings      instance.AccConfigFiles     `json:"acc"`
+	AccExtraSettings ExtraAccSettings            `json:"accExtraSettings"`
+}
+
+type InstanceOS struct {
+	Name   string `json:"name"`
+	NumCPU int    `json:"numCpu"`
 }
 
 type SaveInstancePayload struct {
-	AccWeb           instance.AccWebConfigJson `json:"accWeb"`
-	Acc              instance.AccConfigFiles   `json:"acc"`
-	AccExtraSettings ExtraAccSettings          `json:"accExtraSettings"`
+	AccWeb           instance.AccWebSettingsJson `json:"accWeb"`
+	Acc              instance.AccConfigFiles     `json:"acc"`
+	AccExtraSettings ExtraAccSettings            `json:"accExtraSettings"`
 }
 
 func NewInstancePayload(srv *instance.Instance) InstancePayload {
@@ -38,7 +43,7 @@ func NewInstancePayload(srv *instance.Instance) InstancePayload {
 		Path:        srv.Path,
 		IsRunning:   srv.IsRunning(),
 		PID:         srv.GetProcessID(),
-		Settings:    srv.Cfg,
+		Settings:    srv.Cfg.Settings,
 		AccSettings: srv.AccCfg,
 	}
 
@@ -98,7 +103,7 @@ func (h *Handler) NewInstance(c *gin.Context) {
 		return
 	}
 
-	srv, err := h.sm.Create(&json.Acc, json.AccWeb.AutoStart)
+	srv, err := h.sm.Create(&json.Acc, json.AccWeb)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
 		return
@@ -156,8 +161,13 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 		json.Acc.Settings.AdminPassword = srv.AccCfg.Settings.AdminPassword
 	}
 
+	if err := srv.CanSaveSettings(json.AccWeb, json.Acc); err != nil {
+		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
+		return
+	}
+
 	srv.AccCfg = json.Acc
-	srv.Cfg.AutoStart = json.AccWeb.AutoStart
+	srv.Cfg.Settings = json.AccWeb
 
 	if err := srv.Save(); err != nil {
 		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
@@ -211,15 +221,11 @@ func (h *Handler) DeleteInstance(c *gin.Context) {
 // @Router /instance/{id}/start [post]
 // @Security JWT
 func (h *Handler) StartInstance(c *gin.Context) {
-	id := c.Param("id")
-
-	srv, err := h.sm.GetServerByID(id)
-	if err != nil {
-		c.JSON(http.StatusNotFound, nil)
-		return
-	}
-
-	if err := srv.Start(); err != nil {
+	if err := h.sm.Start(c.Param("id")); err != nil {
+		if errors.Is(err, server_manager.ErrServerNotFound) {
+			c.JSON(http.StatusNotFound, nil)
+			return
+		}
 		if errors.Is(err, instance.ErrServerCantBeRunning) {
 			c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
 			return

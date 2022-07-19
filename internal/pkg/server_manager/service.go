@@ -30,6 +30,10 @@ type Config struct {
 	AccServerMd5Sum string
 }
 
+func (c Config) AccServerFullPath() string {
+	return path.Join(c.AccServerPath, c.AccServerExe)
+}
+
 type Service struct {
 	config  *Config
 	servers map[string]*instance.Instance
@@ -88,7 +92,7 @@ func (s *Service) LoadAll() error {
 
 func (s *Service) AutoStart() error {
 	for _, s := range s.servers {
-		if !s.Cfg.AutoStart {
+		if !s.Cfg.Settings.AutoStart {
 			continue
 		}
 
@@ -117,7 +121,7 @@ func (s *Service) StopAll() error {
 }
 
 func (s *Service) GetAccServerExeMd5Sum() error {
-	sum, err := helper.CheckMd5Sum(path.Join(s.config.AccServerPath, s.config.AccServerExe))
+	sum, err := helper.CheckMd5Sum(s.config.AccServerFullPath())
 	if err != nil {
 		return err
 	}
@@ -131,18 +135,26 @@ func (s *Service) GetAccServerExeMd5Sum() error {
 
 func (s *Service) UpdateServersServerExeFile() error {
 	for _, srv := range s.servers {
-		if srv.Cfg.Md5Sum == s.config.AccServerMd5Sum {
-			continue
-		}
-
-		if ok, err := srv.UpdateAccServerExe(path.Join(s.config.AccServerPath, s.config.AccServerExe)); err != nil {
+		if err := s.updateAccServerExeIfDifferent(srv); err != nil {
 			return err
-		} else if ok {
-			srv.Cfg.SetUpdateAt()
+		}
+	}
 
-			if err := srv.Save(); err != nil {
-				return err
-			}
+	return nil
+}
+
+func (s *Service) updateAccServerExeIfDifferent(srv *instance.Instance) error {
+	if srv.Cfg.Md5Sum == s.config.AccServerMd5Sum {
+		return nil
+	}
+
+	if ok, err := srv.UpdateAccServerExe(s.config.AccServerFullPath()); err != nil {
+		return err
+	} else if ok {
+		srv.Cfg.SetUpdateAt()
+
+		if err := srv.Save(); err != nil {
+			return err
 		}
 	}
 
@@ -208,7 +220,7 @@ func (s *Service) GetServerByID(id string) (*instance.Instance, error) {
 	return nil, ErrServerNotFound
 }
 
-func (s *Service) Create(accConfig *instance.AccConfigFiles, autoStart bool) (*instance.Instance, error) {
+func (s *Service) Create(accConfig *instance.AccConfigFiles, accWebSettings instance.AccWebSettingsJson) (*instance.Instance, error) {
 	id := strconv.FormatInt(time.Now().Unix(), 10)
 	baseDir := path.Join(s.config.ConfigBaseDir, id)
 
@@ -220,7 +232,7 @@ func (s *Service) Create(accConfig *instance.AccConfigFiles, autoStart bool) (*i
 		Path: baseDir,
 		Cfg: instance.AccWebConfigJson{
 			ID:        id,
-			AutoStart: autoStart,
+			Settings:  accWebSettings,
 			CreatedAt: time.Now().UTC(),
 			UpdatedAt: time.Now().UTC(),
 		},
@@ -228,7 +240,7 @@ func (s *Service) Create(accConfig *instance.AccConfigFiles, autoStart bool) (*i
 		Live:   instance.NewLiveState(),
 	}
 
-	if _, err := srv.UpdateAccServerExe(path.Join(s.config.AccServerPath, s.config.AccServerExe)); err != nil {
+	if _, err := srv.UpdateAccServerExe(s.config.AccServerFullPath()); err != nil {
 		return nil, err
 	}
 
@@ -273,5 +285,26 @@ func (s *Service) Duplicate(srcId string) (*instance.Instance, error) {
 	cfg := srcSrv.AccCfg
 	cfg.Settings.ServerName += " (COPY)"
 
-	return s.Create(&cfg, srcSrv.Cfg.AutoStart)
+	return s.Create(&cfg, srcSrv.Cfg.Settings)
+}
+
+func (s *Service) Start(id string) error {
+	srv, err := s.GetServerByID(id)
+	if err != nil {
+		return err
+	}
+
+	if err := s.GetAccServerExeMd5Sum(); err != nil {
+		return err
+	}
+
+	if err := s.updateAccServerExeIfDifferent(srv); err != nil {
+		return err
+	}
+
+	if err := srv.Start(); err != nil {
+		return err
+	}
+
+	return nil
 }

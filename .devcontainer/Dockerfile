@@ -3,11 +3,12 @@ FROM  golang:1.18-stretch
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get install -y git build-essential nodejs
+    && apt-get install -y git build-essential nodejs zip
 
 RUN go install golang.org/x/tools/gopls@latest \
     && go install github.com/go-delve/delve/cmd/dlv@latest \
-    && go install honnef.co/go/tools/cmd/staticcheck@latest
+    && go install honnef.co/go/tools/cmd/staticcheck@latest \
+    && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.46.2
 
 RUN mkdir -p /app && cd /app && git clone https://github.com/assetto-corsa-web/fake-accserver.git
 

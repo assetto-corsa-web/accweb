@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"golang.org/x/text/encoding/charmap"
@@ -37,6 +38,8 @@ const (
 var (
 	ErrServerCantBeRunning = errors.New("server instance cant be running to perform this action")
 	ErrServerDirIsInvalid  = errors.New("server directory is invalid")
+	ErrInvalidCoreAffinity = errors.New("invalid core affinity value")
+	ErrInvalidCpuPriority  = errors.New("invalid cpu priority value")
 )
 
 type Instance struct {
@@ -49,6 +52,8 @@ type Instance struct {
 	cmd       *exec.Cmd
 	logFile   *os.File
 	cmdOut    io.ReadCloser
+
+	lock sync.Mutex
 }
 
 func (s *Instance) GetID() string {
@@ -56,6 +61,9 @@ func (s *Instance) GetID() string {
 }
 
 func (s *Instance) Start() error {
+	s.lock.Lock()
+	defer s.lock.Unlock()
+
 	if s.IsRunning() {
 		return ErrServerCantBeRunning
 	}
@@ -74,6 +82,10 @@ func (s *Instance) Start() error {
 		return err
 	}
 
+	if s.HasAdvancedWindowsConfig() {
+		s.startWithAdvWindows()
+	}
+
 	s.Live.setServerState(ServerStateStarting)
 
 	logrus.WithField("server_id", s.GetID()).WithField("pid", s.GetProcessID()).Info("acc server started")
@@ -83,6 +95,28 @@ func (s *Instance) Start() error {
 	return nil
 }
 
+func (s *Instance) startWithAdvWindows() {
+	cfg := s.Cfg.Settings.AdvWindowsCfg
+	l := logrus.WithField("server_id", s.GetID()).WithField("PID", s.GetProcessID())
+
+	l.Infof("Defining core affinity to %d", cfg.CoreAffinity)
+	if err := helper.SetCoreAffinity(s.GetProcessID(), cfg.CoreAffinity); err != nil {
+		l.Errorf("failed to define affinity with value: %d. ERROR: %s", cfg.CoreAffinity, err.Error())
+	}
+
+	l.Infof("Defining cpu priority to %d", cfg.CpuPriority)
+	if err := helper.SetCpuPriority(s.GetProcessID(), cfg.CpuPriority); err != nil {
+		l.Errorf("failed to define cpu priority with value: %d. ERROR: %s", cfg.CpuPriority, err.Error())
+	}
+
+	if cfg.EnableWinFW {
+		l.Info("Add Firewall Rules")
+		if err := helper.AddFirewallRules(s.GetProcessID(), s.AccCfg.Configuration.TcpPort, s.AccCfg.Configuration.UdpPort); err != nil {
+			l.Errorf("Failed to add accserver firewall rule. ERROR: %s", err.Error())
+		}
+	}
+}
+
 func (s *Instance) Stop() error {
 	if !s.IsRunning() {
 		return nil
@@ -90,8 +124,14 @@ func (s *Instance) Stop() error {
 
 	if err := s.cmd.Process.Signal(os.Interrupt); err != nil {
 		if err := s.cmd.Process.Kill(); err != nil {
-			return err
+			logrus.WithField("server_id", s.GetID()).
+				WithError(err).
+				Error("Failed to kill the accserver process.")
 		}
+	}
+
+	if s.HasAdvancedWindowsConfig() {
+		s.stopWithAdvWindows()
 	}
 
 	s.Live.serverOffline()
@@ -99,6 +139,17 @@ func (s *Instance) Stop() error {
 	logrus.WithField("server_id", s.GetID()).Info("acc server stopped")
 
 	return nil
+}
+
+func (s *Instance) stopWithAdvWindows() {
+	if !s.Cfg.Settings.AdvWindowsCfg.EnableWinFW {
+		return
+	}
+
+	logrus.Info("Removing Firewall Rules")
+	if err := helper.DelFirewallRules(s.GetProcessID()); err != nil {
+		logrus.Errorf("Failed to add accserver firewall rule for TCP. ERROR: %s", err.Error())
+	}
 }
 
 func (s *Instance) GetProcessID() int {
@@ -109,9 +160,35 @@ func (s *Instance) GetProcessID() int {
 	return 0
 }
 
-func (s *Instance) Save() error {
+func (s *Instance) CanSaveSettings(aw AccWebSettingsJson, ac AccConfigFiles) error {
 	if s.IsRunning() {
 		return ErrServerCantBeRunning
+	}
+
+	if s.Cfg.Settings.EnableAdvWinCfg {
+		if s.Cfg.Settings.AdvWindowsCfg == nil {
+			return errors.New("where are the Advanced Windows Config definitions?")
+		}
+
+		if s.Cfg.Settings.AdvWindowsCfg.CoreAffinity > DefaultCoreAffinity {
+			return ErrInvalidCoreAffinity
+		}
+
+		if _, ok := CpuPriorities[int(s.Cfg.Settings.AdvWindowsCfg.CpuPriority)]; !ok {
+			return ErrInvalidCpuPriority
+		}
+	}
+
+	return nil
+}
+
+func (s *Instance) Save() error {
+	if err := s.CanSaveSettings(s.Cfg.Settings, s.AccCfg); err != nil {
+		return err
+	}
+
+	if s.Cfg.Settings.AdvWindowsCfg != nil && s.Cfg.Settings.AdvWindowsCfg.CoreAffinity == 0 {
+		s.Cfg.Settings.AdvWindowsCfg.CoreAffinity = DefaultCoreAffinity
 	}
 
 	fileList := map[string]interface{}{
@@ -363,4 +440,8 @@ func (s *Instance) prepareCmdLogHandler() error {
 	}()
 
 	return nil
+}
+
+func (s *Instance) HasAdvancedWindowsConfig() bool {
+	return runtime.GOOS == "windows" && s.Cfg.Settings.EnableAdvWinCfg
 }

@@ -16,7 +16,7 @@ import (
 // @title           ACCWeb API documentation
 // @description     ACCweb api documentation
 // @termsOfService  http://swagger.io/terms/
-// @version         1.18
+// @version         1.19
 
 // @contact.name   ACCWeb project
 // @contact.url    https://github.com/assetto-corsa-web/accweb
@@ -119,6 +119,7 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 
 	api.GET("/servers", h.ListServers)
 	api.POST("/servers/stop-all", h.StopAllServers)
+	api.GET("/metadata", h.Metadata)
 
 	api.POST("/instance", h.NewInstance)
 	api.GET("/instance/:id", h.GetInstance)
