@@ -145,7 +145,7 @@ export default {
         "starting": "Starting",
         "not_registered": "Waiting for events",
         "online": "Online",
-        "confirm_stop": "Do you really want to stop this server?",
+        "confirm_stop": "Do you really want to stop this server?"
     }
 }
 </i18n>

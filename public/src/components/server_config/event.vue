@@ -65,6 +65,7 @@ export default {
     },
     methods: {
         setData(data) {
+            this.clearSessions;
             this.track = data.track;
             this.preRaceWaitingTimeSeconds = data.preRaceWaitingTimeSeconds;
             this.sessionOverTimeSeconds = data.sessionOverTimeSeconds;
