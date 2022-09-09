@@ -75,7 +75,7 @@ func (h *Handler) ListServers(c *gin.Context) {
 // @Security JWT
 func (h *Handler) StopAllServers(c *gin.Context) {
 	if err := h.sm.StopAll(); err != nil {
-		logrus.WithError(err).Error("failed during stoping all servers")
+		logrus.WithError(err).Error("failed during stopping all servers")
 	}
 
 	c.JSON(http.StatusOK, nil)
