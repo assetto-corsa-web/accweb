@@ -1,7 +1,5 @@
 module github.com/assetto-corsa-web/accweb
 
-go 1.16
-
 require (
 	github.com/appleboy/gin-jwt/v2 v2.7.0
 	github.com/gin-contrib/cors v1.3.1
@@ -16,11 +14,8 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/swaggo/swag v1.8.0
 	github.com/ugorji/go v1.2.6 // indirect
-	golang.org/x/crypto v0.0.0-20220214200702-86341886e292 // indirect
-	golang.org/x/net v0.0.0-20220225143145-3bcbab3f74ef // indirect
-	golang.org/x/sys v0.0.0-20220224120231-95c6836cb0e7 // indirect
-	golang.org/x/text v0.3.7
-	golang.org/x/tools v0.1.9 // indirect
+	golang.org/x/crypto v0.1.0 // indirect
+	golang.org/x/text v0.4.0
 	google.golang.org/protobuf v1.27.1 // indirect
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
