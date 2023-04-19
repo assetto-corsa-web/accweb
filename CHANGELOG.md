@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.20.0
+* Changes for DLC 1.19 #238
+* Update golang dep versions
+* Update node dep versions
+
 ## 1.19.0
 * Fix some typo errors. #210 #212
 * Fix float point handling for rain and cloud. #211
