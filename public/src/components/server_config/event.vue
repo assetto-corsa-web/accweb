@@ -45,7 +45,7 @@ import tracks from "../../data/tracks";
 export default {
     components: {collapsible, field, selection, session, checkbox},
     data() {
-    	  return {
+            return {
             tracks: tracks,
             track: "barcelona",
             preRaceWaitingTimeSeconds: 15,
@@ -94,8 +94,8 @@ export default {
                 this.sessionIndex++;
             }
         },
-    	  getData() {
-    		return {
+        getData() {
+            return {
                 track: this.track,
                 preRaceWaitingTimeSeconds: parseInt(this.preRaceWaitingTimeSeconds),
                 sessionOverTimeSeconds: parseInt(this.sessionOverTimeSeconds),
