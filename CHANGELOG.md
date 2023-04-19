@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.20.1
+* Add event metada field #223
+* Hide /admin on chat commang #233
+
 ## 1.20.0
 * Changes for DLC 1.19 #238
 * Update golang dep versions

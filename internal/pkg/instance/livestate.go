@@ -318,6 +318,11 @@ func (l *LiveState) recalculatePositions() {
 }
 
 func (l *LiveState) addChat(name, message string) {
+	// skip /admin message
+	if len(message) > 6 && message[0:6] == "/admin" {
+		return
+	}
+
 	l.Chats = append(l.Chats, ServerChat{
 		Timestamp: time.Now().UTC(),
 		Name:      name,
