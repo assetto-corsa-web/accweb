@@ -18,6 +18,7 @@ export default [
     {value: "snetterton", label: "Snetterton"},
     {value: "spa", label: "Spa"},
     {value: "suzuka", label: "Suzuka"},
+    {value: "valencia", label: "Valencia"},
     {value: "watkins_glen", label: "Watkins Glen"},
     {value: "zandvoort", label: "Zandvoort"},
     {value: "zolder", label: "Zolder"},
