@@ -1026,6 +1026,9 @@ const docTemplate = `{
                 "isFixedConditionQualification": {
                     "type": "integer"
                 },
+                "metaData": {
+                    "type": "string"
+                },
                 "postQualySeconds": {
                     "type": "integer"
                 },
