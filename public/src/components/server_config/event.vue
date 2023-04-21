@@ -18,6 +18,7 @@
                 <field type="number" :label="$t('sessionovertimeseconds_label')" v-model="sessionOverTimeSeconds"></field>
                 <field type="number" :label="$t('postqualyseconds_label')" v-model="postQualySeconds"></field>
                 <field type="number" :label="$t('postraceseconds_label')" v-model="postRaceSeconds"></field>
+                <field :label="$t('metadata_label')" v-model="metaData"></field>
             </div>
         </div>
         <session v-for="session in sessions"
@@ -44,7 +45,7 @@ import tracks from "../../data/tracks";
 export default {
     components: {collapsible, field, selection, session, checkbox},
     data() {
-    	  return {
+            return {
             tracks: tracks,
             track: "barcelona",
             preRaceWaitingTimeSeconds: 15,
@@ -59,7 +60,8 @@ export default {
             simracerWeatherConditions: false,
             isFixedConditionQualification: false,
             sessionIndex: 0,
-            sessions: []
+            sessions: [],
+            metaData: ""
         };
     },
     methods: {
@@ -77,6 +79,7 @@ export default {
             this.simracerWeatherConditions = data.simracerWeatherConditions;
             this.isFixedConditionQualification = data.isFixedConditionQualification;
             this.setSessionData(data.sessions);
+            this.metaData = data.metaData;
         },
         setSessionData(data) {
             for(let i = 0; i < data.length; i++) {
@@ -91,8 +94,8 @@ export default {
                 this.sessionIndex++;
             }
         },
-    	  getData() {
-    		    return {
+        getData() {
+            return {
                 track: this.track,
                 preRaceWaitingTimeSeconds: parseInt(this.preRaceWaitingTimeSeconds),
                 sessionOverTimeSeconds: parseInt(this.sessionOverTimeSeconds),
@@ -105,7 +108,8 @@ export default {
                 postRaceSeconds: parseInt(this.postRaceSeconds),
                 simracerWeatherConditions: this.simracerWeatherConditions ? 1 : 0,
                 isFixedConditionQualification: this.isFixedConditionQualification ? 1 : 0,
-                sessions: this.getSessionData()
+                sessions: this.getSessionData(),
+                metaData: this.metaData
             };
       	},
         getSessionData() {
@@ -209,6 +213,7 @@ export default {
         "postraceseconds_label": "Post Race Seconds",
         "simracerWeatherConditions_label": "Simracer Weather Conditions",
         "isFixedConditionQualification_label": "Is Fixed Weather Conditions in Qualification",
+        "metadata_label": "Metadata",
         "add_session_button": "Add session",
         "add_sessions_q_r_button": "Add sessions (Q/R)",
         "add_sessions_p_q_r_button": "Add sessions (P/Q/R)",

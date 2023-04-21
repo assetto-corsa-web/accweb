@@ -110,6 +110,7 @@ type EventJson struct {
 	Rain                          float64           `json:"rain"`
 	WeatherRandomness             int               `json:"weatherRandomness"`
 	Sessions                      []SessionSettings `json:"sessions"`
+	MetaData                      string            `json:"metaData"`
 	PostQualySeconds              int               `json:"postQualySeconds"`
 	PostRaceSeconds               int               `json:"postRaceSeconds"`
 	SimracerWeatherConditions     int               `json:"simracerWeatherConditions"`
