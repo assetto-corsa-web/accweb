@@ -3,8 +3,8 @@
         <div class="title">
             <h1>{{servername}}</h1>
             <div class="menu">
-                <button class="primary" v-on:click="save" v-if="is_admin && !is_running"><i class="fas fa-save"></i> {{$t("save")}}</button>
-                <button v-on:click="$router.push('/')" v-if="is_admin"><i class="fas fa-ban"></i> {{$t("cancel")}}</button>
+                <button class="primary" v-on:click="save" v-if="(is_admin || is_mod) && !is_running"><i class="fas fa-save"></i> {{$t("save")}}</button>
+                <button v-on:click="$router.push('/')" v-if="is_admin || is_mod"><i class="fas fa-ban"></i> {{$t("cancel")}}</button>
                 <button class="primary" v-on:click="$router.push('/')" v-if="!is_admin"><i class="fas fa-arrow-left"></i> {{$t("back")}}</button>
             </div>
         </div>
