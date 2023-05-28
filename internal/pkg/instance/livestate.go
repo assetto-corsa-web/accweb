@@ -2,6 +2,7 @@ package instance
 
 import (
 	"sort"
+	"strings"
 	"time"
 )
 
@@ -319,7 +320,7 @@ func (l *LiveState) recalculatePositions() {
 
 func (l *LiveState) addChat(name, message string) {
 	// skip /admin message
-	if len(message) > 6 && message[0:6] == "/admin" {
+	if len(message) > 6 && strings.ToLower(message[0:6]) == "/admin" {
 		return
 	}
 
