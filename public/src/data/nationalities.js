@@ -48,6 +48,7 @@ const nationalities = {
     "85": {id: 85, country: "Malta"},
     "29": {id: 29, country: "Mexico"},
     "15": {id: 15, country: "Monaco"},
+    "88": {id: 88, country: "Morocco"},
     "63": {id: 63, country: "Nepal"},
     "12": {id: 12, country: "Netherlands"},
     "64": {id: 64, country: "New Caledonia"},
