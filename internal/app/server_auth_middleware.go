@@ -7,6 +7,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var ErrForbidden = errors.New("access denied")
+
 type ACCWebAuthLevel int
 
 const (
@@ -19,13 +21,13 @@ func ACCWebAuthMiddleware(lvl ACCWebAuthLevel) gin.HandlerFunc {
 		u := GetUserFromClaims(c)
 
 		if lvl == ACCWebAuthLevel_Mod && (!u.Mod && !u.Admin) {
-			c.JSON(http.StatusForbidden, gin.H{"msg": errors.New("ximbro")})
+			c.JSON(http.StatusForbidden, gin.H{"msg": ErrForbidden})
 			c.Abort()
 			return
 		}
 
 		if lvl == ACCWebAuthLevel_Adm && !u.Admin {
-			c.JSON(http.StatusForbidden, gin.H{"msg": errors.New("ximbro")})
+			c.JSON(http.StatusForbidden, gin.H{"msg": ErrForbidden})
 			c.Abort()
 			return
 		}
