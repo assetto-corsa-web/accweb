@@ -11,13 +11,12 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 1. [Features](#features)
 2. [Changelog](#changelog)
 3. [Installation](#installation)
-4. ~~[Docker](#docker)~~
-5. [Backup](#backup)
-6. [Contribute and support](#support)
-7. [Build release](#release)
-8. [Links](#links)
-9. [License](#license)
-10. [ACCWeb Discord Server](#discord)
+4. [Backup](#backup)
+5. [Contribute and support](#support)
+6. [Build release](#release)
+7. [Links](#links)
+8. [License](#license)
+9. [ACCWeb Discord Server](#discord)
 
 ## Features
 <a name="features" />
@@ -30,7 +29,6 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 * import/export server configuration files
 * delete server configurations
 * three different permissions: admin, mod and read only (using three different passwords)
-* status page for non logged in users
 * easy setup
     * no database required
     * simple configuration using environment variables
@@ -59,56 +57,6 @@ accweb is installed by extracting the zip on your server, modifing the YAML conf
 I recommend to setup an SSL certificate, but that's out of scope for this instructions. You can enable a certificate inside the `config.yml`.
 
 **Note that you have to install [wine](https://www.winehq.org/) if you're on Linux.**
-
-## Docker
-<a name="docker" />
-
-**Docker is not supported at the moment, you can try using the image, but I highly recommend waiting for v2 to be finished (which will have a new image).**
-
-Keep in mind that this docker image doesn't include accserver.exe file, you will have to copy it manually to the /accserver directory inside the container after it started. Check the volumes section for details.
-
-### Docker Image
-
-To build the image manually:
-
-* git clone https://github.com/assetto-corsa-web/accweb
-* `cd accweb`
-* `docker build --pull --rm -f "Dockerfile" -t accweb:latest "."`
-
-An official image is availabe at: https://hub.docker.com/r/kugel/accweb. It can be pulled using: `docker pull kugel/accweb` and started by running `docker run -it accweb`.
-
-By default this image exposes port 8080 in order to have the web UI working. If you want to run the game server you will need to open the ports manually. For example, if I want to run two server instances I need to open two differents port:
-
-```
-docker run -it accweb -p 8080:8080 -p 2600:2600 -p 2601:2601
-```
-
-This will allow you to run a server on 2600 and 2601 port.
-
-### Docker Compose File
-
-The docker-compose file at the root of the git repository can be used to deploy accweb. It comes with pre-defined env variables and volumes. **Keep in mind that this compose file is not secured. Please follow the documentation and check the recommandations.**
-
-### Volumes
-
-Here is the list of docker volumes and their purpose:
-* `accweb`: Contains the accweb project
-* `accserver`: Must contain the `accserver.exe`. It has to be put there manually as we can't bundle it inside docker
-* `sslcerts`: This volume is dedicated to SSL certificates
-
-### Environment Variables List
-
-| Variable name | Description | Default value |
-|---|---|---|
-| ACCWEB_HOST | ACC web server host URL | 0.0.0.0:8080 (not secure) |
-| ACCWEB_ENABLE_TLS | Enable or disable SSL | false (not secure) |
-| ACCWEB_CERT_FILE | Certificate file location | /sslcerts/certificate.crt |
-| ACCWEB_PRIV_FILE | Certificate key location | /sslcerts/private.key |
-| ACCWEB_ADMIN_PASSWORD | Admin password | weakadminpassword |
-| ACCWEB_MOD_PASSWORD | Moderator password | weakmodpassword |
-| ACCWEB_RO_PASSWORD | Read only password | weakropassword |
-| ACCWEB_LOGLEVEL | App log level | info |
-| ACCWEB_CORS | Default CORS origin | "*" (accept all sources) |
 
 ## Backup
 <a name="backup" />
