@@ -119,19 +119,31 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 	api.Use(authMW.MiddlewareFunc())
 
 	api.GET("/servers", h.ListServers)
-	api.POST("/servers/stop-all", h.StopAllServers)
 	api.GET("/metadata", h.Metadata)
-
-	api.POST("/instance", h.NewInstance)
 	api.GET("/instance/:id", h.GetInstance)
-	api.POST("/instance/:id", h.SaveInstance)
-	api.DELETE("/instance/:id", h.DeleteInstance)
-	api.POST("/instance/:id/start", h.StartInstance)
-	api.POST("/instance/:id/stop", h.StopInstance)
-	api.POST("/instance/:id/clone", h.CloneInstance)
 	api.GET("/instance/:id/logs", h.GetInstanceLogs)
-	api.GET("/instance/:id/export", h.ExportInstance)
 	api.GET("/instance/:id/live", h.GetInstanceLiveState)
+	api.GET("/instance/:id/export", h.ExportInstance)
+
+	// moderator level
+	mod := api.Group("")
+	{
+		mod.Use(ACCWebAuthMiddleware(ACCWebAuthLevel_Mod))
+		mod.POST("/servers/stop-all", h.StopAllServers)
+		mod.POST("/instance/:id/start", h.StartInstance)
+		mod.POST("/instance/:id/stop", h.StopInstance)
+	}
+
+	// admin level
+	adm := api.Group("")
+	{
+		adm.Use(ACCWebAuthMiddleware(ACCWebAuthLevel_Adm))
+		adm.POST("/instance", h.NewInstance)
+		adm.POST("/instance/:id", h.SaveInstance)
+		adm.DELETE("/instance/:id", h.DeleteInstance)
+		adm.POST("/instance/:id/clone", h.CloneInstance)
+	}
+
 }
 
 type LoginPayload struct {

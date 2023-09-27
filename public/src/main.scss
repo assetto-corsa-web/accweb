@@ -102,7 +102,8 @@ body {
 			justify-content: center;
 			align-items: center;
 			padding: 6px 10px;
-			background: $green;
+			background: $dark-green;
+			color: $green;
 		}
 
 		.offline {
@@ -110,7 +111,8 @@ body {
 			justify-content: center;
 			align-items: center;
 			padding: 6px 10px;
-			background: $red;
+			background: $dark-red;
+			color: $light_gray;
 		}
 	}
 }

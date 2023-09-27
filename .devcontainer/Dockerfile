@@ -1,4 +1,4 @@
-FROM  golang:1.18-stretch
+FROM golang:1.21.1-bullseye
 
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 
