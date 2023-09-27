@@ -1,5 +1,8 @@
 # Changelog
 
+## next
+* Fix arm64 node dependencies
+
 ## 1.21.0
 * Add Morocoo nationality #245
 * Update go to 1.21.1
