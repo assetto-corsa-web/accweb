@@ -2,6 +2,7 @@
 
 ## next
 * Fix arm64 node dependencies
+* Fix live view for non numeric instance ids
 
 ## 1.21.0
 * Add Morocoo nationality #245

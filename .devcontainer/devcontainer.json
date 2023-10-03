@@ -4,7 +4,9 @@
         "vscode": {
             "extensions": [
                 "golang.go",
-                "Vue.volar"
+                "Vue.volar",
+                "github.vscode-pull-request-github",
+                "ms-vscode.makefile-tools"
             ]
         }
       },

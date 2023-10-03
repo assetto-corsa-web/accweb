@@ -124,7 +124,7 @@ export default {
     components: {layout},
     data() {
         return {
-            id: 0,
+            id: "0",
             showLaps: null,
             showLapsCar: null,
             data: {
@@ -143,7 +143,7 @@ export default {
         };
     },
     mounted() {
-        this.id = parseInt(this.$route.query.id);
+        this.id = this.$route.query.id;
         this.refreshList();
     },
     beforeDestroy() {
