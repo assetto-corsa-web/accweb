@@ -1,5 +1,17 @@
 # Changelog
 
+## next
+* Fix arm64 node dependencies
+* Fix live view for non numeric instance ids
+
+## 1.21.0
+* Add Morocoo nationality #245
+* Update go to 1.21.1
+* Update go dependencies
+* Fix Authorization issues
+* Fix css from read only server list #247
+* Fix README #228
+
 ## 1.20.1
 * Add event metadata field #223
 * Hide /admin on chat command #233

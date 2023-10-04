@@ -15,18 +15,6 @@ Vue.use(VueI18n);
 Vue.config.productionTip = false;
 Vue.config.devtools = false;
 
-// token interceptor for every request
-axios.interceptors.request.use((config) => {
-	const token = window.localStorage.getItem("token");
-
-	if(token){
-		config.headers.Authorization = `Bearer ${token}`;
-	}
-
-	return config;
-}, (err) => {
-	return Promise.reject(err);
-});
 
 // router
 const routes = [
@@ -57,9 +45,24 @@ router.beforeEach((to, from, next) => {
 	}
 });
 
+// token interceptor for every request
+axios.interceptors.request.use((config) => {
+	const token = window.localStorage.getItem("token");
+
+	if (token) {
+		config.headers.Authorization = `Bearer ${token}`;
+	}
+
+	return config;
+}, (err) => {
+	return Promise.reject(err);
+});
+
 // response error handler
-axios.interceptors.response.use(undefined, err => {
-	if(err.response.data.message){
+axios.interceptors.response.use(function (response) {
+    return response;
+  }, err => {
+	if (err.response.data.message) {
 		console.log(err.response.data);
 	}
 
@@ -69,6 +72,7 @@ axios.interceptors.response.use(undefined, err => {
 
 	return Promise.reject(err);
 });
+
 
 // i18n
 const i18n = new VueI18n({
