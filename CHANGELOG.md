@@ -1,6 +1,6 @@
 # Changelog
 
-## next
+## 1.22.0
 * Fix arm64 node dependencies
 * Fix live view for non numeric instance ids
 * Add official docker support
