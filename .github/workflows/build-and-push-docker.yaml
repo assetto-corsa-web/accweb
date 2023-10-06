@@ -4,7 +4,7 @@ on:
     tags:
       - '*'
 jobs:
-  build-accweb:
+  build-docker-accweb:
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -19,8 +19,7 @@ jobs:
         uses: docker/metadata-action@v5
         with:
           # list of Docker images to use as base name for tags
-          images: |
-            accweb/accweb
+          images: accweb/accweb
           # generate Docker tags based on the following events/attributes
           tags: |
             type=semver,pattern={{version}}
@@ -35,6 +34,6 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           build-args: |
-            VERSION=${VERSION}
+            VERSION=$VERSION
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
