@@ -1,4 +1,3 @@
-
 dev-setup:
 	cd public; npm install; npm run build
 	cp dev_config.yml config.yml
