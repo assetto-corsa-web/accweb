@@ -17,11 +17,11 @@ jobs:
           go-version: '^1.21.0'
       - name: Get the version
         id: get_version
-        run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_ENV"
+        run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_OUTPUT"
       - name: Build accweb release
-        run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${VERSION}
+        run: chmod u+x ./build/build_release.sh && ./build/build_release.sh ${{ steps.get_version.outputs.VERSION }}
       - uses: ncipollo/release-action@v1
         with:
-          artifacts: 'releases/accweb_${VERSION}.zip'
+          artifacts: 'releases/accweb_${{ steps.get_version.outputs.VERSION }}.zip'
           generateReleaseNotes: true
           token: ${{ secrets.GITHUB_TOKEN }}
