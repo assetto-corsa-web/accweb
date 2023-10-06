@@ -10,16 +10,17 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 
 1. [Features](#features)
 2. [Changelog](#changelog)
-3. [Installation](#installation)
-4. [Backup](#backup)
-5. [Contribute and support](#support)
-6. [Build release](#release)
-7. [Links](#links)
-8. [License](#license)
-9. [ACCWeb Discord Server](#discord)
+3. [Installation](#installation-and-configuration)
+4. [Docker](#docker)
+5. [Backup](#backup)
+6. [Contribute and support](#contribute-and-support)
+7. [Build release](#build-release)
+8. [Links](#links)
+9. [License](#license)
+10. [ACCWeb Discord Server](#accweb-discord-server)
+
 
 ## Features
-<a name="features" />
 
 * create and manage as many server instances as you like
 * configure your instances in browser
@@ -39,7 +40,6 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 See [CHANGELOG.md](CHANGELOG.md).
 
 ## Installation and configuration
-<a name="installation" />
 
 accweb is installed by extracting the zip on your server, modifing the YAML configuration file to your needs and starting it in a terminal.
 
@@ -58,13 +58,17 @@ I recommend to setup an SSL certificate, but that's out of scope for this instru
 
 **Note that you have to install [wine](https://www.winehq.org/) if you're on Linux.**
 
+## Docker 
+
+Please visite our [Docker Hub repository](https://hub.docker.com/r/accweb/accweb) for more information.
+
+https://hub.docker.com/r/accweb/accweb
+
 ## Backup
-<a name="backup" />
 
 To backup your files, copy and save the `config` directory as well as the `config.yml`. The `config` directory can later be placed inside the new accweb version directory and you can adjust the new `config.yml` based on your old configuration (don't overwrite it, there meight be breaking changes).
 
 ## Contribute and support
-<a name="support" />
 
 If you like to contribute, have questions or suggestions you can open tickets and pull requests on GitHub.
 
@@ -99,7 +103,6 @@ Keep in mind that you need to restart the command for see the changes that you m
 There is a pre-built development environment setup for ACCWeb for Visual Studio Code and Remote Containers. Please, check here how to setup and use: https://code.visualstudio.com/docs/remote/containers
 
 ## Build release
-<a name="release" />
 
 To build a release, execute the `build_release.sh` script (on Linux) or follow the steps inside the script. You need to pass the build version as the first parameter. Example:
 To build a release, execute the `build_release.sh` script (on Linux) or follow the steps inside the script. You need to pass the build version as the first parameter. Example:
@@ -111,18 +114,15 @@ To build a release, execute the `build_release.sh` script (on Linux) or follow t
 This will create a directory `releases/accweb_1.2.3` containing the release build of accweb. This directory can be zipped, uploaded to GitHub and deployed on a server.
 
 ## Links
-<a name="links" />
 
 * [Docker Hub](https://cloud.docker.com/repository/docker/kugel/accweb/general)
 * [Assetto Corsa Forums](https://www.assettocorsa.net/forum/index.php?threads/release-accweb-assetto-corsa-competizione-server-management-tool-via-web-interface.57572/)
 
 ## License
-<a name="license" />
 
 MIT
 
 ## ACCWeb Discord Server
-<a name="discord" />
 
 Join us on our Discord server to get and provide support.
 
