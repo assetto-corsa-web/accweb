@@ -26,7 +26,7 @@ export default {
         };
     },
     mounted() {
-        this.id = parseInt(this.$route.query.id);
+        this.id = this.$route.query.id;
         this.loadServer();
         this.loadLogs();
     },

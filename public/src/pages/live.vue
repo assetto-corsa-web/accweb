@@ -43,7 +43,7 @@
                         v-bind:class="{'tbl-row': true, active: car.carID === showLaps}"
                     >
                         <td>{{carId+1}}</td>
-                        <td>{{car.currentDriver ? car.currentDriver.name : car.carID}}</td>
+                        <td>{{car.currentDriver ? car.currentDriver.name.toUpperCase() : car.carID}}</td>
                         <td>{{car.raceNumber}}</td>
                         <td>{{car.carModel}}</td>
                         <td>{{car.nrLaps}}</td>
@@ -175,7 +175,7 @@ export default {
                     }
 
                     if (this.showLaps !== null) {
-                        this.setShowLaps(this.showLaps);
+                        this.setShowLaps(this.showLaps, true);
                     }
                 })
                 .catch(e => {
@@ -188,9 +188,15 @@ export default {
                 this.refreshList();
             }, 10000);
         },
-        setShowLaps(carID) {
+        setShowLaps(carID, refresh) {
+            if (refresh === undefined && this.showLaps === carID) {
+                this.showLaps = null;
+                this.showLapsCar = null;
+                return;
+            }
+
             this.showLaps = carID;
-            this.showLapsCar = this.data.live.cars[carID]
+            this.showLapsCar = this.data.live.cars[carID];
         },
         lastLap(laps) {
             if (laps === undefined || laps.length === 0) {
