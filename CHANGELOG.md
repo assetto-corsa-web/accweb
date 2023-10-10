@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.22.1
+* Full support for non numeric instances id
+
 ## 1.22.0
 * Fix arm64 node dependencies
 * Fix live view for non numeric instance ids

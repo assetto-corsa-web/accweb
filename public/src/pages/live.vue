@@ -124,7 +124,7 @@ export default {
     components: {layout},
     data() {
         return {
-            id: "0",
+            id: "",
             showLaps: null,
             showLapsCar: null,
             data: {
