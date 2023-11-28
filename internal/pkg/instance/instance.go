@@ -121,12 +121,12 @@ func (s *Instance) Stop() error {
 		return nil
 	}
 
-	if err := s.cmd.Process.Signal(os.Interrupt); err != nil {
-		if err := s.cmd.Process.Kill(); err != nil {
-			logrus.WithField("server_id", s.GetID()).
-				WithError(err).
-				Error("Failed to kill the accserver process.")
-		}
+	s.Live.setServerState(ServerStateStoping)
+
+	if err := s.cmd.Process.Kill(); err != nil {
+		logrus.WithField("server_id", s.GetID()).
+			WithError(err).
+			Error("Failed to kill the accserver process.")
 	}
 
 	if s.HasAdvancedWindowsConfig() {
@@ -369,7 +369,7 @@ func (s *Instance) prepareInstanceDir() error {
 
 func (s *Instance) wait() {
 	// wait for shutdown or crash
-	if err := s.cmd.Wait(); err != nil {
+	if err := s.cmd.Wait(); err != nil && err.Error() != "signal: killed" {
 		logrus.WithError(err).Error("Error when server stopped")
 	}
 
@@ -418,7 +418,7 @@ func (s *Instance) prepareCmdLogHandler() error {
 		}
 
 		if err := scanner.Err(); err != nil {
-			logrus.Infof("Error while reading server console: %v", err)
+			logrus.Warnf("Error while reading server console: %v", err)
 		}
 	}()
 

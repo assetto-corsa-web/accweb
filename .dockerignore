@@ -1,0 +1,4 @@
+releases/
+secrets/
+config/
+public/dist/build.js*

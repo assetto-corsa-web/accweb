@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.22.2
+* bump some go libs
+* first test with wine killing processes issue
+
 ## 1.22.1
 * Full support for non numeric instances id
 

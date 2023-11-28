@@ -15,6 +15,10 @@ jobs:
       - name: Get the version
         id: get_version
         run: echo "VERSION=${GITHUB_REF/refs\/tags\//}" >> "$GITHUB_OUTPUT"
+
+      - name: Get the commit
+        id: get_commit
+        run: echo "COMMIT=${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
       
       - name: Docker meta
         id: meta
@@ -40,5 +44,6 @@ jobs:
           push: true
           build-args: |
             VERSION=${{ steps.get_version.outputs.VERSION }}
+            COMMIT=${{ steps.get_version.outputs.COMMIT }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
