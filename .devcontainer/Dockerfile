@@ -1,9 +1,9 @@
-FROM golang:1.21.1-bullseye
+FROM golang:1.21-bullseye
 
 RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get install -y git build-essential nodejs zip
+    && apt-get install -y git build-essential nodejs="16.*" zip
 
 RUN go install golang.org/x/tools/gopls@latest \
     && go install github.com/go-delve/delve/cmd/dlv@latest \
