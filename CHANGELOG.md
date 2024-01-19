@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.22.3
+* Fix LFM files encoding [#265](https://github.com/assetto-corsa-web/accweb/issues/265) [#266](https://github.com/assetto-corsa-web/accweb/issues/266)
+
 ## 1.22.2
 * bump some go libs
 * first test with wine killing processes issue
