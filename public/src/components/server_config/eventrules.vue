@@ -37,7 +37,7 @@ export default {
         mandatoryPitstopCount: 0,
         maxTotalDrivingTime: -1,
         maxDriversCount: 1,
-        tyreSetCount: 0,
+        tyreSetCount: 50,
         isRefuellingAllowedInRace: true,
         isRefuellingTimeFixed: false,
         isMandatoryPitstopRefuellingRequired: false,
