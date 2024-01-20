@@ -11,6 +11,7 @@ webserver:
   read_timeout: 5
   
 auth:
+  timeout: $ACCWEB_TIMEOUT
   admin_password: $ACCWEB_ADMIN_PASSWORD
   moderator_password: $ACCWEB_MOD_PASSWORD
   read_only_password: $ACCWEB_RO_PASSWORD

@@ -21,6 +21,10 @@ webserver:
   read_timeout: 5
 
 auth:
+  # Set the session duration (Default value is 20 minutes).
+  # duration documentation can be found at https://pkg.go.dev/time#ParseDuration
+  timeout: 20m
+
   # Set the admin, moderator and read only user password.
   # accweb won't start without an admin password.
   admin_password: admin-password
