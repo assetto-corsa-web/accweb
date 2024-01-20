@@ -79,8 +79,8 @@ func Load(file string) *Config {
 	}
 
 	if config.Auth.Timeout == nil {
-		m5 := 5 * time.Minute
-		config.Auth.Timeout = &m5
+		m := 20 * time.Minute
+		config.Auth.Timeout = &m
 	}
 
 	skipWine = config.SkipWine
