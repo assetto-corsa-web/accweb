@@ -1,6 +1,7 @@
 # Changelog
 
-## 1.22.3
+## 1.23
+* Fix setTyreSetCount default value to 50. [#227](https://github.com/assetto-corsa-web/accweb/issues/227)
 * Fix LFM files encoding [#265](https://github.com/assetto-corsa-web/accweb/issues/265) [#266](https://github.com/assetto-corsa-web/accweb/issues/266)
 
 ## 1.22.2
