@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "Assetto Corsa Competizione Server Management Tool via Web Interface.",
   "main": "src/index.js",
+  "devtool": "source-map",
   "scripts": {
     "start": "webpack-dev-server",
     "build": "webpack --mode=production && node-sass src/ -o dist/",
