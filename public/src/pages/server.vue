@@ -34,7 +34,7 @@ export default {
     data() {
         return {
             activeTab: 0,
-            id: 0,
+            id: "",
             servername: "Server name (by accweb)",
             configurationJson: null,
             settingsJson: null,

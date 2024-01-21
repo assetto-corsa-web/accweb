@@ -20,21 +20,13 @@ export default {
     components: {layout, end},
     data() {
         return {
-            id: 0,
+            id: "",
             servername: "",
             logs: ""
         };
     },
-    /*watch: {
-        logs() {
-            // vue needs some time to render the textareas content
-            setTimeout(() => {
-                this.$refs.output.scrollTop = this.$refs.output.scrollHeight;
-            }, 200);
-        }
-    },*/
     mounted() {
-        this.id = parseInt(this.$route.query.id);
+        this.id = this.$route.query.id;
         this.loadServer();
         this.loadLogs();
     },

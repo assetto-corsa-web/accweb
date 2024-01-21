@@ -11,6 +11,7 @@ type ServerState string
 const (
 	ServerStateOffline       ServerState = "offline"
 	ServerStateStarting      ServerState = "starting"
+	ServerStateStoping       ServerState = "stoping"
 	ServerStateNotRegistered ServerState = "not_registered"
 	ServerStateOnline        ServerState = "online"
 )

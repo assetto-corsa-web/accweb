@@ -164,7 +164,7 @@ func setupAuthRouters(r *gin.Engine, config *cfg.Config) *jwt.GinJWTMiddleware {
 		SigningAlgorithm: "RS256",
 		PrivKeyFile:      config.Auth.PrivateKeyPath,
 		PubKeyFile:       config.Auth.PublicKeyPath,
-		Timeout:          time.Duration(config.Webserver.WebServerTimeout) * time.Minute,
+		Timeout:          *config.Auth.Timeout,
 		MaxRefresh:       time.Hour,
 		IdentityKey:      identityKey,
 		PayloadFunc: func(data interface{}) jwt.MapClaims {

@@ -1,16 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
-# Move to working dir
-cd /accweb
+command=$1
 
-# Remove default config file
-rm -rf config.yml
-
-# envsubst to replace set config properly
-envsubst < build/docker/docker_config.yml > config.yml
-
-# Run winecfg
-winecfg
-
-# Launch accweb main
-./main
+if [ $command = "start" ]; then
+    envsubst < docker_config.yml > config.yml
+    ./accweb
+else
+    exec "$@"
+fi

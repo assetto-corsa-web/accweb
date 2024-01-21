@@ -1,7 +1,8 @@
 package cfg
 
 import (
-	"io/ioutil"
+	"os"
+	"time"
 
 	"github.com/sirupsen/logrus"
 	"gopkg.in/yaml.v3"
@@ -41,11 +42,12 @@ type CORS struct {
 }
 
 type Auth struct {
-	PublicKeyPath     string `yaml:"public_key_path"`
-	PrivateKeyPath    string `yaml:"private_key_path"`
-	AdminPassword     string `yaml:"admin_password"`
-	ModeratorPassword string `yaml:"moderator_password"`
-	ReadOnlyPassword  string `yaml:"read_only_password"`
+	PublicKeyPath     string         `yaml:"public_key_path"`
+	PrivateKeyPath    string         `yaml:"private_key_path"`
+	AdminPassword     string         `yaml:"admin_password"`
+	ModeratorPassword string         `yaml:"moderator_password"`
+	ReadOnlyPassword  string         `yaml:"read_only_password"`
+	Timeout           *time.Duration `yaml:"timeout"`
 }
 
 type ACC struct {
@@ -55,7 +57,7 @@ type ACC struct {
 
 // Load loads the application config from config.yml.
 func Load(file string) *Config {
-	data, err := ioutil.ReadFile(file)
+	data, err := os.ReadFile(file)
 	if err != nil {
 		logrus.WithError(err).Fatal("Error loading configuration file")
 	}
@@ -75,6 +77,11 @@ func Load(file string) *Config {
 
 	if config.Auth.PublicKeyPath == "" {
 		config.Auth.PublicKeyPath = "secrets/token.public"
+	}
+
+	if config.Auth.Timeout == nil {
+		m := 20 * time.Minute
+		config.Auth.Timeout = &m
 	}
 
 	skipWine = config.SkipWine

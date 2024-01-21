@@ -12,6 +12,7 @@ auth:
   admin_password: admin
   moderator_password: mod
   read_only_password: ro
+  timeout: 5h
 acc:
   server_path: "/app/fake-accserver/build/osx"
   server_exe: accServer.exe

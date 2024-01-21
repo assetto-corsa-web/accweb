@@ -1,11 +1,21 @@
 #!/bin/sh
 
 VERSION=$1
+COMMIT=$2
 
 if [ -z $VERSION ]; then
   echo "Usage: ./build/build_release.sh <Version Number, e.g. 1.2.3>"
   exit
 fi
+
+if [ -z $COMMIT ]; then
+  COMMIT=`git rev-parse --short HEAD`
+fi
+
+COMMIT=$(echo "${COMMIT}" | cut -c1-7)
+
+echo "Starting to build accweb $VERSION ( $COMMIT )"
+node -v
 
 # create release directory
 RDIR="releases"
@@ -15,7 +25,7 @@ mkdir -p "$DIR"
 
 # build frontend
 cd public
-COMMIT=`git rev-parse --short HEAD`
+# COMMIT=`git rev-parse --short HEAD`
 cp src/components/end.vue src/components/end.vue.orig
 sed -i "s/%VERSION%/$VERSION/g" src/components/end.vue
 sed -i "s/%COMMIT%/$COMMIT/g" src/components/end.vue

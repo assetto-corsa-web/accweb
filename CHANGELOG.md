@@ -1,8 +1,21 @@
 # Changelog
 
-## next
+## 1.23.0
+* Feature: token timeout in configuration file [#262](https://github.com/assetto-corsa-web/accweb/issues/262)
+* Fix setTyreSetCount default value to 50. [#227](https://github.com/assetto-corsa-web/accweb/issues/227)
+* Fix LFM files encoding [#265](https://github.com/assetto-corsa-web/accweb/issues/265) [#266](https://github.com/assetto-corsa-web/accweb/issues/266)
+
+## 1.22.2
+* bump some go libs
+* first test with wine killing processes issue
+
+## 1.22.1
+* Full support for non numeric instances id
+
+## 1.22.0
 * Fix arm64 node dependencies
 * Fix live view for non numeric instance ids
+* Add official docker support
 
 ## 1.21.0
 * Add Morocoo nationality #245
