@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.24.0
+* GT2 pack update [#269](https://github.com/assetto-corsa-web/accweb/pull/269)
+
 ## 1.23.0
 * Feature: token timeout in configuration file [#262](https://github.com/assetto-corsa-web/accweb/issues/262)
 * Fix setTyreSetCount default value to 50. [#227](https://github.com/assetto-corsa-web/accweb/issues/227)

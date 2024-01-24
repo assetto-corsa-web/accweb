@@ -14,6 +14,7 @@ export default [
     {value: "nurburgring", label: "Nürburgring GP"},
     {value: "oulton_park", label: "Outlon Park"},
     {value: "paul_ricard", label: "Paul Ricard"},
+    {value: "red_bull_ring", label: "RedBull Ring"},
     {value: "silverstone", label: "Silverstone"},
     {value: "snetterton", label: "Snetterton"},
     {value: "spa", label: "Spa"},

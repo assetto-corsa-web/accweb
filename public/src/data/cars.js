@@ -46,7 +46,13 @@ const cars = {
     "58": {id: 58, model: "Maserati MC GT4", brand: "maserati"},
     "59": {id: 59, model: "McLaren 570S GT4", brand: "mclaren"},
     "60": {id: 60, model: "Mercedes-AMG GT4", brand: "mercedes"},
-    "61": {id: 61, model: "Porsche 718 Cayman GT4", brand: "porsche"}
+    "61": {id: 61, model: "Porsche 718 Cayman GT4", brand: "porsche"},
+    "80": {id: 80, model: "Audi R8 LMS GT2", brand: "audi"},
+    "82": {id: 82, model: "KTM XBOW GT2", brand: "ktm"},
+    "83": {id: 83, model: "Maserati MC20 GT2", brand: "maserati"},
+    "84": {id: 84, model: "Mercedes AMG GT2", brand: "mercedes"},
+    "85": {id: 85, model: "Porsche 911 GT2 RS CS Evo", brand: "porsche"},
+    "86": {id: 86, model: "Porsche 935", brand: "porsche"},
 };
 
 export default cars;
