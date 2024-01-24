@@ -84,6 +84,9 @@ export default {
             link.remove();
         },
         deleteServer() {
+            if (!window.confirm(this.$t("confirm_delete"))) {
+                return;
+            }
             axios.delete(`/api/instance/${this.server.id}`)
             .then(() => {
                 this.$emit("deleted");
@@ -145,7 +148,8 @@ export default {
         "starting": "Starting",
         "not_registered": "Waiting for events",
         "online": "Online",
-        "confirm_stop": "Do you really want to stop this server?"
+        "confirm_stop": "Do you really want to stop this server?",
+        "confirm_delete": "Do you really want to delete this server?"
     }
 }
 </i18n>
