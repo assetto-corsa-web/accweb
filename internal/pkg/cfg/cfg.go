@@ -2,6 +2,7 @@ package cfg
 
 import (
 	"os"
+	"path"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -26,6 +27,12 @@ type Config struct {
 	CORS       CORS      `yaml:"cors"`
 	Auth       Auth      `yaml:"auth"`
 	ACC        ACC       `yaml:"acc"`
+	Log        Log       `yaml:"log"`
+	Callback   Callback  `yaml:"callback"`
+}
+
+func (c Config) AccServerFullPath() string {
+	return path.Join(c.ACC.ServerPath, c.ACC.ServerExe)
 }
 
 type Webserver struct {
@@ -52,6 +59,17 @@ type Auth struct {
 type ACC struct {
 	ServerPath string `yaml:"server_path"`
 	ServerExe  string `yaml:"server_exe"`
+}
+
+type Log struct {
+	WithTimestamp bool `yaml:"with_timestamp"`
+}
+
+type Callback struct {
+	Enable  bool              `yaml:"enable"`
+	Url     string            `yaml:"url"`
+	Headers map[string]string `yaml:"headers"`
+	Events  []string          `yaml:"events"`
 }
 
 // Load loads the application config from config.yml.

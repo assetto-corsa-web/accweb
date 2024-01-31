@@ -114,30 +114,30 @@ func NewLiveState() *LiveState {
 	}
 }
 
-func (l *LiveState) setServerState(s ServerState) {
+func (l *LiveState) SetServerState(s ServerState) {
 	l.ServerState = s
 }
 
-func (l *LiveState) setNrClients(nr int) {
+func (l *LiveState) SetNrClients(nr int) {
 	l.NrClients = nr
 }
 
-func (l *LiveState) setTrack(t string) {
+func (l *LiveState) SetTrack(t string) {
 	l.Track = t
 }
 
-func (l *LiveState) setSessionState(t, p string, r int) {
+func (l *LiveState) SetSessionState(t, p string, r int) {
 	oldType := l.SessionType
 	l.SessionType = t
 	l.SessionPhase = p
 	l.SessionRemaining = r
 
 	if t != oldType {
-		l.advanceSession()
+		l.AdvanceSession()
 	}
 }
 
-func (l *LiveState) addNewConnection(connID int, name, playerID string, carModel int) {
+func (l *LiveState) AddNewConnection(connID int, name, playerID string, carModel int) {
 	l.connections[connID] = &DriverState{
 		ConnectionID: connID,
 		Name:         name,
@@ -146,10 +146,10 @@ func (l *LiveState) addNewConnection(connID int, name, playerID string, carModel
 	}
 }
 
-func (l *LiveState) advanceSession() {
+func (l *LiveState) AdvanceSession() {
 	for _, car := range l.Cars {
 		if len(car.Drivers) == 0 {
-			l.purgeCar(car.CarID)
+			l.PurgeCar(car.CarID)
 		} else {
 			car.Fuel = 0
 			car.NrLaps = 0
@@ -163,7 +163,7 @@ func (l *LiveState) advanceSession() {
 	l.recalculatePositions()
 }
 
-func (l *LiveState) addNewCar(carID, raceNumber, carModel int) {
+func (l *LiveState) AddNewCar(carID, raceNumber, carModel int) {
 	car := l.Cars[carID]
 
 	if car == nil {
@@ -181,7 +181,7 @@ func (l *LiveState) addNewCar(carID, raceNumber, carModel int) {
 	car.RaceNumber = raceNumber
 }
 
-func (l *LiveState) handshake(carID, connectionID int) {
+func (l *LiveState) Handshake(carID, connectionID int) {
 	d := l.connections[connectionID]
 	if d == nil {
 		return
@@ -200,7 +200,7 @@ func (l *LiveState) handshake(carID, connectionID int) {
 	}
 }
 
-func (l *LiveState) removeConnection(id int) {
+func (l *LiveState) RemoveConnection(id int) {
 	d, ok := l.connections[id]
 	if !ok {
 		return
@@ -213,28 +213,28 @@ func (l *LiveState) removeConnection(id int) {
 	delete(l.connections, id)
 }
 
-func (l *LiveState) purgeCar(id int) {
+func (l *LiveState) PurgeCar(id int) {
 	delete(l.Cars, id)
 }
 
-func (l *LiveState) serverOffline() {
-	l.setServerState(ServerStateOffline)
+func (l *LiveState) ServerOffline() {
+	l.SetServerState(ServerStateOffline)
 	for _, car := range l.Cars {
-		l.purgeCar(car.CarID)
+		l.PurgeCar(car.CarID)
 	}
-	l.setNrClients(0)
-	l.setTrack("")
-	l.setSessionState("", "", 0)
+	l.SetNrClients(0)
+	l.SetTrack("")
+	l.SetSessionState("", "", 0)
 	l.connections = map[int]*DriverState{}
 }
 
-func (l *LiveState) setCarPosition(carID, pos int) {
+func (l *LiveState) SetCarPosition(carID, pos int) {
 	if car, ok := l.Cars[carID]; ok {
 		car.Position = pos
 	}
 }
 
-func (l *LiveState) setLapState(lap *LapState) {
+func (l *LiveState) SetLapState(lap *LapState) {
 	lap.Car.NrLaps++
 	lap.Car.Fuel = lap.Fuel
 	lap.Car.LastLapMS = lap.LapTimeMS
@@ -249,7 +249,7 @@ func (l *LiveState) setLapState(lap *LapState) {
 	l.recalculatePositions()
 }
 
-func (l *LiveState) setCurrLapState(lap LapState) {
+func (l *LiveState) SetCurrLapState(lap LapState) {
 	lap.Car.LastLapTimestampMS = lap.TimestampMS
 	lap.Car.CurrLap = lap
 	l.recalculatePositions()
@@ -319,7 +319,7 @@ func (l *LiveState) recalculatePositions() {
 	}
 }
 
-func (l *LiveState) addChat(name, message string) {
+func (l *LiveState) AddChat(name, message string) {
 	// skip /admin message
 	if len(message) > 6 && strings.ToLower(message[0:6]) == "/admin" {
 		return

@@ -11,16 +11,14 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"regexp"
 	"runtime"
-	"strings"
 	"sync"
-	"time"
-
-	"golang.org/x/text/encoding/charmap"
 
 	"github.com/sirupsen/logrus"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
+	"github.com/assetto-corsa-web/accweb/internal/pkg/event"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
 )
 
@@ -29,9 +27,6 @@ const (
 	accCfgDir              = "cfg"
 	accServerLogDir        = "log"
 	accServerLogFile       = "server.log"
-	logDir                 = "logs"
-	logTimeFormat          = "20060102_150405"
-	logExt                 = ".log"
 )
 
 var (
@@ -39,6 +34,13 @@ var (
 	ErrServerDirIsInvalid  = errors.New("server directory is invalid")
 	ErrInvalidCoreAffinity = errors.New("invalid core affinity value")
 	ErrInvalidCpuPriority  = errors.New("invalid cpu priority value")
+
+	outputFiltersEr = []*regexp.Regexp{
+		regexp.MustCompile(`^==ERR: onCarUpdate \(\d+?\): timestamp is \d+? ms in the future`),
+		regexp.MustCompile(`^Server was running late for \d step\(s\), not enough CPU power`),
+		regexp.MustCompile(`^Udp message count \(\d+? clients\)`),
+		regexp.MustCompile(`^Tcp message count \(\d+? clients\)`),
+	}
 )
 
 type Instance struct {
@@ -47,10 +49,8 @@ type Instance struct {
 	AccCfg AccConfigFiles
 	Live   *LiveState
 
-	logParser *logParser
-	cmd       *exec.Cmd
-	logFile   *os.File
-	cmdOut    io.ReadCloser
+	cmd    *exec.Cmd
+	cmdOut io.ReadCloser
 
 	lock sync.Mutex
 }
@@ -77,43 +77,21 @@ func (s *Instance) Start() error {
 		return err
 	}
 
+	event.EmmitEventInstanceBeforeStart(s.ToEIB())
+
 	if err := s.cmd.Start(); err != nil {
 		return err
 	}
 
-	if s.HasAdvancedWindowsConfig() {
-		s.startWithAdvWindows()
-	}
-
-	s.Live.setServerState(ServerStateStarting)
+	s.Live.SetServerState(ServerStateStarting)
 
 	logrus.WithField("server_id", s.GetID()).WithField("pid", s.GetProcessID()).Info("acc server started")
+
+	event.EmmitEventInstanceStarted(s.ToEIB())
 
 	go s.wait()
 
 	return nil
-}
-
-func (s *Instance) startWithAdvWindows() {
-	cfg := s.Cfg.Settings.AdvWindowsCfg
-	l := logrus.WithField("server_id", s.GetID()).WithField("PID", s.GetProcessID())
-
-	l.Infof("Defining core affinity to %d", cfg.CoreAffinity)
-	if err := helper.SetCoreAffinity(s.GetProcessID(), cfg.CoreAffinity); err != nil {
-		l.Errorf("failed to define affinity with value: %d. ERROR: %s", cfg.CoreAffinity, err.Error())
-	}
-
-	l.Infof("Defining cpu priority to %d", cfg.CpuPriority)
-	if err := helper.SetCpuPriority(s.GetProcessID(), cfg.CpuPriority); err != nil {
-		l.Errorf("failed to define cpu priority with value: %d. ERROR: %s", cfg.CpuPriority, err.Error())
-	}
-
-	if cfg.EnableWinFW {
-		l.Info("Add Firewall Rules")
-		if err := helper.AddFirewallRules(s.GetProcessID(), s.AccCfg.Configuration.TcpPort, s.AccCfg.Configuration.UdpPort); err != nil {
-			l.Errorf("Failed to add accserver firewall rule. ERROR: %s", err.Error())
-		}
-	}
 }
 
 func (s *Instance) Stop() error {
@@ -121,7 +99,9 @@ func (s *Instance) Stop() error {
 		return nil
 	}
 
-	s.Live.setServerState(ServerStateStoping)
+	s.Live.SetServerState(ServerStateStoping)
+
+	event.EmmitEventInstanceBeforeStop(s.ToEIB())
 
 	if err := s.cmd.Process.Kill(); err != nil {
 		logrus.WithField("server_id", s.GetID()).
@@ -129,26 +109,11 @@ func (s *Instance) Stop() error {
 			Error("Failed to kill the accserver process.")
 	}
 
-	if s.HasAdvancedWindowsConfig() {
-		s.stopWithAdvWindows()
-	}
-
-	s.Live.serverOffline()
+	s.Live.ServerOffline()
 
 	logrus.WithField("server_id", s.GetID()).Info("acc server stopped")
 
 	return nil
-}
-
-func (s *Instance) stopWithAdvWindows() {
-	if !s.Cfg.Settings.AdvWindowsCfg.EnableWinFW {
-		return
-	}
-
-	logrus.Info("Removing Firewall Rules")
-	if err := helper.DelFirewallRules(s.GetProcessID()); err != nil {
-		logrus.Errorf("Failed to add accserver firewall rule for TCP. ERROR: %s", err.Error())
-	}
 }
 
 func (s *Instance) GetProcessID() int {
@@ -328,16 +293,6 @@ func (s *Instance) ExportConfigFilesToZip() ([]byte, error) {
 	return buf.Bytes(), nil
 }
 
-func (s *Instance) createLogFile() (*os.File, error) {
-	if err := helper.CreateIfNotExists(path.Join(s.Path, logDir), 0755); err != nil {
-		return nil, err
-	}
-
-	filename := fmt.Sprintf("logs_%s_%s%s", time.Now().Format(logTimeFormat), s.GetID(), logExt)
-
-	return os.Create(path.Join(s.Path, logDir, filename))
-}
-
 func (s *Instance) prepareInstanceDir() error {
 	if err := s.CheckDirectory(); err != nil {
 		return err
@@ -374,7 +329,8 @@ func (s *Instance) wait() {
 	}
 
 	_ = s.cmdOut.Close()
-	_ = s.logFile.Close()
+
+	event.EmmitEventInstanceStopped(s.ToEIB())
 }
 
 func (s *Instance) prepareCommandAndArgs() {
@@ -402,19 +358,17 @@ func (s *Instance) prepareCmdLogHandler() error {
 		return err
 	}
 
-	if s.logFile, err = s.createLogFile(); err != nil {
-		return err
-	}
-
-	s.logParser = newLogParser()
-
-	r := charmap.ISO8859_1.NewDecoder().Reader(io.TeeReader(s.cmdOut, s.logFile))
-	scanner := bufio.NewScanner(r)
+	scanner := bufio.NewScanner(s.cmdOut)
 
 	go func() {
 		for scanner.Scan() {
-			data := scanner.Text()
-			s.logParser.processLine(s.Live, strings.TrimSpace(data))
+			data := scanner.Bytes()
+
+			if shouldOutputFilter(data) {
+				continue
+			}
+
+			event.EmmitEventInstanceOutput(s.ToEIB(), data)
 		}
 
 		if err := scanner.Err(); err != nil {
@@ -425,6 +379,21 @@ func (s *Instance) prepareCmdLogHandler() error {
 	return nil
 }
 
-func (s *Instance) HasAdvancedWindowsConfig() bool {
-	return runtime.GOOS == "windows" && s.Cfg.Settings.EnableAdvWinCfg
+func (s *Instance) ToEIB() event.EventInstanceBase {
+	return event.NewEventInstanceBase(
+		s.GetID(),
+		s.AccCfg.Event.Track,
+		s.AccCfg.Configuration.TcpPort,
+		s.AccCfg.Configuration.UdpPort,
+	)
+}
+
+func shouldOutputFilter(data []byte) bool {
+	for _, er := range outputFiltersEr {
+		if er.Match(data) {
+			return true
+		}
+	}
+
+	return false
 }
