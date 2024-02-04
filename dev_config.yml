@@ -24,3 +24,21 @@ loglevel: debug
 cors:
   origins: "*"
   loglevel: info
+
+log:
+  with_timestamp: true
+
+callback:
+  enabled: false
+  url: "http://localhost:3000/callback"
+  headers:
+    "auth-token": "aabbcc"
+  all_events: false
+  events:
+    - "instance_started"
+    - "instance_stopped"
+    - "instance_live_new_driver"
+    - "instance_live_remove_connection"
+    - "instance_live_new_lap"
+    - "instance_live_session_phase_changed"
+    - "instance_live_new_damage_zone"

@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"bytes"
 	"crypto/md5"
 	"encoding/json"
 	"errors"
@@ -49,6 +50,17 @@ func Decode(f io.ReadSeeker, obj interface{}) error {
 	}
 
 	return nil
+}
+
+func DecodeBytes(data []byte) ([]byte, error) {
+	buf := bytes.NewBuffer(nil)
+	reader := transform.NewWriter(buf, utf16Decoder)
+
+	if _, err := reader.Write(data); err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
 }
 
 func LoadFromPath(baseDir, filename string, obj interface{}) error {

@@ -16,7 +16,7 @@ var client *http.Client
 var cacheEvents = map[string]struct{}{}
 
 func Register(sm *server_manager.Service) {
-	if !sm.Config().Callback.Enable {
+	if !sm.Config().Callback.Enabled {
 		return
 	}
 
@@ -33,11 +33,24 @@ func Register(sm *server_manager.Service) {
 	event.Register(handleEvent)
 }
 
+func shouldProcess(all bool, val string) bool {
+	if val == "instance_output" {
+		return false
+	}
+
+	if all {
+		return true
+	}
+
+	_, ok := cacheEvents[val]
+	return ok
+}
+
 func handleEvent(ev event.Eventer) {
 	cb := sM.Config().Callback
 	info := ev.GetInfo()
 
-	if _, ok := cacheEvents[info.Name]; !ok {
+	if !shouldProcess(cb.AllEvents, info.Name) {
 		return
 	}
 

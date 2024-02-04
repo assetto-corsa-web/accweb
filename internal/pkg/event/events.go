@@ -18,23 +18,27 @@ func (e EventBase) GetInfo() EventBase {
 func eventBase(name string) EventBase {
 	return EventBase{
 		Name:      name,
-		Timestamp: time.Now(),
+		Timestamp: time.Now().UTC(),
 	}
 }
 
 type EventInstanceBase struct {
 	InstanceId string `json:"instanceId"`
+	Name       string `json:"instanceName"`
 	Track      string `json:"track"`
 	UdpPort    int    `json:"udpPort"`
 	TcpPort    int    `json:"tcpPort"`
+	NrDrivers  int    `json:"nrDrivers"`
 }
 
-func NewEventInstanceBase(id, track string, tcp, udp int) EventInstanceBase {
+func NewEventInstanceBase(id, name, track string, tcp, udp, nrDrivers int) EventInstanceBase {
 	return EventInstanceBase{
 		InstanceId: id,
+		Name:       name,
 		Track:      track,
 		UdpPort:    udp,
 		TcpPort:    tcp,
+		NrDrivers:  nrDrivers,
 	}
 }
 

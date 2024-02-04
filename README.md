@@ -30,6 +30,8 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 * import/export server configuration files
 * delete server configurations
 * three different permissions: admin, mod and read only (using three different passwords)
+* instance live view
+* http callback for many instance events
 * easy setup
     * no database required
     * simple configuration using environment variables

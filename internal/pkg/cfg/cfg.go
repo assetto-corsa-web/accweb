@@ -66,10 +66,11 @@ type Log struct {
 }
 
 type Callback struct {
-	Enable  bool              `yaml:"enable"`
-	Url     string            `yaml:"url"`
-	Headers map[string]string `yaml:"headers"`
-	Events  []string          `yaml:"events"`
+	Enabled   bool              `yaml:"enabled"`
+	Url       string            `yaml:"url"`
+	Headers   map[string]string `yaml:"headers"`
+	AllEvents bool              `yaml:"all_events"`
+	Events    []string          `yaml:"events"`
 }
 
 // Load loads the application config from config.yml.

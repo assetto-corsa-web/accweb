@@ -26,4 +26,13 @@ loglevel: $ACCWEB_LOGLEVEL
 cors:
   origins: "$ACCWEB_CORS"
   loglevel: $ACCWEB_LOGLEVEL
-  
+
+log:
+  with_timestamp: $ACCWEB_LOG_WITH_TIMESTAMP
+
+callback:
+  enabled: $ACCWEB_CALLBACK_ENABLED
+  url: "$ACCWEB_CALLBACK_URL"
+  headers: $ACCWEB_CALLBACK_HEADERS
+  all_events: $ACCWEB_CALLBACK_ALL_EVENTS
+  events: $ACCWEB_CALLBACK_EVENTS

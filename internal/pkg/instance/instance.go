@@ -380,11 +380,18 @@ func (s *Instance) prepareCmdLogHandler() error {
 }
 
 func (s *Instance) ToEIB() event.EventInstanceBase {
+	t := s.AccCfg.Event.Track
+	if s.Live.Track != "" {
+		t = s.Live.Track
+	}
+
 	return event.NewEventInstanceBase(
 		s.GetID(),
-		s.AccCfg.Event.Track,
+		s.AccCfg.Settings.ServerName,
+		t,
 		s.AccCfg.Configuration.TcpPort,
 		s.AccCfg.Configuration.UdpPort,
+		s.Live.NrClients,
 	)
 }
 

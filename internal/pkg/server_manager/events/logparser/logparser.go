@@ -38,7 +38,7 @@ func (l *logParser) processLine(i *instance.Instance, line string) {
 	for _, matcher := range l.matchers {
 		matches := matcher.er.FindStringSubmatch(line)
 		if matches != nil {
-			logrus.WithField("line", matches[0]).WithField("attr", matches[1:]).Debug("log handled")
+			// logrus.WithField("line", matches[0]).WithField("attr", matches[1:]).Debug("log handled")
 			matcher.handler(i, i.Live, matches)
 			i.Live.UpdatedAt = time.Now().UTC()
 		}
@@ -64,6 +64,7 @@ func makeLogMatchers() []*logMatcher {
 		newLogMatcher(`^\s*Car (\d+) Pos (\d+)$`, handleGridPosition),
 		newLogMatcher(`^CHAT (.*?): (.*)$`, handleChat),
 		newLogMatcher(`^Updated leaderboard for \d+ clients \(([A-Za-z ]+)-<([-A-Za-z ]+)> (\d+) min\)$`, handleSessionUpdate),
+		newLogMatcher(`Updated \d+ clients with new damage zones for car (\d+)$`, handleNewDamage),
 	}
 }
 
@@ -73,6 +74,17 @@ func toInt(str string) int {
 		return 0
 	}
 	return value
+}
+
+var timeEr = regexp.MustCompile(`(\d+):(\d+):(\d+)`)
+
+func timeToMs(ts string) int {
+	p := timeEr.FindStringSubmatch(ts)
+	if p == nil {
+		return 0
+	}
+
+	return toInt(p[1])*60000 + toInt(p[2])*1000 + toInt(p[3])
 }
 
 func toLap(l *instance.LiveState, p []string) *instance.LapState {
@@ -115,8 +127,11 @@ func toLap(l *instance.LiveState, p []string) *instance.LapState {
 		TimestampMS: toInt(p[6]),
 		Flags:       0,
 		S1:          p[9],
+		S1MS:        timeToMs(p[9]),
 		S2:          p[11],
+		S2MS:        timeToMs(p[11]),
 		S3:          p[13],
+		S3MS:        timeToMs(p[13]),
 		Fuel:        toInt(p[14]),
 		HasCut:      p[15] != "",
 		InLap:       p[16] != "",
@@ -157,6 +172,15 @@ func handleLap(i *instance.Instance, l *instance.LiveState, p []string) {
 	}
 
 	l.SetLapState(lap)
+
+	event.EmmitEventInstanceLiveNewLap(
+		i.ToEIB(),
+		lap.Driver.ToEILDB(),
+		lap.Car.ToEILCB(),
+		lap.LapTimeMS, lap.TimestampMS, lap.Flags, lap.Fuel,
+		lap.S1, lap.S2, lap.S3,
+		lap.HasCut, lap.InLap, lap.OutLap, lap.SessionOver,
+	)
 }
 
 func handleCurrLap(i *instance.Instance, l *instance.LiveState, p []string) {
@@ -189,7 +213,12 @@ func handleTrack(i *instance.Instance, s *instance.LiveState, p []string) {
 }
 
 func handleSessionPhaseChanged(i *instance.Instance, s *instance.LiveState, p []string) {
-	s.SetSessionState(p[3], p[2], 0)
+	s.SetSessionState(p[3], p[2], -1)
+
+	event.EmmitEventInstanceLiveSessionPhaseChanged(
+		i.ToEIB(),
+		s.SessionType, s.SessionPhase, s.SessionRemaining,
+	)
 }
 
 func handleSessionUpdate(i *instance.Instance, s *instance.LiveState, p []string) {
@@ -243,4 +272,16 @@ func handleResettingRace(i *instance.Instance, l *instance.LiveState, _ []string
 
 func handleChat(i *instance.Instance, l *instance.LiveState, p []string) {
 	l.AddChat(p[1], p[2])
+}
+
+func handleNewDamage(i *instance.Instance, l *instance.LiveState, p []string) {
+	l.AddDamage(toInt(p[1]))
+
+	if car := l.GetCar(toInt(p[1])); car != nil {
+		event.EmmitEventInstanceLiveNewDamageZone(
+			i.ToEIB(),
+			car.CurrentDriver.ToEILDB(),
+			car.ToEILCB(),
+		)
+	}
 }

@@ -1,6 +1,10 @@
 package main
 
 import (
+	"os"
+	"os/signal"
+	"syscall"
+
 	"github.com/assetto-corsa-web/accweb/internal/app"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
@@ -28,5 +32,12 @@ func main() {
 	}
 
 	logrus.WithField("addr", c.Webserver.Host).Info("initializing web server")
-	app.StartServer(c, sM)
+	go app.StartServer(c, sM)
+
+	signalChannel := make(chan os.Signal, 1)
+	signal.Notify(signalChannel, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
+	<-signalChannel
+
+	logrus.Info("Gracefully terminating...")
+	sM.StopAll()
 }
