@@ -41,7 +41,9 @@ ENV ACCWEB_HOST=0.0.0.0:8080 \
 	ACCWEB_MOD_PASSWORD=weakmodpassword \
 	ACCWEB_RO_PASSWORD=weakropassword \
 	ACCWEB_LOGLEVEL=info \
-	ACCWEB_CORS=*
+	ACCWEB_CORS=* \
+	ACCWEB_LOG_WITH_TIMESTAMP=true \
+	ACCWEB_CALLBACK_ENABLED=false
 
 VOLUME /accserver /accweb /sslcerts
 

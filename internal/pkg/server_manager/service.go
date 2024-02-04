@@ -11,6 +11,7 @@ import (
 
 	"github.com/sirupsen/logrus"
 
+	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/helper"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
 )
@@ -21,38 +22,24 @@ var (
 	ErrServerAlreadyExists = errors.New("server already exists")
 )
 
-type Config struct {
-	ConfigBaseDir   string
-	AccServerPath   string
-	AccServerExe    string
-	AccServerMd5Sum string
-}
-
-func (c Config) AccServerFullPath() string {
-	return path.Join(c.AccServerPath, c.AccServerExe)
-}
-
 type Service struct {
-	config  *Config
-	servers map[string]*instance.Instance
-	lock    sync.Mutex
+	accServerMd5Sum string
+	config          *cfg.Config
+	servers         map[string]*instance.Instance
+	lock            sync.Mutex
 }
 
-func New(baseDir, accServerPath, accServerExe string) *Service {
-	return &Service{config: &Config{
-		ConfigBaseDir: baseDir,
-		AccServerPath: accServerPath,
-		AccServerExe:  accServerExe,
-	}}
+func New(config *cfg.Config) *Service {
+	return &Service{config: config}
 }
 
 // LoadAll .
 func (s *Service) LoadAll() error {
-	if err := helper.CreateIfNotExists(s.config.ConfigBaseDir, 0755); err != nil {
+	if err := helper.CreateIfNotExists(s.config.ConfigPath, 0755); err != nil {
 		return helper.WrapErrors(ErrCantCreateConfigDir, err)
 	}
 
-	dir, err := ioutil.ReadDir(s.config.ConfigBaseDir)
+	dir, err := ioutil.ReadDir(s.config.ConfigPath)
 	if err != nil {
 		return err
 	}
@@ -65,7 +52,7 @@ func (s *Service) LoadAll() error {
 			continue
 		}
 
-		srv, err := instance.LoadServerFromPath(path.Join(s.config.ConfigBaseDir, entry.Name()))
+		srv, err := instance.LoadServerFromPath(path.Join(s.config.ConfigPath, entry.Name()))
 		if err != nil {
 			return err
 		}
@@ -112,8 +99,8 @@ func (s *Service) GetAccServerExeMd5Sum() error {
 		return err
 	}
 
-	if s.config.AccServerMd5Sum != sum {
-		s.config.AccServerMd5Sum = sum
+	if s.accServerMd5Sum != sum {
+		s.accServerMd5Sum = sum
 	}
 
 	return nil
@@ -130,7 +117,7 @@ func (s *Service) UpdateServersServerExeFile() error {
 }
 
 func (s *Service) updateAccServerExeIfDifferent(srv *instance.Instance) error {
-	if srv.Cfg.Md5Sum == s.config.AccServerMd5Sum {
+	if srv.Cfg.Md5Sum == s.accServerMd5Sum {
 		return nil
 	}
 
@@ -151,7 +138,7 @@ func (s *Service) Bootstrap() error {
 	if err := s.GetAccServerExeMd5Sum(); err != nil {
 		return err
 	}
-	logrus.WithField("md5sum", s.config.AccServerMd5Sum).Info("boot: calculating acc dedicated server md5sum")
+	logrus.WithField("md5sum", s.accServerMd5Sum).Info("boot: calculating acc dedicated server md5sum")
 
 	if err := s.LoadAll(); err != nil {
 		return err
@@ -208,7 +195,7 @@ func (s *Service) GetServerByID(id string) (*instance.Instance, error) {
 
 func (s *Service) Create(accConfig *instance.AccConfigFiles, accWebSettings instance.AccWebSettingsJson) (*instance.Instance, error) {
 	id := strconv.FormatInt(time.Now().Unix(), 10)
-	baseDir := path.Join(s.config.ConfigBaseDir, id)
+	baseDir := path.Join(s.config.ConfigPath, id)
 
 	if err := helper.CreateIfNotExists(baseDir, 0755); err != nil {
 		return nil, err
@@ -293,4 +280,8 @@ func (s *Service) Start(id string) error {
 	}
 
 	return nil
+}
+
+func (s *Service) Config() cfg.Config {
+	return *s.config
 }
