@@ -1,0 +1,2 @@
+# Don't change line endings on .sh files
+*.sh -crlf

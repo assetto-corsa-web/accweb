@@ -2,3 +2,5 @@ releases/
 secrets/
 config/
 public/dist/build.js*
+public/dist/
+public/node_modules/
