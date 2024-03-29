@@ -1,15 +1,18 @@
 <template>
     <collapsible :title="$t('title')" with-import="true" import-filename="settings.json" @load="setDataFile">
         <div class="pwd">
-            <field v-if="!passwordIsEmpty" type="password" :label="$t('password_label')" v-model="password" :disabled="passwordIsEmpty"></field>
+            <label v-if="!passwordIsEmpty"> {{ $t('password_label') }} </label>
+            <input v-if="!passwordIsEmpty" class="form-input" type="password" v-model="password" v-bind:autocomplete="'new-password'" :disabled="passwordIsEmpty">
             <checkbox :label="$t('password_empty_label')" v-model="passwordIsEmpty"></checkbox>
         </div>
         <div class="pwd">
-            <field v-if="!adminPasswordIsEmpty" type="password" :label="$t('adminpassword_label')" v-model="adminPassword" :disabled="adminPasswordIsEmpty"></field>
+            <label v-if="!adminPasswordIsEmpty"> {{ $t('adminpassword_label') }} </label>
+            <input v-if="!adminPasswordIsEmpty" class="form-input" type="password" v-model="adminPassword" v-bind:autocomplete="'new-password'" :disabled="adminPasswordIsEmpty">
             <checkbox :label="$t('adminpassword_empty_label')" v-model="adminPasswordIsEmpty"></checkbox>
         </div>
         <div class="pwd">
-            <field v-if="!spectatorPasswordIsEmpty" type="password" :label="$t('spectatorpassword_label')" v-model="spectatorPassword" :disabled="spectatorPasswordIsEmpty"></field>
+            <label v-if="!spectatorPasswordIsEmpty"> {{ $t('spectatorpassword_empty_label') }} </label>
+            <input v-if="!spectatorPasswordIsEmpty" class="form-input" type="password" v-model="spectatorPassword" v-bind:autocomplete="'new-password'" :disabled="spectatorPasswordIsEmpty">
             <checkbox :label="$t('spectatorpassword_empty_label')" v-model="spectatorPasswordIsEmpty"></checkbox>
         </div>
         <div class="server-settings-container three-columns" style="margin-top: 1.0rem;">
