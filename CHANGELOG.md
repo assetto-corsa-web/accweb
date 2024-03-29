@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.25.0
+* html adjustments on server password [#273](https://github.com/assetto-corsa-web/accweb/pull/273)
+* New track nurburgring_24h
+* Remove circleci integration
+
 ## 1.24.0
 * GT2 pack update [#269](https://github.com/assetto-corsa-web/accweb/pull/269)
 
