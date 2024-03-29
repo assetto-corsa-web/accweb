@@ -11,7 +11,7 @@ run-dev-frontend:
 swag:
 	${GOPATH}/bin/swag init -d cmd,internal -g ../internal/app/server.go
 
-IMG ?= accweb/acceweb
+IMG ?= accweb/accweb
 VERSION ?= dev
 TAG ?= latest
 docker-build:
