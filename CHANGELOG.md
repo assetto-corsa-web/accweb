@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.25.1
+* makes majority of the entrylist fields optional [#278](https://github.com/assetto-corsa-web/accweb/pull/278)
+* sorting nationalities, tracks and cars lists
+
 ## 1.25.0
 * html adjustments on server password [#273](https://github.com/assetto-corsa-web/accweb/pull/273)
 * New track nurburgring_24h

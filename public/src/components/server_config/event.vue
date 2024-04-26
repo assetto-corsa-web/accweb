@@ -46,7 +46,7 @@ export default {
     components: {collapsible, field, selection, session, checkbox},
     data() {
             return {
-            tracks: tracks,
+            tracks: _.orderBy(tracks, "label", "asc"),
             track: "barcelona",
             preRaceWaitingTimeSeconds: 15,
             sessionOverTimeSeconds: 120,

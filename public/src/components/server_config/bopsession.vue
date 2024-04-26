@@ -20,7 +20,7 @@ export default {
     props: ["entry"],
     data() {
       return {
-        tracks: tracks,
+        tracks: _.orderBy(tracks, "label", "asc"),
         track: "barcelona",
         carModels: _.sortBy(
                 _.mapValues(cars, function(o) { return {value: o.id.toString(), label: o.model, brand: o.brand}; }),
