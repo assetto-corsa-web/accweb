@@ -36,6 +36,7 @@ const cars = {
     "33": {id: 33, model: "Lamborghini Huracan Evo2", brand: "lamborghini"},
     "34": {id: 34, model: "Porsche 992 GT3 R", brand: "porsche"},
     "35": {id: 35, model: "McLaren 720S GT3 Evo (2023)", brand: "mclaren"},
+    "36": {id: 36, model: "Ford Mustang GT3", brand: "ford"},
     "50": {id: 50, model: "Alpine A110 GT4", brand: "alpine"},
     "51": {id: 51, model: "AMR V8 Vantage GT4", brand: "amr"},
     "52": {id: 52, model: "Audi R8 LMS GT4", brand: "audi"},

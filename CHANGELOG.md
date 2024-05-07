@@ -3,6 +3,7 @@
 ## 1.25.1
 * makes majority of the entrylist fields optional [#278](https://github.com/assetto-corsa-web/accweb/pull/278)
 * sorting nationalities, tracks and cars lists
+* New car - Ford Mustang GT3 [#279](https://github.com/assetto-corsa-web/accweb/pull/279)
 
 ## 1.25.0
 * html adjustments on server password [#273](https://github.com/assetto-corsa-web/accweb/pull/273)
