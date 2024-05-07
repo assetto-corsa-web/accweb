@@ -149,24 +149,24 @@ type EntrylistJson struct {
 
 type EntrySettings struct {
 	Drivers                      []DriverSettings `json:"drivers"`
-	RaceNumber                   int              `json:"raceNumber"`
-	ForcedCarModel               int              `json:"forcedCarModel"`
+	RaceNumber                   *int             `json:"raceNumber,omitempty"`
+	ForcedCarModel               *int             `json:"forcedCarModel,omitempty"`
 	OverrideDriverInfo           int              `json:"overrideDriverInfo"`
-	IsServerAdmin                int              `json:"isServerAdmin"`
-	CustomCar                    string           `json:"customCar"`
+	IsServerAdmin                *int             `json:"isServerAdmin,omitempty"`
+	CustomCar                    *string          `json:"customCar,omitempty"`
 	OverrideCarModelForCustomCar int              `json:"overrideCarModelForCustomCar"`
-	BallastKg                    int              `json:"ballastKg"`
-	Restrictor                   int              `json:"restrictor"`
-	DefaultGridPosition          int              `json:"defaultGridPosition"`
+	BallastKg                    *int             `json:"ballastKg,omitempty"`
+	Restrictor                   *int             `json:"restrictor,omitempty"`
+	DefaultGridPosition          *int             `json:"defaultGridPosition,omitempty"`
 }
 
 type DriverSettings struct {
-	FirstName      string `json:"firstName"`
-	LastName       string `json:"lastName"`
-	ShortName      string `json:"shortName"`
-	DriverCategory int    `json:"driverCategory"`
-	PlayerID       string `json:"playerID"`
-	Nationality    int    `json:"nationality"`
+	FirstName      *string `json:"firstName,omitempty"`
+	LastName       *string `json:"lastName,omitempty"`
+	ShortName      *string `json:"shortName,omitempty"`
+	DriverCategory *int    `json:"driverCategory,omitempty"`
+	PlayerID       string  `json:"playerID"`
+	Nationality    *int    `json:"nationality,omitempty"`
 }
 
 type BopJson struct {

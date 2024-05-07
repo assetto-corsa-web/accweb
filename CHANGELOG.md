@@ -1,5 +1,22 @@
 # Changelog
 
+## 1.25.1
+* makes majority of the entrylist fields optional [#278](https://github.com/assetto-corsa-web/accweb/pull/278)
+* sorting nationalities, tracks and cars lists
+
+## 1.25.0
+* html adjustments on server password [#273](https://github.com/assetto-corsa-web/accweb/pull/273)
+* New track nurburgring_24h
+* Remove circleci integration
+
+## 1.24.0
+* GT2 pack update [#269](https://github.com/assetto-corsa-web/accweb/pull/269)
+
+## 1.23.0
+* Feature: token timeout in configuration file [#262](https://github.com/assetto-corsa-web/accweb/issues/262)
+* Fix setTyreSetCount default value to 50. [#227](https://github.com/assetto-corsa-web/accweb/issues/227)
+* Fix LFM files encoding [#265](https://github.com/assetto-corsa-web/accweb/issues/265) [#266](https://github.com/assetto-corsa-web/accweb/issues/266)
+
 ## 1.22.2
 * bump some go libs
 * first test with wine killing processes issue

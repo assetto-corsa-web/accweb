@@ -9,6 +9,9 @@
             <i class="collapse-icon" v-bind:class="{fas: true, 'fa-chevron-down': !expanded, 'fa-chevron-up': expanded}"></i>
         </div>
         <div class="collapsible-content" v-show="expanded">
+            <div v-show="loadError" class="alert">
+                This is an invalid JSON file or maybe there is encoding issues.
+            </div>
             <slot></slot>
         </div>
     </div>
@@ -22,13 +25,21 @@ export default {
     components: { filereader },
     data() {
         return {
-            expanded: false
+            expanded: false,
+            loadError: ''
         };
     },
     methods: {
         onLoadContent: function (e) {
-            this.$emit("load", JSON.parse(e));
-            this.expanded = true
+            this.expanded = true;
+            this.loadError = false;
+            try {
+                const obj = JSON.parse(e.replaceAll('\x00', ''));
+                this.$emit("load", obj);
+                
+            } catch (err) {
+                this.loadError = true;
+            }
         }
     }
 }

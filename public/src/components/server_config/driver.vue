@@ -25,19 +25,19 @@ export default {
     props: ["driver"],
     watch: {
         firstName(value) {
-            this.driver.firstName = value;
+            this.driver.firstName = value == '' ? undefined : value;
             this.$emit("update", this.driver);
         },
         lastName(value) {
-            this.driver.lastName = value;
+            this.driver.lastName = value == '' ? undefined : value;;
             this.$emit("update", this.driver);
         },
         shortName(value) {
-            this.driver.shortName = value;
+            this.driver.shortName = value == '' ? undefined : value;;
             this.$emit("update", this.driver);
         },
         driverCategory(value) {
-            this.driver.driverCategory = parseInt(value);
+            this.driver.driverCategory = parseInt(value) == 0 ? undefined : parseInt(value);
             this.$emit("update", this.driver);
         },
         playerID(value) {
@@ -45,25 +45,25 @@ export default {
             this.$emit("update", this.driver);
         },
         nationality(value) {
-            this.driver.nationality = parseInt(value);
+            this.driver.nationality = parseInt(value) == 0 ? undefined : parseInt(value);
             this.$emit("update", this.driver);
         }
     },
     data() {
         return {
-            firstName: "",
-            lastName: "",
-            shortName: "",
+            firstName: undefined,
+            lastName: undefined,
+            shortName: undefined,
             driverCategoryTypes: [
               {value: 0, label: "Bronze"},
               {value: 1, label: "Silver"},
               {value: 2, label: "Gold"},
               {value: 3, label: "Platinum"}
             ],
-            driverCategory: 0,
+            driverCategory: undefined,
             playerID: "",
-            nationalities: _.mapValues(nationalities, function(o) { return {value: o.id, label: o.country}; }),
-            nationality: 0,
+            nationalities: _.mapValues(_.orderBy(nationalities, "country", "asc"), function(o) { return {value: o.id, label: o.country}; }),
+            nationality: undefined,
         };
     },
     mounted() {

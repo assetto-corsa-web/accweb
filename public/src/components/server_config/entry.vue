@@ -64,12 +64,12 @@ export default {
         addDriver() {
             this.drivers.push({
                 index: this.driverIndex,
-                firstName: "",
-                lastName: "",
-                shortName: "",
-                driverCategory: 0,
+                firstName: undefined,
+                lastName: undefined,
+                shortName: undefined,
+                driverCategory: undefined,
                 playerID: "",
-                nationality: 0,
+                nationality: undefined,
             });
             this.driverIndex++;
         },
