@@ -63,7 +63,8 @@ log:
 
 callback:
   enabled: false
-  url: "http://localhost:3000/callback"
+  urls: 
+    - "http://localhost:3000/callback"
   headers:
     "auth-token": "aabbcc"
   all_events: false

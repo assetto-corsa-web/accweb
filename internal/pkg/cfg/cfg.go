@@ -67,7 +67,7 @@ type Log struct {
 
 type Callback struct {
 	Enabled   bool              `yaml:"enabled"`
-	Url       string            `yaml:"url"`
+	Urls      []string          `yaml:"urls"`
 	Headers   map[string]string `yaml:"headers"`
 	AllEvents bool              `yaml:"all_events"`
 	Events    []string          `yaml:"events"`

@@ -1,5 +1,20 @@
 package event
 
+type EventInstanceLive struct {
+	EventBase
+	EventInstanceBase
+
+	Data interface{} `json:"data"`
+}
+
+func NewEventInstanceLive(eb EventBase, eib EventInstanceBase, dt any) EventInstanceLive {
+	return EventInstanceLive{
+		EventBase:         eb,
+		EventInstanceBase: eib,
+		Data:              dt,
+	}
+}
+
 type EventInstanceLiveDriverBase struct {
 	Name     string `json:"playerName"`
 	PlayerID string `json:"playerID"`
@@ -27,38 +42,36 @@ func NewEventInstanceLiveCarBase(cId, rn, cm int) EventInstanceLiveCarBase {
 }
 
 type EventInstanceLiveNewDriver struct {
-	EventBase
-	EventInstanceBase
 	EventInstanceLiveDriverBase
 	EventInstanceLiveCarBase
 }
 
 func EmmitEventInstanceLiveNewDriver(eib EventInstanceBase, name, pId string, cId, rn, cm int) {
-	Emmit(EventInstanceLiveNewDriver{
-		EventBase:                   eventBase("instance_live_new_driver"),
-		EventInstanceBase:           eib,
-		EventInstanceLiveDriverBase: NewEventInstanceLiveDriver(name, pId),
-		EventInstanceLiveCarBase:    NewEventInstanceLiveCarBase(cId, rn, cm),
-	})
+	Emmit(NewEventInstanceLive(
+		eventBase("instance_live_new_driver"),
+		eib,
+		EventInstanceLiveNewDriver{
+			EventInstanceLiveDriverBase: NewEventInstanceLiveDriver(name, pId),
+			EventInstanceLiveCarBase:    NewEventInstanceLiveCarBase(cId, rn, cm),
+		},
+	))
 }
 
 type EventInstanceLiveRemoveConnection struct {
-	EventBase
-	EventInstanceBase
 	EventInstanceLiveDriverBase
 }
 
 func EmmitEventInstanceLiveRemoveConnection(eib EventInstanceBase, name, pId string) {
-	Emmit(EventInstanceLiveRemoveConnection{
-		EventBase:                   eventBase("instance_live_remove_connection"),
-		EventInstanceBase:           eib,
-		EventInstanceLiveDriverBase: NewEventInstanceLiveDriver(name, pId),
-	})
+	Emmit(NewEventInstanceLive(
+		eventBase("instance_live_remove_connection"),
+		eib,
+		EventInstanceLiveRemoveConnection{
+			EventInstanceLiveDriverBase: NewEventInstanceLiveDriver(name, pId),
+		},
+	))
 }
 
 type EventInstanceLiveNewLap struct {
-	EventBase
-	EventInstanceBase
 	EventInstanceLiveDriverBase
 	EventInstanceLiveCarBase
 
@@ -83,47 +96,46 @@ func EmmitEventInstanceLiveNewLap(
 	s1, s2, s3 string,
 	fhc, fil, fol, fso bool,
 ) {
-	Emmit(EventInstanceLiveNewLap{
-		EventBase:                   eventBase("instance_live_new_lap"),
-		EventInstanceBase:           eib,
-		EventInstanceLiveDriverBase: eildb,
-		EventInstanceLiveCarBase:    eilcb,
-		LapTimeMS:                   ltms,
-		TimestampMS:                 tms,
-		Flags:                       flags,
-		Fuel:                        fuel,
-		S1:                          s1,
-		S2:                          s2,
-		S3:                          s3,
-		HasCut:                      fhc,
-		InLap:                       fil,
-		OutLap:                      fol,
-		SessionOver:                 fso,
-	})
+	Emmit(NewEventInstanceLive(
+		eventBase("instance_live_new_lap"),
+		eib,
+		EventInstanceLiveNewLap{
+			EventInstanceLiveDriverBase: eildb,
+			EventInstanceLiveCarBase:    eilcb,
+			LapTimeMS:                   ltms,
+			TimestampMS:                 tms,
+			Flags:                       flags,
+			Fuel:                        fuel,
+			S1:                          s1,
+			S2:                          s2,
+			S3:                          s3,
+			HasCut:                      fhc,
+			InLap:                       fil,
+			OutLap:                      fol,
+			SessionOver:                 fso,
+		},
+	))
 }
 
 type EventInstanceLiveSessionPhaseChanged struct {
-	EventBase
-	EventInstanceBase
-
 	Session   string `json:"session"`
 	Phase     string `json:"phase"`
 	Remaining int    `json:"remaining"`
 }
 
 func EmmitEventInstanceLiveSessionPhaseChanged(eib EventInstanceBase, s, p string, r int) {
-	Emmit(EventInstanceLiveSessionPhaseChanged{
-		EventBase:         eventBase("instance_live_session_phase_changed"),
-		EventInstanceBase: eib,
-		Session:           s,
-		Phase:             p,
-		Remaining:         r,
-	})
+	Emmit(NewEventInstanceLive(
+		eventBase("instance_live_session_phase_changed"),
+		eib,
+		EventInstanceLiveSessionPhaseChanged{
+			Session:   s,
+			Phase:     p,
+			Remaining: r,
+		},
+	))
 }
 
 type EventInstanceLiveNewDamageZone struct {
-	EventBase
-	EventInstanceBase
 	EventInstanceLiveDriverBase
 	EventInstanceLiveCarBase
 }
@@ -133,10 +145,12 @@ func EmmitEventInstanceLiveNewDamageZone(
 	eildb EventInstanceLiveDriverBase,
 	eilcb EventInstanceLiveCarBase,
 ) {
-	Emmit(EventInstanceLiveNewDamageZone{
-		EventBase:                   eventBase("instance_live_new_damage_zone"),
-		EventInstanceBase:           eib,
-		EventInstanceLiveDriverBase: eildb,
-		EventInstanceLiveCarBase:    eilcb,
-	})
+	Emmit(NewEventInstanceLive(
+		eventBase("instance_live_new_damage_zone"),
+		eib,
+		EventInstanceLiveNewDamageZone{
+			EventInstanceLiveDriverBase: eildb,
+			EventInstanceLiveCarBase:    eilcb,
+		},
+	))
 }

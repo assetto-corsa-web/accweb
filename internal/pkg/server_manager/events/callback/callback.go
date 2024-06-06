@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"net/http"
+	"sync"
 	"time"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/event"
@@ -27,7 +28,7 @@ func Register(sm *server_manager.Service) {
 	}
 
 	client = &http.Client{
-		Timeout: 500 * time.Millisecond,
+		Timeout: 100 * time.Millisecond,
 	}
 
 	event.Register(handleEvent)
@@ -54,28 +55,42 @@ func handleEvent(ev event.Eventer) {
 		return
 	}
 
-	buf := bytes.NewBuffer(nil)
+	// buf := bytes.NewBuffer(nil)
+	buf, err := json.Marshal(ev)
 
-	if err := json.NewEncoder(buf).Encode(ev); err != nil {
+	if err != nil {
 		logrus.WithError(err).Error("failed to build callback payload.")
 		return
 	}
 
-	req, err := http.NewRequest(http.MethodPost, cb.Url, buf)
-	if err != nil {
-		logrus.WithError(err).Error("failed to build request.")
-		return
-	}
-
+	wg := sync.WaitGroup{}
+	hdrs := http.Header{}
 	for h, v := range cb.Headers {
-		req.Header.Add(h, v)
+		hdrs.Add(h, v)
 	}
 
-	go func(req *http.Request) {
-		_, err = client.Do(req)
-		if err != nil {
-			logrus.WithError(err).Error("failed to request callback.")
-		}
-	}(req)
+	wg.Add(len(cb.Urls))
+	ts := time.Now()
 
+	for _, url := range cb.Urls {
+		go func(wg *sync.WaitGroup, url string) {
+			defer wg.Done()
+
+			req, err := http.NewRequest(http.MethodPost, url, bytes.NewReader(buf))
+			if err != nil {
+				logrus.WithError(err).Error("failed to build request.")
+				return
+			}
+
+			req.Header = hdrs
+
+			if _, err := client.Do(req); err != nil {
+				logrus.WithError(err).Warn("failed to request callback.")
+			}
+		}(&wg, url)
+	}
+
+	wg.Wait()
+
+	println("fim ", time.Since(ts).String())
 }
