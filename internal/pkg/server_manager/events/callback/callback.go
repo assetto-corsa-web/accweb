@@ -91,6 +91,5 @@ func handleEvent(ev event.Eventer) {
 	}
 
 	wg.Wait()
-
-	println("fim ", time.Since(ts).String())
+	logrus.Debug("callback handled in " + time.Since(ts).String())
 }
