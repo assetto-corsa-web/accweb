@@ -15,6 +15,15 @@ import (
 var sM *server_manager.Service
 var client *http.Client
 var cacheEvents = map[string]struct{}{}
+var validEvents = map[string]struct{}{
+	"instance_started":                    {},
+	"instance_stopped":                    {},
+	"instance_live_new_driver":            {},
+	"instance_live_remove_connection":     {},
+	"instance_live_new_lap":               {},
+	"instance_live_session_phase_changed": {},
+	"instance_live_new_damage_zone":       {},
+}
 
 func Register(sm *server_manager.Service) {
 	if !sm.Config().Callback.Enabled {
@@ -35,7 +44,7 @@ func Register(sm *server_manager.Service) {
 }
 
 func shouldProcess(all bool, val string) bool {
-	if val == "instance_output" {
+	if _, ok := validEvents[val]; !ok {
 		return false
 	}
 
@@ -55,7 +64,6 @@ func handleEvent(ev event.Eventer) {
 		return
 	}
 
-	// buf := bytes.NewBuffer(nil)
 	buf, err := json.Marshal(ev)
 
 	if err != nil {
