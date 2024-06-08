@@ -29,6 +29,10 @@ type DriverState struct {
 }
 
 func (ds *DriverState) ToEILDB() event.EventInstanceLiveDriverBase {
+	if ds == nil {
+		return event.EventInstanceLiveDriverBase{}
+	}
+
 	return event.EventInstanceLiveDriverBase{
 		Name:     ds.Name,
 		PlayerID: ds.PlayerID,
@@ -107,6 +111,26 @@ func (l LapState) IsValid() bool {
 	return l.Flags == 0 && !l.HasCut && !l.InLap && !l.OutLap && !l.SessionOver
 }
 
+func (l LapState) ToEILS() event.EventLapState {
+	return event.EventLapState{
+		DriverIndex: l.DriverIndex,
+		LapTimeMS:   l.LapTimeMS,
+		TimestampMS: l.TimestampMS,
+		Flags:       l.Flags,
+		S1:          l.S1,
+		S1MS:        l.S1MS,
+		S2:          l.S2,
+		S2MS:        l.S2MS,
+		S3:          l.S3,
+		S3MS:        l.S3MS,
+		Fuel:        l.Fuel,
+		HasCut:      l.HasCut,
+		InLap:       l.InLap,
+		OutLap:      l.OutLap,
+		SessionOver: l.SessionOver,
+	}
+}
+
 type ServerChat struct {
 	Timestamp time.Time `json:"ts"`
 	Name      string    `json:"name"`
@@ -179,26 +203,25 @@ func (l *LiveState) SetTrack(t string) {
 	l.Track = t
 }
 
-func (l *LiveState) SetSessionState(t, p string, r int) {
-	oldType := l.SessionType
+func (l *LiveState) SetSession(new string) {
+	l.SessionType = new
+	l.AdvanceSession()
+}
+
+func (l *LiveState) SetSessionState(p string, r int) {
 	oldPhase := l.SessionPhase
-	l.SessionType = t
 	l.SessionPhase = p
 
 	if r >= 0 {
 		l.SessionRemaining = r
 	}
 
-	if t != oldType || p != oldPhase {
+	if p != oldPhase {
 		l.AddHistory("session", ServerHistorySessionChange{
 			SessionType:      l.SessionType,
 			SessionPhase:     l.SessionPhase,
 			SessionRemaining: l.SessionRemaining,
 		})
-	}
-
-	if t != oldType {
-		l.AdvanceSession()
 	}
 }
 
@@ -289,7 +312,7 @@ func (l *LiveState) ServerOffline() {
 	}
 	l.SetNrClients(0)
 	l.SetTrack("")
-	l.SetSessionState("", "", 0)
+	l.SetSessionState("", 0)
 	l.connections = map[int]*DriverState{}
 }
 
@@ -441,4 +464,37 @@ func (l *LiveState) AddDamage(carId int) {
 		Name:       car.CurrentDriver.Name,
 		PlayerID:   car.CurrentDriver.PlayerID,
 	})
+}
+
+func (l *LiveState) ToEIC() map[int]event.EventCarState {
+	cars := map[int]event.EventCarState{}
+
+	for k, c := range l.Cars {
+		dd := make([]event.EventInstanceLiveDriverBase, len(c.Drivers))
+		for i, d := range c.Drivers {
+			dd[i] = d.ToEILDB()
+		}
+
+		ll := make([]event.EventLapState, len(c.Laps))
+		for i, l := range c.Laps {
+			ll[i] = l.ToEILS()
+		}
+
+		cars[k] = event.EventCarState{
+			RaceNumber:         c.RaceNumber,
+			CarModel:           c.CarModel,
+			Drivers:            dd,
+			CurrentDriver:      c.CurrentDriver.ToEILDB(),
+			Fuel:               c.Fuel,
+			Position:           c.Position,
+			NrLaps:             c.NrLaps,
+			BestLapMS:          c.BestLapMS,
+			LastLapMS:          c.LastLapMS,
+			LastLapTimestampMS: c.LastLapTimestampMS,
+			Laps:               ll,
+			CurrLap:            c.CurrLap.ToEILS(),
+		}
+	}
+
+	return cars
 }

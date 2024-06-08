@@ -52,6 +52,7 @@ func makeLogMatchers() []*logMatcher {
 		newLogMatcher(`RegisterToLobby succeeded`, handleLobbyConnectionSucceeded),
 		newLogMatcher(`^(\d+) client\(s\) online$`, handleNrClientsOnline),
 		newLogMatcher(`^Track (\w+) was set and updated$`, handleTrack),
+		newLogMatcher(`^Session changed: ([A-Za-z ]+) -> ([A-Za-z ]+) \d$`, handleSessionChanged),
 		newLogMatcher(`^Detected sessionPhase <([A-Za-z ]+)> -> <([A-Za-z ]+)> \(([A-Za-z ]+)\)$`, handleSessionPhaseChanged),
 		newLogMatcher(`^Resetting race weekend$`, handleResettingRace),
 		newLogMatcher(`^New connection request: id (\d+) (.+) (S\d+) on car model (\d+)$`, handleNewConnection),
@@ -212,8 +213,13 @@ func handleTrack(i *instance.Instance, s *instance.LiveState, p []string) {
 	s.SetTrack(p[1])
 }
 
+func handleSessionChanged(i *instance.Instance, l *instance.LiveState, p []string) {
+	event.EmmitEventInstanceLiveSessionChanged(i.ToEIB(), l.ToEIC(), p[1], p[2])
+	l.SetSession(p[2])
+}
+
 func handleSessionPhaseChanged(i *instance.Instance, s *instance.LiveState, p []string) {
-	s.SetSessionState(p[3], p[2], -1)
+	s.SetSessionState(p[2], -1)
 
 	event.EmmitEventInstanceLiveSessionPhaseChanged(
 		i.ToEIB(),
@@ -222,7 +228,7 @@ func handleSessionPhaseChanged(i *instance.Instance, s *instance.LiveState, p []
 }
 
 func handleSessionUpdate(i *instance.Instance, s *instance.LiveState, p []string) {
-	s.SetSessionState(p[1], p[2], toInt(p[3]))
+	s.SetSessionState(p[2], toInt(p[3]))
 }
 
 func handleNewConnection(i *instance.Instance, l *instance.LiveState, p []string) {
@@ -267,6 +273,8 @@ func handleGridPosition(i *instance.Instance, l *instance.LiveState, p []string)
 }
 
 func handleResettingRace(i *instance.Instance, l *instance.LiveState, _ []string) {
+	event.EmmitEventInstanceLiveResetingRaceWeekend(i.ToEIB(), l.ToEIC())
+
 	l.AdvanceSession()
 }
 

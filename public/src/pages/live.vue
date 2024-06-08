@@ -21,7 +21,8 @@
                     <span v-if="data.live.sessionRemaining > 0">[{{ data.live.sessionRemaining }} min]</span>
                 </div>
                 <div id="nrdrivers"><strong>Drivers:</strong> {{ data.live.nrClients }}</div>
-                <div id="updatedat"><strong>Last Update:</strong> {{ new Date(data.live.updatedAt).toLocaleString() }}</div>
+                <div id="updatedat"><strong>Last Update:</strong> {{ new Date(data.live.updatedAt).toLocaleString() }}
+                </div>
             </div>
 
             <div class="body">
@@ -84,8 +85,9 @@
                         <tr v-for="(lap, i) in showLapsCar.laps" :key="i"
                             v-bind:class="{ 'tbl-row': true, invalid: lap.flags > 0, best: lap.lapTimeMS === showLapsCar.bestLapMS }">
                             <td>{{ i + 1 }}</td>
-                            <td>{{ showLapsCar.drivers[lap.driverIndex] ? showLapsCar.drivers[lap.driverIndex].name : '--'
-                            }}
+                            <td>{{ showLapsCar.drivers[lap.driverIndex] ? showLapsCar.drivers[lap.driverIndex].name :
+                                '--'
+                                }}
                             </td>
                             <td>{{ lap.fuel }}</td>
                             <td>{{ msToTime(lap.lapTimeMS) }}</td>
@@ -114,7 +116,8 @@
                             <checkbox label="Hide session changes" v-model="hideSession" />
                         </div>
                         <div>
-                            <selection label="Show last events" :options="eventsOptions" v-model="nrEvents" />
+                            <selection label="Show last events" :options="eventsOptions" :inline="true"
+                                v-model="nrEvents" />
                         </div>
                     </div>
 
@@ -320,7 +323,7 @@ export default {
         }
     }
 }
-</script>	
+</script>
 
 <style scoped>
 .header {

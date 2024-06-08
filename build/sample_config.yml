@@ -65,8 +65,7 @@ callback:
   enabled: false
   urls: 
     - "http://localhost:3000/callback"
-  headers:
-    "auth-token": "aabbcc"
+  headers: []
   all_events: false
   events:
     - "instance_started"
@@ -76,3 +75,5 @@ callback:
     - "instance_live_new_lap"
     - "instance_live_session_phase_changed"
     - "instance_live_new_damage_zone"
+    - "instance_live_reseting_race_weekend"
+    - "instance_live_session_changed"

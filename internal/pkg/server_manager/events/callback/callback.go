@@ -23,6 +23,8 @@ var validEvents = map[string]struct{}{
 	"instance_live_new_lap":               {},
 	"instance_live_session_phase_changed": {},
 	"instance_live_new_damage_zone":       {},
+	"instance_live_reseting_race_weekend": {},
+	"instance_live_session_changed":       {},
 }
 
 func Register(sm *server_manager.Service) {

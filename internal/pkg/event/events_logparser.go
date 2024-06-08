@@ -135,6 +135,71 @@ func EmmitEventInstanceLiveSessionPhaseChanged(eib EventInstanceBase, s, p strin
 	))
 }
 
+type EventLapState struct {
+	DriverIndex int    `json:"driverIndex"`
+	LapTimeMS   int    `json:"lapTimeMS"`
+	TimestampMS int    `json:"timestampMS"`
+	Flags       int    `json:"flags"`
+	S1          string `json:"s1"`
+	S1MS        int    `json:"s1MS"`
+	S2          string `json:"s2"`
+	S2MS        int    `json:"s2MS"`
+	S3          string `json:"s3"`
+	S3MS        int    `json:"s3MS"`
+	Fuel        int    `json:"fuel"`
+	HasCut      bool   `json:"hasCut"`
+	InLap       bool   `json:"inLap"`
+	OutLap      bool   `json:"outLap"`
+	SessionOver bool   `json:"sessionOver"`
+}
+
+type EventCarState struct {
+	RaceNumber         int                           `json:"raceNumber"`
+	CarModel           int                           `json:"carModel"`
+	Drivers            []EventInstanceLiveDriverBase `json:"drivers"`
+	CurrentDriver      EventInstanceLiveDriverBase   `json:"currentDriver"`
+	Fuel               int                           `json:"fuel"`
+	Position           int                           `json:"position"`
+	NrLaps             int                           `json:"nrLaps"`
+	BestLapMS          int                           `json:"bestLapMS"`
+	LastLapMS          int                           `json:"lastLapMS"`
+	LastLapTimestampMS int                           `json:"lastLapTimestampMS"`
+	Laps               []EventLapState               `json:"laps"`
+	CurrLap            EventLapState                 `json:"currLap"`
+}
+
+type EventInstanceLiveResetingRaceWeekend struct {
+	Live map[int]EventCarState `json:"live"`
+}
+
+func EmmitEventInstanceLiveResetingRaceWeekend(eib EventInstanceBase, live map[int]EventCarState) {
+	Emmit(NewEventInstanceLive(
+		eventBase("instance_live_reseting_race_weekend"),
+		eib,
+		EventInstanceLiveResetingRaceWeekend{
+			Live: live,
+		},
+	))
+}
+
+type EventInstanceLiveSessionChanged struct {
+	OldSession string                `json:"oldSession"`
+	Session    string                `json:"session"`
+	Live       map[int]EventCarState `json:"live"`
+}
+
+func EmmitEventInstanceLiveSessionChanged(eib EventInstanceBase, live map[int]EventCarState, o, s string) {
+	Emmit(NewEventInstanceLive(
+		eventBase("instance_live_session_changed"),
+		eib,
+		EventInstanceLiveSessionChanged{
+			OldSession: o,
+			Session:    s,
+			Live:       live,
+		},
+	))
+}
+
 type EventInstanceLiveNewDamageZone struct {
 	EventInstanceLiveDriverBase
 	EventInstanceLiveCarBase
