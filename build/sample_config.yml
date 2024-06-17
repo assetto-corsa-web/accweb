@@ -57,3 +57,12 @@ loglevel: info
 cors:
   origins: "*"
   loglevel: info
+
+log:
+  with_timestamp: true
+
+# Event System configuration.
+#
+# More info: https://github.com/assetto-corsa-web/accweb/wiki/Event-System
+callback:
+  enabled: false

@@ -1,5 +1,13 @@
 # Changelog
 
+## next release
+* Restructuring whole instance code to handle events.
+* New feature: add timestamp on instance logs. [#259](https://github.com/assetto-corsa-web/accweb/issues/259)
+* New feature: http callbacks over instance events.
+* Fix incorrect best lap. [#272](https://github.com/assetto-corsa-web/accweb/issues/272)
+* Fix missing driver. [#264](https://github.com/assetto-corsa-web/accweb/issues/264) 
+
+
 ## 1.25.1
 * makes majority of the entrylist fields optional [#278](https://github.com/assetto-corsa-web/accweb/pull/278)
 * sorting nationalities, tracks and cars lists
