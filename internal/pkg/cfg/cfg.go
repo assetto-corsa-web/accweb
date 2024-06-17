@@ -65,12 +65,24 @@ type Log struct {
 	WithTimestamp bool `yaml:"with_timestamp"`
 }
 
-type Callback struct {
+type CallbackOld struct {
 	Enabled   bool              `yaml:"enabled"`
 	Urls      []string          `yaml:"urls"`
 	Headers   map[string]string `yaml:"headers"`
 	AllEvents bool              `yaml:"all_events"`
 	Events    []string          `yaml:"events"`
+}
+
+type Callback struct {
+	Enabled bool             `yaml:"enabled"`
+	Clients []CallbackClient `yaml:"clients"`
+}
+
+type CallbackClient struct {
+	Enabled *bool             `yaml:"enabled"`
+	Url     string            `yaml:"url"`
+	Headers map[string]string `yaml:"headers"`
+	Events  []string          `yaml:"events"`
 }
 
 // Load loads the application config from config.yml.

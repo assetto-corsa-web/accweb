@@ -28,20 +28,29 @@ cors:
 log:
   with_timestamp: true
 
+# Event System configuration.
+#
+# More info: https://github.com/assetto-corsa-web/accweb/wiki/Event-System
 callback:
   enabled: false
-  urls: 
-    - "http://localhost:3000/callback"
-  headers:
-    "auth-token": "aabbcc"
-  all_events: false
-  events:
-    - "instance_started"
-    - "instance_stopped"
-    - "instance_live_new_driver"
-    - "instance_live_remove_connection"
-    - "instance_live_new_lap"
-    - "instance_live_session_phase_changed"
-    - "instance_live_new_damage_zone"
-    - "instance_live_reseting_race_weekend"
-    - "instance_live_session_changed"
+  clients:
+    # simple example (enabled, no http headers and all events)
+    - url: "http://localhost:3000/callback1"
+    # complete example (enabled, with custom headers and few events)
+    - url: "http://localhost:3000/callback2"
+      enabled: true
+      headers:
+        "some-header": "aabbcc"
+      events:
+        - "instance_started"
+        - "instance_stopped"
+        # - "instance_live_new_driver"
+        # - "instance_live_remove_connection"
+        # - "instance_live_new_lap"
+        # - "instance_live_session_phase_changed"
+        # - "instance_live_new_damage_zone"
+        # - "instance_live_reseting_race_weekend"
+        # - "instance_live_session_changed"
+    # disabled client
+    - url: "http://localhost:3000/callback3"
+      enabled: false
