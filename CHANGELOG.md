@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.25.2
+* Enable Crossplay support for PS5 and XBox
+
 ## 1.25.1
 * makes majority of the entrylist fields optional [#278](https://github.com/assetto-corsa-web/accweb/pull/278)
 * sorting nationalities, tracks and cars lists
