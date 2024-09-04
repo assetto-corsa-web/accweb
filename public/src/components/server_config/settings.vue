@@ -28,6 +28,7 @@
         <checkbox :label="$t('isracelocked_label')" v-model="isRaceLocked"></checkbox>
         <checkbox :label="$t('randomizetrackwhenempty_label')" v-model="randomizeTrackWhenEmpty"></checkbox>
         <checkbox :label="$t('allowautodq_label')" v-model="allowAutoDQ"></checkbox>
+        <checkbox :label="$t('isCrossplayServer_label')" v-model="isCrossplayServer"></checkbox>
 
         <div class="server-settings-group">
             <selection :label="$t('cargroup_label')" :options="carGroups" v-model="carGroup"></selection>
@@ -70,6 +71,7 @@ export default {
             centralEntryListPath: "",
             shortFormationLap: false,
             allowAutoDQ: false,
+            isCrossplayServer: false,
             dumpEntryList: false,
             formationLapTypes: [
                 {value: 0, label: "Old with limiter"},
@@ -107,6 +109,7 @@ export default {
             this.centralEntryListPath = data.centralEntryListPath;
             this.shortFormationLap = data.shortFormationLap;
             this.allowAutoDQ = data.allowAutoDQ;
+            this.isCrossplayServer = data.isCrossplayServer;
             this.dumpEntryList = data.dumpEntryList;
             this.formationLapType = data.formationLapType;
             this.carGroup = data.carGroup;
@@ -137,6 +140,7 @@ export default {
                 centralEntryListPath: this.centralEntryListPath,
                 shortFormationLap: this.shortFormationLap ? 1 : 0,
                 allowAutoDQ: this.allowAutoDQ ? 1 : 0,
+                isCrossplayServer: this.isCrossplayServer ? 1: 0,
                 dumpEntryList: this.dumpEntryList ? 1 : 0,
                 formationLapType: parseInt(this.formationLapType),
                 carGroup: this.carGroup
@@ -169,7 +173,8 @@ export default {
         "allowautodq_label": "Allow Auto DQ",
         "dumpentrylist_label": "Dump Entry List",
         "formationlaptype_label": "Formation Lap Type",
-		"cargroup_label": "Car Group"
+		"cargroup_label": "Car Group",
+        "isCrossplayServer_label": "Enable Crossplay (PS5 + XBox)"
     }
 }
 </i18n>

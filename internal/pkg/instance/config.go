@@ -94,6 +94,7 @@ type SettingsJson struct {
 	CentralEntryListPath       string `json:"centralEntryListPath"`
 	ShortFormationLap          int    `json:"shortFormationLap"`
 	AllowAutoDQ                int    `json:"allowAutoDQ"`
+	IsCrossplayServer          int    `json:"isCrossplayServer"`
 	DumpEntryList              int    `json:"dumpEntryList"`
 	FormationLapType           int    `json:"formationLapType"`
 	CarGroup                   string `json:"carGroup"`

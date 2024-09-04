@@ -1247,6 +1247,9 @@
                 "ignorePrematureDisconnects": {
                     "type": "integer"
                 },
+                "isCrossplayServer": {
+                    "type": "integer"
+                },
                 "isRaceLocked": {
                     "type": "integer"
                 },
