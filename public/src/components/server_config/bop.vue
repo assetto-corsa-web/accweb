@@ -111,7 +111,7 @@ export default {
         "title": "BOP Settings",
         "track_label": "Track",
         "carModel_label": "Car Model #",
-        "ballast_label": "Ballast: 0 to 100kg max.",
+        "ballast_label": "Ballast: -40 to +40kg max.",
         "restrictor_label": "Motor Restrictor: 0 to 20% max.",
         "add_entry_button": "Add BOP",
         "clear_entries_button": "Clear all BOP",
