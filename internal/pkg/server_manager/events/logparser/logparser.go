@@ -89,7 +89,7 @@ func timeToMs(ts string) int {
 }
 
 func toLap(l *instance.LiveState, p []string) *instance.LapState {
-	c := l.Cars[toInt(p[1])]
+	c := l.GetCar(toInt(p[1]))
 	if c == nil {
 		logrus.WithFields(logrus.Fields{
 			"carID":    toInt(p[1]),
@@ -101,11 +101,12 @@ func toLap(l *instance.LiveState, p []string) *instance.LapState {
 
 	dIdx := toInt(p[2])
 
-	d := c.Drivers[dIdx]
+	d := c.GetDriver(dIdx)
 	if d == nil {
 		logrus.WithFields(logrus.Fields{
 			"driverIndex":    dIdx,
 			"rawDriverIndex": p[2],
+			"totalDrivers":   c.LenDrivers(),
 			"track":          l.Track,
 		}).Warn("driver index not found while building lap")
 		return nil

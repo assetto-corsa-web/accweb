@@ -75,6 +75,17 @@ func (c *CarState) removeDriver(d *DriverState) {
 	c.Drivers = dd
 }
 
+func (c *CarState) GetDriver(idx int) *DriverState {
+	c.drvLock.RLock()
+	defer c.drvLock.RUnlock()
+
+	if idx < 0 || idx >= len(c.Drivers) {
+		return nil
+	}
+
+	return c.Drivers[idx]
+}
+
 func (c *CarState) LenDrivers() int {
 	c.drvLock.RLock()
 	defer c.drvLock.RUnlock()
