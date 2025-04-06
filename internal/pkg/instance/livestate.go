@@ -18,149 +18,10 @@ const (
 	ServerStateOnline        ServerState = "online"
 )
 
-// DriverState contains the information about a single driver
-type DriverState struct {
-	ConnectionID int    `json:"-"`
-	Name         string `json:"name"`
-	PlayerID     string `json:"playerID"`
-
-	car      *CarState
-	carModel int
-}
-
-func (ds *DriverState) ToEILDB() event.EventInstanceLiveDriverBase {
-	if ds == nil {
-		return event.EventInstanceLiveDriverBase{}
-	}
-
-	return event.EventInstanceLiveDriverBase{
-		Name:     ds.Name,
-		PlayerID: ds.PlayerID,
-	}
-}
-
-// CarState represents the current state of a single car
-type CarState struct {
-	CarID              int            `json:"carID"`
-	RaceNumber         int            `json:"raceNumber"`
-	CarModel           int            `json:"carModel"`
-	Drivers            []*DriverState `json:"drivers"`
-	CurrentDriver      *DriverState   `json:"currentDriver"`
-	Fuel               int            `json:"fuel"`
-	Position           int            `json:"position"`
-	NrLaps             int            `json:"nrLaps"`
-	BestLapMS          int            `json:"bestLapMS"`
-	LastLapMS          int            `json:"lastLapMS"`
-	LastLapTimestampMS int            `json:"lastLapTimestampMS"`
-	Laps               []*LapState    `json:"laps"`
-	CurrLap            LapState       `json:"currLap"`
-}
-
-func (cs *CarState) ToEILCB() event.EventInstanceLiveCarBase {
-	return event.EventInstanceLiveCarBase{
-		CarID:      cs.CarID,
-		RaceNumber: cs.RaceNumber,
-		CarModel:   cs.CarModel,
-	}
-}
-
-func (c *CarState) removeDriver(d *DriverState) {
-	if c.CurrentDriver != nil && c.CurrentDriver.ConnectionID == d.ConnectionID {
-		c.CurrentDriver = nil
-	}
-
-	k := -1
-	for i, driver := range c.Drivers {
-		if driver.ConnectionID == d.ConnectionID {
-			k = i
-			break
-		}
-	}
-
-	if k == -1 {
-		return
-	}
-
-	//copy(c.Drivers[k:], c.Drivers[:k+1])
-	copy(c.Drivers[k:], c.Drivers[k+1:])
-	c.Drivers = c.Drivers[:len(c.Drivers)-1]
-}
-
-type LapState struct {
-	CarID       int          `json:"carID"`
-	DriverIndex int          `json:"driverIndex"`
-	Car         *CarState    `json:"-"`
-	Driver      *DriverState `json:"-"`
-	LapTimeMS   int          `json:"lapTimeMS"`
-	TimestampMS int          `json:"timestampMS"`
-	Flags       int          `json:"flags"`
-	S1          string       `json:"s1"`
-	S1MS        int          `json:"s1MS"`
-	S2          string       `json:"s2"`
-	S2MS        int          `json:"s2MS"`
-	S3          string       `json:"s3"`
-	S3MS        int          `json:"s3MS"`
-	Fuel        int          `json:"fuel"`
-	HasCut      bool         `json:"hasCut"`
-	InLap       bool         `json:"inLap"`
-	OutLap      bool         `json:"outLap"`
-	SessionOver bool         `json:"sessionOver"`
-}
-
-func (l LapState) IsValid() bool {
-	return l.Flags == 0 && !l.HasCut && !l.InLap && !l.OutLap && !l.SessionOver
-}
-
-func (l LapState) ToEILS() event.EventLapState {
-	return event.EventLapState{
-		DriverIndex: l.DriverIndex,
-		LapTimeMS:   l.LapTimeMS,
-		TimestampMS: l.TimestampMS,
-		Flags:       l.Flags,
-		S1:          l.S1,
-		S1MS:        l.S1MS,
-		S2:          l.S2,
-		S2MS:        l.S2MS,
-		S3:          l.S3,
-		S3MS:        l.S3MS,
-		Fuel:        l.Fuel,
-		HasCut:      l.HasCut,
-		InLap:       l.InLap,
-		OutLap:      l.OutLap,
-		SessionOver: l.SessionOver,
-	}
-}
-
 type ServerChat struct {
 	Timestamp time.Time `json:"ts"`
 	Name      string    `json:"name"`
 	Message   string    `json:"message"`
-}
-
-type ServerHistory struct {
-	ID        int32     `json:"id"`
-	Timestamp time.Time `json:"ts"`
-	Type      string    `json:"type"`
-	Data      any       `json:"data"`
-}
-
-type ServerHistoryChat struct {
-	Name    string `json:"name"`
-	Message string `json:"message"`
-}
-
-type ServerHistoryDamage struct {
-	CarID      int    `json:"carID"`
-	RaceNumber int    `json:"raceNumber"`
-	CarModel   int    `json:"carModel"`
-	Name       string `json:"name"`
-	PlayerID   string `json:"playerID"`
-}
-
-type ServerHistorySessionChange struct {
-	SessionType      string `json:"sessionType"`
-	SessionPhase     string `json:"sessionPhase"`
-	SessionRemaining int    `json:"sessionRemaining"`
 }
 
 type LiveState struct {
@@ -397,6 +258,7 @@ func (l *LiveState) recalculatePositions() {
 		if l.SessionType == "Race" {
 			return cmpPositionMostDistance(cars[i], cars[j])
 		}
+
 		return cmpPositionFastestLap(cars[i], cars[j])
 	})
 
