@@ -3,6 +3,7 @@ package instance
 import (
 	"sort"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/event"
@@ -39,6 +40,9 @@ type LiveState struct {
 
 	// drivers waiting to be assigned to a car, key: ConnectionID
 	connections map[int]*DriverState
+
+	carsLock sync.RWMutex
+	connLock sync.RWMutex
 }
 
 func NewLiveState() *LiveState {
@@ -50,6 +54,28 @@ func NewLiveState() *LiveState {
 		Chats:       []ServerChat{},
 		History:     []ServerHistory{},
 	}
+}
+
+func (l *LiveState) GetCar(cId int) *CarState {
+	l.carsLock.RLock()
+	defer l.carsLock.RUnlock()
+
+	if c, ok := l.Cars[cId]; ok {
+		return c
+	}
+
+	return nil
+}
+
+func (l *LiveState) GetDriver(connId int) *DriverState {
+	l.connLock.RLock()
+	defer l.connLock.RUnlock()
+
+	if c, ok := l.connections[connId]; ok {
+		return c
+	}
+
+	return nil
 }
 
 func (l *LiveState) SetServerState(s ServerState) {
@@ -87,6 +113,9 @@ func (l *LiveState) SetSessionState(p string, r int) {
 }
 
 func (l *LiveState) AddNewConnection(connID int, name, playerID string, carModel int) {
+	l.connLock.Lock()
+	defer l.connLock.Unlock()
+
 	l.connections[connID] = &DriverState{
 		ConnectionID: connID,
 		Name:         name,
@@ -96,23 +125,30 @@ func (l *LiveState) AddNewConnection(connID int, name, playerID string, carModel
 }
 
 func (l *LiveState) AdvanceSession() {
+	l.carsLock.RLock()
+	defer l.carsLock.RUnlock()
+
 	for _, car := range l.Cars {
-		if len(car.Drivers) == 0 {
+		if car.LenDrivers() == 0 {
 			l.PurgeCar(car.CarID)
-		} else {
-			car.Fuel = 0
-			car.NrLaps = 0
-			car.BestLapMS = 0
-			car.LastLapMS = 0
-			car.LastLapTimestampMS = 0
-			car.Laps = []*LapState{}
-			car.CurrLap = LapState{}
+			continue
 		}
+
+		car.Fuel = 0
+		car.NrLaps = 0
+		car.BestLapMS = 0
+		car.LastLapMS = 0
+		car.LastLapTimestampMS = 0
+		car.Laps = []*LapState{}
+		car.CurrLap = LapState{}
 	}
 	l.recalculatePositions()
 }
 
 func (l *LiveState) AddNewCar(carID, raceNumber, carModel int) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	car := l.Cars[carID]
 
 	if car == nil {
@@ -130,8 +166,14 @@ func (l *LiveState) AddNewCar(carID, raceNumber, carModel int) {
 	car.RaceNumber = raceNumber
 }
 
-func (l *LiveState) Handshake(carID, connectionID int) {
-	d := l.connections[connectionID]
+func (l *LiveState) Handshake(carID, connId int) {
+	l.carsLock.RLock()
+	defer l.carsLock.RUnlock()
+
+	l.connLock.RLock()
+	defer l.connLock.RUnlock()
+
+	d := l.connections[connId]
 	if d == nil {
 		return
 	}
@@ -142,15 +184,14 @@ func (l *LiveState) Handshake(carID, connectionID int) {
 	}
 
 	d.car = car
-	car.Drivers = append(car.Drivers, d)
-
-	if car.CurrentDriver == nil {
-		car.CurrentDriver = d
-	}
+	car.addDriver(d)
 }
 
-func (l *LiveState) RemoveConnection(id int) {
-	d, ok := l.connections[id]
+func (l *LiveState) RemoveConnection(connId int) {
+	l.connLock.Lock()
+	defer l.connLock.Unlock()
+
+	d, ok := l.connections[connId]
 	if !ok {
 		return
 	}
@@ -159,14 +200,23 @@ func (l *LiveState) RemoveConnection(id int) {
 		d.car.removeDriver(d)
 	}
 
-	delete(l.connections, id)
+	delete(l.connections, connId)
 }
 
 func (l *LiveState) PurgeCar(id int) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	delete(l.Cars, id)
 }
 
 func (l *LiveState) ServerOffline() {
+	l.carsLock.RLock()
+	defer l.carsLock.RUnlock()
+
+	l.connLock.Lock()
+	defer l.connLock.Unlock()
+
 	l.SetServerState(ServerStateOffline)
 	for _, car := range l.Cars {
 		l.PurgeCar(car.CarID)
@@ -178,6 +228,9 @@ func (l *LiveState) ServerOffline() {
 }
 
 func (l *LiveState) SetCarPosition(carID, pos int) {
+	l.carsLock.RLock()
+	defer l.carsLock.RUnlock()
+
 	if car, ok := l.Cars[carID]; ok {
 		car.Position = pos
 	}
@@ -249,6 +302,9 @@ func cmpPositionMostDistance(a, b *CarState) bool {
 }
 
 func (l *LiveState) recalculatePositions() {
+	l.carsLock.RLock()
+	defer l.carsLock.RUnlock()
+
 	cars := make([]*CarState, 0, len(l.Cars))
 	for _, car := range l.Cars {
 		cars = append(cars, car)
@@ -329,13 +385,18 @@ func (l *LiveState) AddDamage(carId int) {
 }
 
 func (l *LiveState) ToEIC() map[int]event.EventCarState {
+	l.carsLock.RLock()
+	defer l.carsLock.RUnlock()
+
 	cars := map[int]event.EventCarState{}
 
 	for k, c := range l.Cars {
-		dd := make([]event.EventInstanceLiveDriverBase, len(c.Drivers))
-		for i, d := range c.Drivers {
+		dd := make([]event.EventInstanceLiveDriverBase, c.LenDrivers())
+
+		c.RangeDrivers(func(i int, d *DriverState) bool {
 			dd[i] = d.ToEILDB()
-		}
+			return true
+		})
 
 		ll := make([]event.EventLapState, len(c.Laps))
 		for i, l := range c.Laps {

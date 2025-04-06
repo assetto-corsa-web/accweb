@@ -100,14 +100,6 @@ func toLap(l *instance.LiveState, p []string) *instance.LapState {
 	}
 
 	dIdx := toInt(p[2])
-	if len(c.Drivers) < dIdx+1 {
-		logrus.WithFields(logrus.Fields{
-			"driverIndex":    dIdx,
-			"rawDriverIndex": p[2],
-			"track":          l.Track,
-		}).Warn("driver not found while building lap")
-		return nil
-	}
 
 	d := c.Drivers[dIdx]
 	if d == nil {
