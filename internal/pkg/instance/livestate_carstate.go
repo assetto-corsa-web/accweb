@@ -22,7 +22,7 @@ type CarState struct {
 	Laps               []*LapState    `json:"laps"`
 	CurrLap            LapState       `json:"currLap"`
 
-	drvLock sync.RWMutex
+	drvLock sync.Mutex
 }
 
 func (c *CarState) ToEILCB() event.EventInstanceLiveCarBase {
@@ -76,8 +76,8 @@ func (c *CarState) removeDriver(d *DriverState) {
 }
 
 func (c *CarState) GetDriver(idx int) *DriverState {
-	c.drvLock.RLock()
-	defer c.drvLock.RUnlock()
+	c.drvLock.Lock()
+	defer c.drvLock.Unlock()
 
 	if idx < 0 || idx >= len(c.Drivers) {
 		return nil
@@ -87,15 +87,15 @@ func (c *CarState) GetDriver(idx int) *DriverState {
 }
 
 func (c *CarState) LenDrivers() int {
-	c.drvLock.RLock()
-	defer c.drvLock.RUnlock()
+	c.drvLock.Lock()
+	defer c.drvLock.Unlock()
 
 	return len(c.Drivers)
 }
 
 func (c *CarState) RangeDrivers(f func(i int, d *DriverState) bool) {
-	c.drvLock.RLock()
-	defer c.drvLock.RUnlock()
+	c.drvLock.Lock()
+	defer c.drvLock.Unlock()
 
 	for i, driver := range c.Drivers {
 		if ok := f(i, driver); !ok {

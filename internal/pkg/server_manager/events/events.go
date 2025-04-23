@@ -9,10 +9,8 @@ import (
 )
 
 func InitializeAll(sm *server_manager.Service) {
-
 	logwriter.Register(sm)
 	logparser.Register(sm)
 	windowsadv.Register(sm)
 	callback.Register(sm)
-
 }

@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/event"
+	"github.com/sirupsen/logrus"
 )
 
 type ServerState string
@@ -64,6 +65,10 @@ func (l *LiveState) GetCar(cId int) *CarState {
 		return c
 	}
 
+	logrus.WithFields(logrus.Fields{
+		"carID": cId,
+	}).Error("car not found in GetCar")
+
 	return nil
 }
 
@@ -74,6 +79,10 @@ func (l *LiveState) GetDriver(connId int) *DriverState {
 	if c, ok := l.connections[connId]; ok {
 		return c
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"connID": connId,
+	}).Error("driver not found in GetDriver")
 
 	return nil
 }
@@ -125,12 +134,12 @@ func (l *LiveState) AddNewConnection(connID int, name, playerID string, carModel
 }
 
 func (l *LiveState) AdvanceSession() {
-	l.carsLock.RLock()
-	defer l.carsLock.RUnlock()
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
 
 	for _, car := range l.Cars {
 		if car.LenDrivers() == 0 {
-			l.PurgeCar(car.CarID)
+			delete(l.Cars, car.CarID)
 			continue
 		}
 
@@ -142,6 +151,7 @@ func (l *LiveState) AdvanceSession() {
 		car.Laps = []*LapState{}
 		car.CurrLap = LapState{}
 	}
+
 	l.recalculatePositions()
 }
 
@@ -167,19 +177,27 @@ func (l *LiveState) AddNewCar(carID, raceNumber, carModel int) {
 }
 
 func (l *LiveState) Handshake(carID, connId int) {
-	l.carsLock.RLock()
-	defer l.carsLock.RUnlock()
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
 
-	l.connLock.RLock()
-	defer l.connLock.RUnlock()
+	l.connLock.Lock()
+	defer l.connLock.Unlock()
 
 	d := l.connections[connId]
 	if d == nil {
+		logrus.WithFields(logrus.Fields{
+			"connID": connId,
+			"carID":  carID,
+		}).Error("connection not found in Handshake")
 		return
 	}
 
 	car := l.Cars[carID]
 	if car == nil {
+		logrus.WithFields(logrus.Fields{
+			"connID": connId,
+			"carID":  carID,
+		}).Error("car not found in Handshake")
 		return
 	}
 
@@ -193,6 +211,9 @@ func (l *LiveState) RemoveConnection(connId int) {
 
 	d, ok := l.connections[connId]
 	if !ok {
+		logrus.WithFields(logrus.Fields{
+			"connID": connId,
+		}).Error("connection not found in RemoveConnection")
 		return
 	}
 
@@ -211,9 +232,6 @@ func (l *LiveState) PurgeCar(id int) {
 }
 
 func (l *LiveState) ServerOffline() {
-	l.carsLock.RLock()
-	defer l.carsLock.RUnlock()
-
 	l.connLock.Lock()
 	defer l.connLock.Unlock()
 
@@ -228,15 +246,24 @@ func (l *LiveState) ServerOffline() {
 }
 
 func (l *LiveState) SetCarPosition(carID, pos int) {
-	l.carsLock.RLock()
-	defer l.carsLock.RUnlock()
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
 
 	if car, ok := l.Cars[carID]; ok {
 		car.Position = pos
+		return
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"carID": carID,
+		"pos":   pos,
+	}).Error("car not found in SetCarPosition")
 }
 
 func (l *LiveState) SetLapState(lap *LapState) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	lap.Car.NrLaps++
 	lap.Car.Fuel = lap.Fuel
 	lap.Car.LastLapMS = lap.LapTimeMS
@@ -252,6 +279,9 @@ func (l *LiveState) SetLapState(lap *LapState) {
 }
 
 func (l *LiveState) SetCurrLapState(lap LapState) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	lap.Car.LastLapTimestampMS = lap.TimestampMS
 	lap.Car.CurrLap = lap
 	l.recalculatePositions()
@@ -302,9 +332,6 @@ func cmpPositionMostDistance(a, b *CarState) bool {
 }
 
 func (l *LiveState) recalculatePositions() {
-	l.carsLock.RLock()
-	defer l.carsLock.RUnlock()
-
 	cars := make([]*CarState, 0, len(l.Cars))
 	for _, car := range l.Cars {
 		cars = append(cars, car)
@@ -372,6 +399,9 @@ func (l *LiveState) AddHistory(t string, data any) {
 func (l *LiveState) AddDamage(carId int) {
 	car := l.GetCar(carId)
 	if car == nil {
+		logrus.WithFields(logrus.Fields{
+			"carID": carId,
+		}).Error("car not found in AddDamage")
 		return
 	}
 
