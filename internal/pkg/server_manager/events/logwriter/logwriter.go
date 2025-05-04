@@ -68,7 +68,12 @@ func handleEvent(data event.Eventer) {
 
 		logMap[ev.InstanceId].Write([]byte(data))
 
-		logrus.WithFields(logrus.Fields{"instanceId": ev.InstanceId, "log": string(ev.Output)}).Debug("instance log")
+		logrus.
+			WithFields(logrus.Fields{
+				"instanceId": ev.InstanceId,
+				"log":        string(ev.Output),
+			}).
+			Debug("instance log")
 	}
 }
 

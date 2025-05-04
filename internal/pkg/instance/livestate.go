@@ -405,6 +405,13 @@ func (l *LiveState) AddDamage(carId int) {
 		return
 	}
 
+	if car.CurrentDriver == nil {
+		logrus.WithFields(logrus.Fields{
+			"carID": carId,
+		}).Error("car driver not found in AddDamage")
+		return
+	}
+
 	l.AddHistory("damage", ServerHistoryDamage{
 		CarID:      car.CarID,
 		RaceNumber: car.RaceNumber,

@@ -19,7 +19,7 @@ func Emmit(data Eventer) {
 	for _, cb := range subs {
 		wg.Add(1)
 		go func(fn EventFunc, wg *sync.WaitGroup) {
-			wg.Done()
+			defer wg.Done()
 			fn(data)
 		}(cb, &wg)
 	}

@@ -35,10 +35,26 @@ func newLogParser() *logParser {
 }
 
 func (l *logParser) processLine(i *instance.Instance, line string) {
+	defer func() {
+		if r := recover(); r != nil {
+			logrus.WithFields(logrus.Fields{
+				"instanceId": i.GetID(),
+				"line":       line,
+				"error":      r,
+			}).Error("Recovered from panic in log parser")
+		}
+	}()
+
 	for _, matcher := range l.matchers {
 		matches := matcher.er.FindStringSubmatch(line)
 		if matches != nil {
-			// logrus.WithField("line", matches[0]).WithField("attr", matches[1:]).Debug("log handled")
+			logrus.
+				WithFields(logrus.Fields{
+					"instanceId": i.GetID(),
+					"line":       line,
+					"match":      matches,
+				}).
+				Debug("log handled")
 			matcher.handler(i, i.Live, matches)
 			i.Live.UpdatedAt = time.Now().UTC()
 		}
