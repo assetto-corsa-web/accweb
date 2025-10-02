@@ -116,6 +116,9 @@
                             <checkbox label="Hide session changes" v-model="hideSession" />
                         </div>
                         <div>
+                            <checkbox label="Hide connection changes" v-model="hideConnections" />
+                        </div>
+                        <div>
                             <selection label="Show last events" :options="eventsOptions" :inline="true"
                                 v-model="nrEvents" />
                         </div>
@@ -139,6 +142,18 @@
                             <div class="ts">{{ timeSince(new Date(item.ts)) }}</div>
                             <div class="name">{{ item.data.name.toUpperCase() }}:</div>
                             <div class="msg">Damage Report #{{ item.data.raceNumber }}</div>
+                        </div>
+
+                        <div class="message new_connection" v-if="item.type == 'new_connection'">
+                            <div class="ts">{{ timeSince(new Date(item.ts)) }}</div>
+                            <div class="name">Player joined:</div>
+                            <div class="msg">{{ item.data.name.toUpperCase() }}</div>
+                        </div>
+
+                        <div class="message remove_connection" v-if="item.type == 'remove_connection'">
+                            <div class="ts">{{ timeSince(new Date(item.ts)) }}</div>
+                            <div class="name">Player left:</div>
+                            <div class="msg">{{ item.data.name.toUpperCase() }}</div>
                         </div>
                     </div>
 
@@ -167,6 +182,7 @@ export default {
             refreshRate: 10,
             hideDamage: false,
             hideSession: false,
+            hideConnections: false,
             nrEvents: 100,
             eventsOptions: [
                 { label: "30", value: 30 },
@@ -214,12 +230,17 @@ export default {
         eventHistories: function () {
             const hd = this.hideDamage;
             const hs = this.hideSession;
+            const hc = this.hideConnections;
             const data = _.filter(this.data.live.history, function (o) {
                 if (hd && o.type == "damage") {
                     return false
                 }
 
                 if (hs && o.type == "session") {
+                    return false
+                }
+
+                if (hc && (o.type == "new_connection" || o.type == "remove_connection")) {
                     return false
                 }
 
@@ -388,6 +409,14 @@ tr:nth-child(odd) {
 
 .message.session {
     color: #803c3c;
+}
+
+.message.new_connection {
+    color: #3c803c;
+}
+
+.message.remove_connection {
+    color: #80803c;
 }
 </style>
 

@@ -27,3 +27,8 @@ type ServerHistorySessionChange struct {
 	SessionPhase     string `json:"sessionPhase"`
 	SessionRemaining int    `json:"sessionRemaining"`
 }
+
+type ServerHistoryConnection struct {
+	Name     string `json:"name"`
+	PlayerID string `json:"playerID"`
+}

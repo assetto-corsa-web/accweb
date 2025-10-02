@@ -131,6 +131,11 @@ func (l *LiveState) AddNewConnection(connID int, name, playerID string, carModel
 		PlayerID:     playerID,
 		carModel:     carModel,
 	}
+
+	l.AddHistory("new_connection", ServerHistoryConnection{
+		Name:     name,
+		PlayerID: playerID,
+	})
 }
 
 func (l *LiveState) AdvanceSession() {
@@ -220,6 +225,11 @@ func (l *LiveState) RemoveConnection(connId int) {
 	if d.car != nil {
 		d.car.removeDriver(d)
 	}
+
+	l.AddHistory("remove_connection", ServerHistoryConnection{
+		Name:     d.Name,
+		PlayerID: d.PlayerID,
+	})
 
 	delete(l.connections, connId)
 }
