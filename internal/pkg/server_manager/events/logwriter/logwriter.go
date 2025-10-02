@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"sync"
 	"time"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/event"
@@ -20,8 +21,8 @@ const (
 )
 
 var sM *server_manager.Service
-var logMap = map[string]*os.File{}
 var withTs bool
+var lm sync.Map
 
 func Register(sm *server_manager.Service) {
 	sM = sm
@@ -33,8 +34,8 @@ func Register(sm *server_manager.Service) {
 func handleEvent(data event.Eventer) {
 	switch ev := data.(type) {
 	case event.EventInstanceBeforeStart:
-		if v, ok := logMap[ev.InstanceId]; ok {
-			v.Close()
+		if v, ok := lm.Load(ev.InstanceId); ok {
+			v.(*os.File).Close()
 		}
 
 		i, err := sM.GetServerByID(ev.InstanceId)
@@ -42,21 +43,23 @@ func handleEvent(data event.Eventer) {
 			logrus.Error("instance not found")
 		}
 
-		logMap[ev.InstanceId], err = createLogFile(i)
+		f, err := createLogFile(i)
 		if err != nil {
 			logrus.Error("failed to create instance log")
 		}
+		lm.Store(ev.InstanceId, f)
 
 	case event.EventInstanceBeforeStop:
-		v, ok := logMap[ev.InstanceId]
+		v, ok := lm.Load(ev.InstanceId)
 		if !ok {
 			return
 		}
-		v.Close()
-		delete(logMap, ev.InstanceId)
+		v.(*os.File).Close()
+		lm.Delete(ev.InstanceId)
 
 	case event.EventInstanceOutput:
-		if _, ok := logMap[ev.InstanceId]; !ok {
+		f, ok := lm.Load(ev.InstanceId)
+		if !ok {
 			return
 		}
 
@@ -66,7 +69,7 @@ func handleEvent(data event.Eventer) {
 			data = ev.Timestamp.Format(time.RFC3339Nano) + ": " + data
 		}
 
-		logMap[ev.InstanceId].Write([]byte(data))
+		f.(*os.File).Write([]byte(data))
 
 		logrus.
 			WithFields(logrus.Fields{
