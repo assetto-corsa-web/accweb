@@ -1,6 +1,8 @@
 package event
 
-import "time"
+import (
+	"time"
+)
 
 type Eventer interface {
 	GetInfo() EventBase

@@ -16,6 +16,8 @@ import (
 	"sync"
 
 	"github.com/sirupsen/logrus"
+	"golang.org/x/text/encoding/unicode"
+	"golang.org/x/text/transform"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/event"
@@ -358,25 +360,96 @@ func (s *Instance) prepareCmdLogHandler() error {
 		return err
 	}
 
-	scanner := bufio.NewScanner(s.cmdOut)
-
 	go func() {
-		for scanner.Scan() {
-			data := scanner.Bytes()
+		// Raw reader from process stdout
+		raw := bufio.NewReader(s.cmdOut)
 
-			if shouldOutputFilter(data) {
-				continue
-			}
-
-			event.EmmitEventInstanceOutput(s.ToEIB(), data)
+		// Detect UTF-16 LE BOM (0xFF 0xFE)
+		isUtf16 := false
+		if bom, err := raw.Peek(2); err == nil && len(bom) == 2 && bom[0] == 0xFF && bom[1] == 0xFE {
+			// Discard BOM
+			_, _ = raw.Discard(2)
+			isUtf16 = true
 		}
 
-		if err := scanner.Err(); err != nil {
-			logrus.Warnf("Error while reading server console: %v", err)
+		var srcReader io.Reader = raw
+		if isUtf16 {
+			decoder := unicode.UTF16(unicode.LittleEndian, unicode.IgnoreBOM).NewDecoder()
+			srcReader = transform.NewReader(raw, decoder)
+			logrus.Debug("Detected UTF-16LE output. Decoding to UTF-8.")
+		}
+
+		reader := bufio.NewReader(srcReader)
+		var buffer bytes.Buffer
+		readBuffer := make([]byte, 1024)
+
+		for {
+			n, err := reader.Read(readBuffer)
+			if err != nil {
+				if err == io.EOF {
+					if buffer.Len() > 0 {
+						s.processBufferedData(&buffer)
+					}
+					break
+				}
+				logrus.Warnf("Error while reading server console: %v", err)
+				break
+			}
+
+			if n > 0 {
+				buffer.Write(readBuffer[:n])
+				s.processLinesFromBuffer(&buffer)
+			}
 		}
 	}()
 
 	return nil
+}
+
+func (s *Instance) processLinesFromBuffer(buffer *bytes.Buffer) {
+	for {
+		// Look for newline in buffer
+		data := buffer.Bytes()
+		newlineIndex := bytes.IndexByte(data, '\n')
+
+		if newlineIndex == -1 {
+			// No complete line found, keep data in buffer
+			break
+		}
+
+		// Extract complete line (including newline)
+		line := make([]byte, newlineIndex+1)
+		buffer.Read(line)
+
+		// Clean CRLF
+		line = bytes.TrimRight(line, "\r\n")
+		if len(line) == 0 {
+			continue
+		}
+
+		decoded := helper.NormalizeEncoding(line)
+		if len(decoded) > 0 && !shouldFilterOutput(decoded) {
+			event.EmmitEventInstanceOutput(s.ToEIB(), decoded)
+		}
+	}
+}
+
+func (s *Instance) processBufferedData(buffer *bytes.Buffer) {
+	if buffer.Len() == 0 {
+		return
+	}
+
+	// Process any remaining data as a single line
+	data := buffer.Bytes()
+	data = bytes.TrimRight(data, "\r\n")
+	if len(data) > 0 {
+		decoded := helper.NormalizeEncoding(data)
+		if len(decoded) > 0 && !shouldFilterOutput(decoded) {
+			event.EmmitEventInstanceOutput(s.ToEIB(), decoded)
+		}
+	}
+
+	buffer.Reset()
 }
 
 func (s *Instance) ToEIB() event.EventInstanceBase {
@@ -395,7 +468,7 @@ func (s *Instance) ToEIB() event.EventInstanceBase {
 	)
 }
 
-func shouldOutputFilter(data []byte) bool {
+func shouldFilterOutput(data []byte) bool {
 	for _, er := range outputFiltersEr {
 		if er.Match(data) {
 			return true

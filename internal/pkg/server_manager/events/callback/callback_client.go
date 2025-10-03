@@ -63,6 +63,8 @@ func (c *client) process(buf []byte) {
 
 	req.Header = c.Headers
 
+	req.Header.Set("Content-Type", "application/json; charset=utf-8")
+
 	if _, err := httpClient.Do(req); err != nil {
 		logrus.WithError(err).Warn("failed to request callback.")
 	}
