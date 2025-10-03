@@ -47,10 +47,6 @@ func (c *client) shouldProcess(ev string) bool {
 		return false
 	}
 
-	if _, ok := validEvents[ev]; !ok {
-		return false
-	}
-
 	if _, ok := c.cachedEvents[ev]; !ok {
 		return false
 	}

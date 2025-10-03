@@ -32,7 +32,8 @@ log:
 
 callback:
   enabled: $ACCWEB_CALLBACK_ENABLED
-  url: "$ACCWEB_CALLBACK_URL"
-  headers: $ACCWEB_CALLBACK_HEADERS
-  all_events: $ACCWEB_CALLBACK_ALL_EVENTS
-  events: $ACCWEB_CALLBACK_EVENTS
+  timeout: $ACCWEB_CALLBACK_TIMEOUT
+  clients:
+    - url: "$ACCWEB_CALLBACK_URL"
+      headers:
+        "$ACCWEB_CALLBACK_HEADER_KEY": "$ACCWEB_CALLBACK_HEADER_VALUE"

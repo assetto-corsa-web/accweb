@@ -33,6 +33,7 @@ log:
 # More info: https://github.com/assetto-corsa-web/accweb/wiki/Event-System
 callback:
   enabled: false
+  timeout: 500ms
   clients:
     # simple example (enabled, no http headers and all events)
     - url: "http://localhost:3000/callback1"

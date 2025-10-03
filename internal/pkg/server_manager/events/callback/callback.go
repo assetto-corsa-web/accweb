@@ -34,8 +34,13 @@ func Register(sm *server_manager.Service) {
 
 	setupClients(cbCfg)
 
+	clientTimeout := 100 * time.Millisecond
+	if cbCfg.Timeout != nil {
+		clientTimeout = *cbCfg.Timeout
+	}
+
 	httpClient = &http.Client{
-		Timeout: 100 * time.Millisecond,
+		Timeout: clientTimeout,
 	}
 
 	event.Register(handleEvent)
@@ -52,6 +57,10 @@ func setupClients(cb cfg.Callback) {
 func handleEvent(ev event.Eventer) {
 	info := ev.GetInfo()
 
+	if _, ok := validEvents[info.Name]; !ok {
+		return
+	}
+
 	buf, err := json.Marshal(ev)
 	if err != nil {
 		logrus.WithError(err).Error("failed to build callback payload.")
@@ -61,8 +70,6 @@ func handleEvent(ev event.Eventer) {
 	wg := sync.WaitGroup{}
 	wg.Add(len(clients))
 
-	ts := time.Now()
-
 	for _, c := range clients {
 		go func(c *client) {
 			defer wg.Done()
@@ -71,10 +78,14 @@ func handleEvent(ev event.Eventer) {
 				return
 			}
 
+			ts := time.Now()
+
+			logrus.Debug("processing callback client " + c.Url + " event " + info.Name + " with body: " + string(buf))
+			logrus.Debug("callback handled in " + time.Since(ts).String())
+
 			c.process(buf)
 		}(c)
 	}
 
 	wg.Wait()
-	logrus.Debug("callback handled in " + time.Since(ts).String())
 }

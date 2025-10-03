@@ -65,16 +65,9 @@ type Log struct {
 	WithTimestamp bool `yaml:"with_timestamp"`
 }
 
-type CallbackOld struct {
-	Enabled   bool              `yaml:"enabled"`
-	Urls      []string          `yaml:"urls"`
-	Headers   map[string]string `yaml:"headers"`
-	AllEvents bool              `yaml:"all_events"`
-	Events    []string          `yaml:"events"`
-}
-
 type Callback struct {
 	Enabled bool             `yaml:"enabled"`
+	Timeout *time.Duration   `yaml:"timeout"`
 	Clients []CallbackClient `yaml:"clients"`
 }
 
