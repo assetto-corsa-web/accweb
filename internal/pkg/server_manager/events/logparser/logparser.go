@@ -187,7 +187,7 @@ func handleLap(i *instance.Instance, l *instance.LiveState, p []string) {
 		i.ToEIB(),
 		lap.Driver.ToEILDB(),
 		lap.Car.ToEILCB(),
-		lap.LapTimeMS, lap.TimestampMS, lap.Flags, lap.Fuel,
+		lap.LapTimeMS, lap.TimestampMS, lap.Flags, lap.Fuel, lap.Position,
 		lap.S1, lap.S2, lap.S3,
 		lap.HasCut, lap.InLap, lap.OutLap, lap.SessionOver,
 	)

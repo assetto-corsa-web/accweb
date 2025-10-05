@@ -26,7 +26,7 @@
             </div>
 
             <div class="body">
-                <table id="leaderboard">
+                <table id="leaderboard" style="width: 100%;">
                     <tr class="tbl-header">
                         <th>Pos</th>
                         <th>Driver</th>
@@ -34,12 +34,12 @@
                         <th>Model</th>
                         <th>Laps</th>
                         <th>Fuel</th>
-                        <th>Best Lap</th>
-                        <th>Last Lap</th>
-                        <th>S1</th>
-                        <th>S2</th>
-                        <th>S3</th>
-                        <th v-if="data.live.sessionType == 'Race'">Gap</th>
+                        <th class="col-time">Best Lap</th>
+                        <th class="col-time">Last Lap</th>
+                        <th class="col-time">S1</th>
+                        <th class="col-time">S2</th>
+                        <th class="col-time">S3</th>
+                        <th class="col-time" v-if="data.live.sessionType == 'Race'">Gap</th>
                         <th>Flags</th>
                     </tr>
 
@@ -69,40 +69,53 @@
                 <div id="laps" v-if="showLaps">
                     <h3>Car {{ showLapsCar.raceNumber }} Laps</h3>
 
-                    <table>
-                        <tr class="tbl-header">
-                            <th>Nr</th>
-                            <th>Driver</th>
-                            <th>Fuel</th>
-                            <th>Lap Time</th>
-                            <th>S1</th>
-                            <th>S2</th>
-                            <th>S3</th>
-                            <th>Delta</th>
-                            <th>Flags</th>
-                        </tr>
+                    <div class="server-settings-container one-three-columns">
+                        <div>
+                            <div  class="box" v-for="(d, i) in showLapsCar.drivers" :key="i" style="margin-bottom: 20px;">
+                                <h4 style="margin: 0 0 5px 0">{{ d.name }}</h4>
+                                ( {{ d.playerID }} )
+                            </div>
+                        </div>
 
-                        <tr v-for="(lap, i) in showLapsCar.laps" :key="i"
-                            v-bind:class="{ 'tbl-row': true, invalid: lap.flags > 0, best: lap.lapTimeMS === showLapsCar.bestLapMS }">
-                            <td>{{ i + 1 }}</td>
-                            <td>{{ showLapsCar.drivers[lap.driverIndex] ? showLapsCar.drivers[lap.driverIndex].name :
-                                '--'
-                                }}
-                            </td>
-                            <td>{{ lap.fuel }}</td>
-                            <td>{{ msToTime(lap.lapTimeMS) }}</td>
-                            <td>{{ lap.s1 }}</td>
-                            <td>{{ lap.s2 }}</td>
-                            <td>{{ lap.s3 }}</td>
-                            <td align="right">{{ calcDelta(i) }}</td>
-                            <td>
-                                <i class="fas fa-cut" v-if="lap.hasCut" title="Has Cut"></i>
-                                <i class="fas fa-sign-in-alt" v-if="lap.inLap" title="In Lap"></i>
-                                <i class="fas fa-sign-out-alt" v-if="lap.outLap" title="Out Lap"></i>
-                                <i class="fas fa-flag-checkered" v-if="lap.sessionOver" title="Session is Over"></i>
-                            </td>
-                        </tr>
-                    </table>
+                        <div>
+                            <table style="width: 100%;">
+                                <tr class="tbl-header">
+                                    <th>Lap</th>
+                                    <th>Driver</th>
+                                    <th>Pos</th>
+                                    <th>Fuel</th>
+                                    <th class="col-time">Lap Time</th>
+                                    <th class="col-time">S1</th>
+                                    <th class="col-time">S2</th>
+                                    <th class="col-time">S3</th>
+                                    <th class="col-time">Delta</th>
+                                    <th>Flags</th>
+                                </tr>
+
+                                <tr v-for="(lap, i) in showLapsCar.laps" :key="i"
+                                    v-bind:class="{ 'tbl-row': true, invalid: lap.flags > 0, best: lap.lapTimeMS === showLapsCar.bestLapMS }">
+                                    <td>{{ i + 1 }}</td>
+                                    <td>{{ showLapsCar.drivers[lap.driverIndex] ? showLapsCar.drivers[lap.driverIndex].name :
+                                        '--'
+                                        }}
+                                    </td>
+                                    <td>{{ lap.position }}</td>
+                                    <td>{{ lap.fuel }}</td>
+                                    <td>{{ msToTime(lap.lapTimeMS) }}</td>
+                                    <td>{{ lap.s1 }}</td>
+                                    <td>{{ lap.s2 }}</td>
+                                    <td>{{ lap.s3 }}</td>
+                                    <td align="right">{{ calcDelta(i) }}</td>
+                                    <td>
+                                        <i class="fas fa-cut" v-if="lap.hasCut" title="Has Cut"></i>
+                                        <i class="fas fa-sign-in-alt" v-if="lap.inLap" title="In Lap"></i>
+                                        <i class="fas fa-sign-out-alt" v-if="lap.outLap" title="Out Lap"></i>
+                                        <i class="fas fa-flag-checkered" v-if="lap.sessionOver" title="Session is Over"></i>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
 
                 <div id="chat">
@@ -361,6 +374,14 @@ export default {
     cursor: pointer;
 }
 
+#laps {
+    margin-top: 40px;
+}
+
+.col-time {
+    width: 60px;
+}
+
 .active {
     background-color: #27344c !important;
 }
@@ -384,6 +405,10 @@ th {
 
 tr:nth-child(odd) {
     background-color: #1f2936;
+}
+
+#chat {
+    margin-top: 40px;
 }
 
 #chat .message div {

@@ -17,6 +17,7 @@ type LapState struct {
 	S3          string       `json:"s3"`
 	S3MS        int          `json:"s3MS"`
 	Fuel        int          `json:"fuel"`
+	Position    int          `json:"position"`
 	HasCut      bool         `json:"hasCut"`
 	InLap       bool         `json:"inLap"`
 	OutLap      bool         `json:"outLap"`

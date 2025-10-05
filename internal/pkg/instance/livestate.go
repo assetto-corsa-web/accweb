@@ -286,6 +286,7 @@ func (l *LiveState) SetLapState(lap *LapState) {
 	lap.Car.Laps = append(lap.Car.Laps, lap)
 
 	l.recalculatePositions()
+	lap.Position = lap.Car.Position
 }
 
 func (l *LiveState) SetCurrLapState(lap LapState) {

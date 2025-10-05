@@ -79,6 +79,7 @@ type EventInstanceLiveNewLap struct {
 	TimestampMS int    `json:"timestampMS"`
 	Flags       int    `json:"flags"`
 	Fuel        int    `json:"fuel"`
+	Position    int    `json:"position"`
 	S1          string `json:"s1"`
 	S2          string `json:"s2"`
 	S3          string `json:"s3"`
@@ -92,7 +93,7 @@ func EmmitEventInstanceLiveNewLap(
 	eib EventInstanceBase,
 	eildb EventInstanceLiveDriverBase,
 	eilcb EventInstanceLiveCarBase,
-	ltms, tms, flags, fuel int,
+	ltms, tms, flags, fuel, pos int,
 	s1, s2, s3 string,
 	fhc, fil, fol, fso bool,
 ) {
@@ -106,6 +107,7 @@ func EmmitEventInstanceLiveNewLap(
 			TimestampMS:                 tms,
 			Flags:                       flags,
 			Fuel:                        fuel,
+			Position:                    pos,
 			S1:                          s1,
 			S2:                          s2,
 			S3:                          s3,
