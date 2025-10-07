@@ -3,7 +3,11 @@ package instance
 import (
 	"sort"
 	"strings"
+	"sync"
 	"time"
+
+	"github.com/assetto-corsa-web/accweb/internal/pkg/event"
+	"github.com/sirupsen/logrus"
 )
 
 type ServerState string
@@ -15,73 +19,6 @@ const (
 	ServerStateNotRegistered ServerState = "not_registered"
 	ServerStateOnline        ServerState = "online"
 )
-
-// DriverState contains the information about a single driver
-type DriverState struct {
-	ConnectionID int    `json:"-"`
-	Name         string `json:"name"`
-	PlayerID     string `json:"playerID"`
-
-	car      *CarState
-	carModel int
-}
-
-// CarState represents the current state of a single car
-type CarState struct {
-	CarID              int            `json:"carID"`
-	RaceNumber         int            `json:"raceNumber"`
-	CarModel           int            `json:"carModel"`
-	Drivers            []*DriverState `json:"drivers"`
-	CurrentDriver      *DriverState   `json:"currentDriver"`
-	Fuel               int            `json:"fuel"`
-	Position           int            `json:"position"`
-	NrLaps             int            `json:"nrLaps"`
-	BestLapMS          int            `json:"bestLapMS"`
-	LastLapMS          int            `json:"lastLapMS"`
-	LastLapTimestampMS int            `json:"lastLapTimestampMS"`
-	Laps               []*LapState    `json:"laps"`
-	CurrLap            LapState       `json:"currLap"`
-}
-
-func (c *CarState) removeDriver(d *DriverState) {
-	if c.CurrentDriver != nil && c.CurrentDriver.PlayerID == d.PlayerID {
-		c.CurrentDriver = nil
-	}
-
-	k := -1
-	for i, driver := range c.Drivers {
-		if driver.PlayerID == d.PlayerID {
-			k = i
-			break
-		}
-	}
-
-	if k == -1 {
-		return
-	}
-
-	//copy(c.Drivers[k:], c.Drivers[:k+1])
-	copy(c.Drivers[k:], c.Drivers[k+1:])
-	c.Drivers = c.Drivers[:len(c.Drivers)-1]
-}
-
-type LapState struct {
-	CarID       int          `json:"carID"`
-	DriverIndex int          `json:"driverIndex"`
-	Car         *CarState    `json:"-"`
-	Driver      *DriverState `json:"-"`
-	LapTimeMS   int          `json:"lapTimeMS"`
-	TimestampMS int          `json:"timestampMS"`
-	Flags       int          `json:"flags"`
-	S1          string       `json:"s1"`
-	S2          string       `json:"s2"`
-	S3          string       `json:"s3"`
-	Fuel        int          `json:"fuel"`
-	HasCut      bool         `json:"hasCut"`
-	InLap       bool         `json:"inLap"`
-	OutLap      bool         `json:"outLap"`
-	SessionOver bool         `json:"sessionOver"`
-}
 
 type ServerChat struct {
 	Timestamp time.Time `json:"ts"`
@@ -99,9 +36,14 @@ type LiveState struct {
 	Cars             map[int]*CarState `json:"cars"`
 	UpdatedAt        time.Time         `json:"updatedAt"`
 	Chats            []ServerChat      `json:"chats"`
+	History          []ServerHistory   `json:"history"`
+	historyId        int32
 
 	// drivers waiting to be assigned to a car, key: ConnectionID
 	connections map[int]*DriverState
+
+	carsLock sync.RWMutex
+	connLock sync.RWMutex
 }
 
 func NewLiveState() *LiveState {
@@ -111,59 +53,117 @@ func NewLiveState() *LiveState {
 		connections: map[int]*DriverState{},
 		UpdatedAt:   time.Now().UTC(),
 		Chats:       []ServerChat{},
+		History:     []ServerHistory{},
 	}
 }
 
-func (l *LiveState) setServerState(s ServerState) {
+func (l *LiveState) GetCar(cId int) *CarState {
+	l.carsLock.RLock()
+	defer l.carsLock.RUnlock()
+
+	if c, ok := l.Cars[cId]; ok {
+		return c
+	}
+
+	logrus.WithFields(logrus.Fields{
+		"carID": cId,
+	}).Error("car not found in GetCar")
+
+	return nil
+}
+
+func (l *LiveState) GetDriver(connId int) *DriverState {
+	l.connLock.RLock()
+	defer l.connLock.RUnlock()
+
+	if c, ok := l.connections[connId]; ok {
+		return c
+	}
+
+	logrus.WithFields(logrus.Fields{
+		"connID": connId,
+	}).Error("driver not found in GetDriver")
+
+	return nil
+}
+
+func (l *LiveState) SetServerState(s ServerState) {
 	l.ServerState = s
 }
 
-func (l *LiveState) setNrClients(nr int) {
+func (l *LiveState) SetNrClients(nr int) {
 	l.NrClients = nr
 }
 
-func (l *LiveState) setTrack(t string) {
+func (l *LiveState) SetTrack(t string) {
 	l.Track = t
 }
 
-func (l *LiveState) setSessionState(t, p string, r int) {
-	oldType := l.SessionType
-	l.SessionType = t
-	l.SessionPhase = p
-	l.SessionRemaining = r
+func (l *LiveState) SetSession(new string) {
+	l.SessionType = new
+	l.AdvanceSession()
+}
 
-	if t != oldType {
-		l.advanceSession()
+func (l *LiveState) SetSessionState(p string, r int) {
+	oldPhase := l.SessionPhase
+	l.SessionPhase = p
+
+	if r >= 0 {
+		l.SessionRemaining = r
+	}
+
+	if p != oldPhase {
+		l.AddHistory("session", ServerHistorySessionChange{
+			SessionType:      l.SessionType,
+			SessionPhase:     l.SessionPhase,
+			SessionRemaining: l.SessionRemaining,
+		})
 	}
 }
 
-func (l *LiveState) addNewConnection(connID int, name, playerID string, carModel int) {
+func (l *LiveState) AddNewConnection(connID int, name, playerID string, carModel int) {
+	l.connLock.Lock()
+	defer l.connLock.Unlock()
+
 	l.connections[connID] = &DriverState{
 		ConnectionID: connID,
 		Name:         name,
 		PlayerID:     playerID,
 		carModel:     carModel,
 	}
+
+	l.AddHistory("new_connection", ServerHistoryConnection{
+		Name:     name,
+		PlayerID: playerID,
+	})
 }
 
-func (l *LiveState) advanceSession() {
+func (l *LiveState) AdvanceSession() {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	for _, car := range l.Cars {
-		if len(car.Drivers) == 0 {
-			l.purgeCar(car.CarID)
-		} else {
-			car.Fuel = 0
-			car.NrLaps = 0
-			car.BestLapMS = 0
-			car.LastLapMS = 0
-			car.LastLapTimestampMS = 0
-			car.Laps = []*LapState{}
-			car.CurrLap = LapState{}
+		if car.LenDrivers() == 0 {
+			delete(l.Cars, car.CarID)
+			continue
 		}
+
+		car.Fuel = 0
+		car.NrLaps = 0
+		car.BestLapMS = 0
+		car.LastLapMS = 0
+		car.LastLapTimestampMS = 0
+		car.Laps = []*LapState{}
+		car.CurrLap = LapState{}
 	}
+
 	l.recalculatePositions()
 }
 
-func (l *LiveState) addNewCar(carID, raceNumber, carModel int) {
+func (l *LiveState) AddNewCar(carID, raceNumber, carModel int) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	car := l.Cars[carID]
 
 	if car == nil {
@@ -181,28 +181,44 @@ func (l *LiveState) addNewCar(carID, raceNumber, carModel int) {
 	car.RaceNumber = raceNumber
 }
 
-func (l *LiveState) handshake(carID, connectionID int) {
-	d := l.connections[connectionID]
+func (l *LiveState) Handshake(carID, connId int) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
+	l.connLock.Lock()
+	defer l.connLock.Unlock()
+
+	d := l.connections[connId]
 	if d == nil {
+		logrus.WithFields(logrus.Fields{
+			"connID": connId,
+			"carID":  carID,
+		}).Error("connection not found in Handshake")
 		return
 	}
 
 	car := l.Cars[carID]
 	if car == nil {
+		logrus.WithFields(logrus.Fields{
+			"connID": connId,
+			"carID":  carID,
+		}).Error("car not found in Handshake")
 		return
 	}
 
 	d.car = car
-	car.Drivers = append(car.Drivers, d)
-
-	if car.CurrentDriver == nil {
-		car.CurrentDriver = d
-	}
+	car.addDriver(d)
 }
 
-func (l *LiveState) removeConnection(id int) {
-	d, ok := l.connections[id]
+func (l *LiveState) RemoveConnection(connId int) {
+	l.connLock.Lock()
+	defer l.connLock.Unlock()
+
+	d, ok := l.connections[connId]
 	if !ok {
+		logrus.WithFields(logrus.Fields{
+			"connID": connId,
+		}).Error("connection not found in RemoveConnection")
 		return
 	}
 
@@ -210,46 +226,73 @@ func (l *LiveState) removeConnection(id int) {
 		d.car.removeDriver(d)
 	}
 
-	delete(l.connections, id)
+	l.AddHistory("remove_connection", ServerHistoryConnection{
+		Name:     d.Name,
+		PlayerID: d.PlayerID,
+	})
+
+	delete(l.connections, connId)
 }
 
-func (l *LiveState) purgeCar(id int) {
+func (l *LiveState) PurgeCar(id int) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	delete(l.Cars, id)
 }
 
-func (l *LiveState) serverOffline() {
-	l.setServerState(ServerStateOffline)
+func (l *LiveState) ServerOffline() {
+	l.connLock.Lock()
+	defer l.connLock.Unlock()
+
+	l.SetServerState(ServerStateOffline)
 	for _, car := range l.Cars {
-		l.purgeCar(car.CarID)
+		l.PurgeCar(car.CarID)
 	}
-	l.setNrClients(0)
-	l.setTrack("")
-	l.setSessionState("", "", 0)
+	l.SetNrClients(0)
+	l.SetTrack("")
+	l.SetSessionState("", 0)
 	l.connections = map[int]*DriverState{}
 }
 
-func (l *LiveState) setCarPosition(carID, pos int) {
+func (l *LiveState) SetCarPosition(carID, pos int) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	if car, ok := l.Cars[carID]; ok {
 		car.Position = pos
+		return
 	}
+
+	logrus.WithFields(logrus.Fields{
+		"carID": carID,
+		"pos":   pos,
+	}).Error("car not found in SetCarPosition")
 }
 
-func (l *LiveState) setLapState(lap *LapState) {
+func (l *LiveState) SetLapState(lap *LapState) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	lap.Car.NrLaps++
 	lap.Car.Fuel = lap.Fuel
 	lap.Car.LastLapMS = lap.LapTimeMS
 	lap.Car.LastLapTimestampMS = lap.TimestampMS
 
-	if lap.Flags == 0 && (lap.Car.BestLapMS <= 0 || lap.LapTimeMS < lap.Car.BestLapMS) {
+	if lap.IsValid() && (lap.Car.BestLapMS <= 0 || lap.LapTimeMS < lap.Car.BestLapMS) {
 		lap.Car.BestLapMS = lap.LapTimeMS
 	}
 
 	lap.Car.Laps = append(lap.Car.Laps, lap)
 
 	l.recalculatePositions()
+	lap.Position = lap.Car.Position
 }
 
-func (l *LiveState) setCurrLapState(lap LapState) {
+func (l *LiveState) SetCurrLapState(lap LapState) {
+	l.carsLock.Lock()
+	defer l.carsLock.Unlock()
+
 	lap.Car.LastLapTimestampMS = lap.TimestampMS
 	lap.Car.CurrLap = lap
 	l.recalculatePositions()
@@ -309,6 +352,7 @@ func (l *LiveState) recalculatePositions() {
 		if l.SessionType == "Race" {
 			return cmpPositionMostDistance(cars[i], cars[j])
 		}
+
 		return cmpPositionFastestLap(cars[i], cars[j])
 	})
 
@@ -319,11 +363,16 @@ func (l *LiveState) recalculatePositions() {
 	}
 }
 
-func (l *LiveState) addChat(name, message string) {
+func (l *LiveState) AddChat(name, message string) {
 	// skip /admin message
 	if len(message) > 6 && strings.ToLower(message[0:6]) == "/admin" {
 		return
 	}
+
+	l.AddHistory("chat", ServerHistoryChat{
+		Name:    name,
+		Message: message,
+	})
 
 	l.Chats = append(l.Chats, ServerChat{
 		Timestamp: time.Now().UTC(),
@@ -338,4 +387,85 @@ func (l *LiveState) addChat(name, message string) {
 	if t > nrMsg {
 		l.Chats = l.Chats[t-nrMsg : t]
 	}
+}
+
+func (l *LiveState) AddHistory(t string, data any) {
+	l.historyId++
+	l.History = append(l.History, ServerHistory{
+		ID:        l.historyId,
+		Timestamp: time.Now().UTC(),
+		Type:      t,
+		Data:      data,
+	})
+
+	nrMsg := 200
+
+	tt := len(l.History)
+
+	if tt > nrMsg {
+		l.History = l.History[tt-nrMsg : tt]
+	}
+}
+
+func (l *LiveState) AddDamage(carId int) {
+	car := l.GetCar(carId)
+	if car == nil {
+		logrus.WithFields(logrus.Fields{
+			"carID": carId,
+		}).Error("car not found in AddDamage")
+		return
+	}
+
+	if car.CurrentDriver == nil {
+		logrus.WithFields(logrus.Fields{
+			"carID": carId,
+		}).Error("car driver not found in AddDamage")
+		return
+	}
+
+	l.AddHistory("damage", ServerHistoryDamage{
+		CarID:      car.CarID,
+		RaceNumber: car.RaceNumber,
+		CarModel:   car.CarModel,
+		Name:       car.CurrentDriver.Name,
+		PlayerID:   car.CurrentDriver.PlayerID,
+	})
+}
+
+func (l *LiveState) ToEIC() map[int]event.EventCarState {
+	l.carsLock.RLock()
+	defer l.carsLock.RUnlock()
+
+	cars := map[int]event.EventCarState{}
+
+	for k, c := range l.Cars {
+		dd := make([]event.EventInstanceLiveDriverBase, c.LenDrivers())
+
+		c.RangeDrivers(func(i int, d *DriverState) bool {
+			dd[i] = d.ToEILDB()
+			return true
+		})
+
+		ll := make([]event.EventLapState, len(c.Laps))
+		for i, l := range c.Laps {
+			ll[i] = l.ToEILS()
+		}
+
+		cars[k] = event.EventCarState{
+			RaceNumber:         c.RaceNumber,
+			CarModel:           c.CarModel,
+			Drivers:            dd,
+			CurrentDriver:      c.CurrentDriver.ToEILDB(),
+			Fuel:               c.Fuel,
+			Position:           c.Position,
+			NrLaps:             c.NrLaps,
+			BestLapMS:          c.BestLapMS,
+			LastLapMS:          c.LastLapMS,
+			LastLapTimestampMS: c.LastLapTimestampMS,
+			Laps:               ll,
+			CurrLap:            c.CurrLap.ToEILS(),
+		}
+	}
+
+	return cars
 }

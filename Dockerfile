@@ -1,4 +1,4 @@
-FROM golang:1-bookworm AS builder
+FROM golang:1.24-bookworm AS builder
 
 ARG VERSION=docker
 
@@ -10,7 +10,7 @@ RUN curl -fsSL https://deb.nodesource.com/gpgkey/nodesource-repo.gpg.key | gpg -
 RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesource.com/node_$NODE_MAJOR.x nodistro main" | tee /etc/apt/sources.list.d/nodesource.list
 
 RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get install -y git build-essential nodejs="${NODE_MAJOR}.*" zip
+	&& apt-get install -y git build-essential nodejs="${NODE_MAJOR}.*" zip
 
 WORKDIR /accweb_src
 
@@ -41,7 +41,9 @@ ENV ACCWEB_HOST=0.0.0.0:8080 \
 	ACCWEB_MOD_PASSWORD=weakmodpassword \
 	ACCWEB_RO_PASSWORD=weakropassword \
 	ACCWEB_LOGLEVEL=info \
-	ACCWEB_CORS=*
+	ACCWEB_CORS=* \
+	ACCWEB_LOG_WITH_TIMESTAMP=true \
+	ACCWEB_CALLBACK_ENABLED=false
 
 VOLUME /accserver /accweb /sslcerts
 

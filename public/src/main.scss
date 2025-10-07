@@ -15,7 +15,8 @@ $font_size_small: 12px;
 $font_family: sans-serif;
 $font_color: $gray;
 
-html, body {
+html,
+body {
 	height: 100%;
 	margin: 0;
 	padding: 0;
@@ -27,7 +28,8 @@ html, body {
 }
 
 html {
-	margin-right: calc(-100vw + 100%); /* Fix for scroll-bar jump */
+	margin-right: calc(-100vw + 100%);
+	/* Fix for scroll-bar jump */
 }
 
 body {
@@ -200,7 +202,8 @@ h1 {
 	margin: 0 0 0 6px;
 }
 
-button, input[type~="submit"] {
+button,
+input[type~="submit"] {
 	width: auto;
 	border-width: 0;
 	font-size: $font_size;
@@ -217,7 +220,9 @@ button, input[type~="submit"] {
 	}
 }
 
-input, select, textarea {
+input,
+select,
+textarea {
 	width: 100%;
 	box-sizing: border-box;
 	font-size: $font_size;
@@ -308,6 +313,14 @@ a {
 
 .server-settings-container.four-columns {
 	grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.server-settings-container.one-two-columns {
+	grid-template-columns: 1fr 2fr;
+}
+
+.server-settings-container.one-three-columns {
+	grid-template-columns: 1fr 3fr;
 }
 
 @media (max-device-width: 700px) {

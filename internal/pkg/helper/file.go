@@ -1,6 +1,7 @@
 package helper
 
 import (
+	"bytes"
 	"crypto/md5"
 	"encoding/json"
 	"errors"
@@ -16,6 +17,8 @@ import (
 
 var (
 	utf16Encoding = unicode.UTF16(unicode.LittleEndian, unicode.UseBOM)
+	utf16Encoder  = utf16Encoding.NewEncoder()
+	utf16Decoder  = utf16Encoding.NewDecoder()
 
 	// ErrFileNotFound file not found
 	ErrFileNotFound = errors.New("file not found")
@@ -29,11 +32,11 @@ func Encode(obj interface{}) ([]byte, error) {
 		return nil, err
 	}
 
-	return utf16Encoding.NewEncoder().Bytes(data)
+	return utf16Encoder.Bytes(data)
 }
 
 func Decode(f io.ReadSeeker, obj interface{}) error {
-	r := transform.NewReader(f, utf16Encoding.NewDecoder().Transformer)
+	r := transform.NewReader(f, utf16Decoder.Transformer)
 
 	if err := json.NewDecoder(r).Decode(obj); err != nil {
 		if _, errSeek := f.Seek(0, io.SeekStart); errSeek != nil {
@@ -47,6 +50,17 @@ func Decode(f io.ReadSeeker, obj interface{}) error {
 	}
 
 	return nil
+}
+
+func DecodeBytes(data []byte) ([]byte, error) {
+	buf := bytes.NewBuffer(nil)
+	reader := transform.NewWriter(buf, utf16Decoder)
+
+	if _, err := reader.Write(data); err != nil {
+		return nil, err
+	}
+
+	return buf.Bytes(), nil
 }
 
 func LoadFromPath(baseDir, filename string, obj interface{}) error {
