@@ -241,3 +241,27 @@ func EmmitEventInstanceLiveChat(
 		},
 	))
 }
+
+type EventInstanceLivePingSpike struct {
+	EventInstanceLiveDriverBase
+	Ping   int `json:"ping"`
+	Avg    int `json:"avg"`
+	Capped int `json:"capped"`
+}
+
+func EmmitEventInstanceLivePingSpike(
+	eib EventInstanceBase,
+	eildb EventInstanceLiveDriverBase,
+	ping, avg, capped int,
+) {
+	Emmit(NewEventInstanceLive(
+		eventBase("instance_live_ping_spike"),
+		eib,
+		EventInstanceLivePingSpike{
+			EventInstanceLiveDriverBase: eildb,
+			Ping:                        ping,
+			Avg:                         avg,
+			Capped:                      capped,
+		},
+	))
+}

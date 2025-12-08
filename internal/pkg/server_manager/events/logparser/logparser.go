@@ -83,6 +83,7 @@ func makeLogMatchers() []*logMatcher {
 		newLogMatcher(`^CHAT (.*?): (.*)$`, handleChat),
 		newLogMatcher(`^Updated leaderboard for \d+ clients \(([A-Za-z ]+)-<([-A-Za-z ]+)> (\d+) min\)$`, handleSessionUpdate),
 		newLogMatcher(`Updated \d+ clients with new damage zones for car (\d+)$`, handleNewDamage),
+		newLogMatcher(`^Received Ping spike from connectionId (\d+); (\d+) vs. avg (\d+) ms, is capped to (\d+)`, handlePingSpike),
 	}
 }
 
@@ -319,4 +320,19 @@ func handleNewDamage(i *instance.Instance, l *instance.LiveState, p []string) {
 			car.ToEILCB(),
 		)
 	}
+}
+
+func handlePingSpike(i *instance.Instance, l *instance.LiveState, p []string) {
+	drv := l.GetDriver(toInt(p[1]))
+	if drv == nil {
+		return
+	}
+
+	event.EmmitEventInstanceLivePingSpike(
+		i.ToEIB(),
+		drv.ToEILDB(),
+		toInt(p[2]),
+		toInt(p[3]),
+		toInt(p[4]),
+	)
 }

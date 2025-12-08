@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.26.3
+* feat: add ping spike to event system. [#290](https://github.com/assetto-corsa-web/accweb/pull/290)
+
 ## 1.26.2
 * feat: add chat messages to event system. [#289](https://github.com/assetto-corsa-web/accweb/pull/289)
 

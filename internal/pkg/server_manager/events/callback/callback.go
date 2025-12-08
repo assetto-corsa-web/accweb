@@ -24,6 +24,7 @@ var validEvents = map[string]struct{}{
 	"instance_live_reseting_race_weekend": {},
 	"instance_live_session_changed":       {},
 	"instance_live_chat":                  {},
+	"instance_live_ping_spike":            {},
 }
 var clients []*client
 

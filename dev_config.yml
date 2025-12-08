@@ -53,6 +53,7 @@ callback:
         # - "instance_live_reseting_race_weekend"
         # - "instance_live_session_changed"
         # - "instance_live_chat"
+        # - "instance_live_ping_spike"
     # disabled client
     - url: "http://localhost:3000/callback3"
       enabled: false
