@@ -53,6 +53,7 @@ accweb is installed by extracting the zip on your server, modifing the YAML conf
 4. open a terminal
 5. change directory to the accweb installation location
 6. start accweb using `./accweb` on Linux and `accweb.exe` on Windows
+   - By using --config (-c) you can point to an alternative `config.yml` file, e.g. `./accweb --config server1.yml`
 8. leave the terminal open (or start in background using screens on Linux for example)
 9. visit the server IP/domain and port you've configured, for example: http://example.com:8080
 

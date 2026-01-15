@@ -13,9 +13,29 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const configFile = "config.yml"
+const configFileDefault = "config.yml"
 
 func main() {
+	var configFile string = configFileDefault
+
+	// Parse command line arguments
+	if len(os.Args) > 1 {
+		for i, arg := range os.Args[1:] {
+			if arg == "--config" || arg == "-c" {
+				if i+1 < len(os.Args)-1 {
+					configFile = os.Args[i+2]
+				} else {
+					logrus.Fatal("--config requires a value")
+				}
+				break
+			}
+			if arg == "--help" || arg == "-h" {
+				println("Usage: accweb [--config <config-file>]")
+				return
+			}
+		}
+	}
+
 	c := cfg.Load(configFile)
 
 	sM := server_manager.New(c)
