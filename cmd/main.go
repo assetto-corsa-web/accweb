@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"os"
 	"os/signal"
 	"syscall"
@@ -16,25 +17,11 @@ import (
 const configFileDefault = "config.yml"
 
 func main() {
-	var configFile string = configFileDefault
+	var configFile string
 
-	// Parse command line arguments
-	if len(os.Args) > 1 {
-		for i, arg := range os.Args[1:] {
-			if arg == "--config" || arg == "-c" {
-				if i+1 < len(os.Args)-1 {
-					configFile = os.Args[i+2]
-				} else {
-					logrus.Fatal("--config requires a value")
-				}
-				break
-			}
-			if arg == "--help" || arg == "-h" {
-				println("Usage: accweb [--config <config-file>]")
-				return
-			}
-		}
-	}
+	flag.StringVar(&configFile, "config", configFileDefault, "override configuration file")
+	flag.StringVar(&configFile, "c", configFileDefault, "override configuration file (shorthand)")
+	flag.Parse()
 
 	c := cfg.Load(configFile)
 
