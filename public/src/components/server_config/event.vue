@@ -1,7 +1,13 @@
 <template>
     <collapsible :title="$t('title')" with-import="true" import-filename="event.json" @load="setData">
-        <div style="margin-bottom: 1.0rem;">
-            <selection :label="$t('track_label')" :options="tracks" v-model="track"></selection>
+        <div style="margin-bottom: 1rem;">
+            <select :label="$t('track_label')" v-model="track">
+                <optgroup v-for="group in tracks" :key="group.group" :label="group.group">
+                    <option v-for="option in group.options" :key="option.value" :value="option.value">
+                        {{ option.label }}
+                    </option>
+                </optgroup>
+            </select>
         </div>
         <div class="server-settings-container two-columns">
             <div>
