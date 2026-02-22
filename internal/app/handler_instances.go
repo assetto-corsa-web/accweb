@@ -3,11 +3,13 @@ package app
 import (
 	"errors"
 	"fmt"
+	"io/fs"
 	"net/http"
+	"strconv"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v5"
 )
 
 type ExtraAccSettings struct {
@@ -70,18 +72,17 @@ func NewInstancePayload(srv *instance.Instance) InstancePayload {
 // @Param id path int true "Instance ID"
 // @Router /instance/{id} [get]
 // @Security JWT
-func (h *Handler) GetInstance(c *gin.Context) {
+func (h *Handler) GetInstance(c *echo.Context) error {
 	id := c.Param("id")
 
 	srv, err := h.sm.GetServerByID(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, nil)
-		return
+		return echo.ErrNotFound
 	}
 
 	res := NewInstancePayload(srv)
 
-	c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, res)
 }
 
 // NewInstance Create new instance information
@@ -96,22 +97,24 @@ func (h *Handler) GetInstance(c *gin.Context) {
 // @Param instance body SaveInstancePayload true "Instance data"
 // @Router /instance [post]
 // @Security JWT
-func (h *Handler) NewInstance(c *gin.Context) {
+func (h *Handler) NewInstance(c *echo.Context) error {
 	var json SaveInstancePayload
-	if err := c.ShouldBindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
-		return
+	if err := c.Bind(&json); err != nil {
+		return echo.ErrBadRequest.Wrap(err)
 	}
 
 	srv, err := h.sm.Create(&json.Acc, json.AccWeb)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
+	}
+
+	if err := srv.Save(); err != nil {
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
 	res := NewInstancePayload(srv)
 
-	c.JSON(http.StatusCreated, res)
+	return c.JSON(http.StatusCreated, res)
 }
 
 // SaveInstance Saves instance information
@@ -128,19 +131,17 @@ func (h *Handler) NewInstance(c *gin.Context) {
 // @Param instance body SaveInstancePayload true "Instance data"
 // @Router /instance/{id} [post]
 // @Security JWT
-func (h *Handler) SaveInstance(c *gin.Context) {
+func (h *Handler) SaveInstance(c *echo.Context) error {
 	id := c.Param("id")
 
 	srv, err := h.sm.GetServerByID(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, nil)
-		return
+		return echo.ErrNotFound
 	}
 
 	var json SaveInstancePayload
-	if err := c.ShouldBindJSON(&json); err != nil {
-		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
-		return
+	if err := c.Bind(&json); err != nil {
+		return echo.ErrBadRequest.Wrap(err)
 	}
 
 	if json.AccExtraSettings.PasswordIsEmpty {
@@ -162,21 +163,19 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 	}
 
 	if err := srv.CanSaveSettings(json.AccWeb, json.Acc); err != nil {
-		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
-		return
+		return echo.ErrBadRequest.Wrap(err)
 	}
 
 	srv.AccCfg = json.Acc
 	srv.Cfg.Settings = json.AccWeb
 
 	if err := srv.Save(); err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
 	res := NewInstancePayload(srv)
 
-	c.JSON(http.StatusCreated, res)
+	return c.JSON(http.StatusCreated, res)
 }
 
 // DeleteInstance Delete instance
@@ -191,20 +190,18 @@ func (h *Handler) SaveInstance(c *gin.Context) {
 // @Param id path int true "Instance ID"
 // @Router /instance/{id} [delete]
 // @Security JWT
-func (h *Handler) DeleteInstance(c *gin.Context) {
+func (h *Handler) DeleteInstance(c *echo.Context) error {
 	id := c.Param("id")
 
 	if err := h.sm.Delete(id); err != nil {
 		if errors.Is(err, server_manager.ErrServerNotFound) {
-			c.JSON(http.StatusNotFound, nil)
-			return
+			return echo.ErrNotFound
 		}
 
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 // StartInstance Starts acc instance
@@ -220,21 +217,19 @@ func (h *Handler) DeleteInstance(c *gin.Context) {
 // @Param id path int true "Instance ID"
 // @Router /instance/{id}/start [post]
 // @Security JWT
-func (h *Handler) StartInstance(c *gin.Context) {
+func (h *Handler) StartInstance(c *echo.Context) error {
 	if err := h.sm.Start(c.Param("id")); err != nil {
 		if errors.Is(err, server_manager.ErrServerNotFound) {
-			c.JSON(http.StatusNotFound, nil)
-			return
+			return echo.ErrNotFound
 		}
 		if errors.Is(err, instance.ErrServerCantBeRunning) {
-			c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
-			return
+			return echo.ErrBadRequest.Wrap(err)
 		}
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 // StopInstance Stops acc instance
@@ -250,21 +245,27 @@ func (h *Handler) StartInstance(c *gin.Context) {
 // @Param id path int true "Instance ID"
 // @Router /instance/{id}/stop [post]
 // @Security JWT
-func (h *Handler) StopInstance(c *gin.Context) {
+func (h *Handler) StopInstance(c *echo.Context) error {
 	id := c.Param("id")
 
 	srv, err := h.sm.GetServerByID(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, nil)
-		return
+		return echo.ErrNotFound
 	}
 
-	if err := srv.Stop(); err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+	arw := c.QueryParamOr("afterRaceWeekend", "false")
+
+	if arw == "true" {
+		if err := srv.StopAfterWeekend(); err != nil {
+			return echo.ErrInternalServerError.Wrap(err)
+		}
+	} else {
+		if err := srv.Stop(); err != nil {
+			return echo.ErrInternalServerError.Wrap(err)
+		}
 	}
 
-	c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 // CloneInstance Clones acc instance
@@ -279,23 +280,21 @@ func (h *Handler) StopInstance(c *gin.Context) {
 // @Param id path int true "Instance ID"
 // @Router /instance/{id}/clone [post]
 // @Security JWT
-func (h *Handler) CloneInstance(c *gin.Context) {
+func (h *Handler) CloneInstance(c *echo.Context) error {
 	id := c.Param("id")
 
 	srv, err := h.sm.Duplicate(id)
 	if err != nil {
 		if errors.Is(err, server_manager.ErrServerNotFound) {
-			c.JSON(http.StatusNotFound, nil)
-			return
+			return echo.ErrNotFound
 		}
 
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
 	res := NewInstancePayload(srv)
 
-	c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, res)
 }
 
 type accWebInstanceLogs struct {
@@ -315,22 +314,20 @@ type accWebInstanceLogs struct {
 // @Param id path int true "Instance ID"
 // @Router /instance/{id}/logs [get]
 // @Security JWT
-func (h *Handler) GetInstanceLogs(c *gin.Context) {
+func (h *Handler) GetInstanceLogs(c *echo.Context) error {
 	id := c.Param("id")
 
 	srv, err := h.sm.GetServerByID(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, nil)
-		return
+		return echo.ErrNotFound
 	}
 
 	data, err := srv.GetAccServerLogs()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.JSON(http.StatusOK, accWebInstanceLogs{ID: srv.GetID(), Logs: string(data)})
+	return c.JSON(http.StatusOK, accWebInstanceLogs{ID: srv.GetID(), Logs: string(data)})
 }
 
 // ExportInstance Get acc instance configuration files
@@ -345,23 +342,21 @@ func (h *Handler) GetInstanceLogs(c *gin.Context) {
 // @Param id path int true "Instance ID"
 // @Router /instance/{id}/export [get]
 // @Security JWT
-func (h *Handler) ExportInstance(c *gin.Context) {
+func (h *Handler) ExportInstance(c *echo.Context) error {
 	id := c.Param("id")
 
 	srv, err := h.sm.GetServerByID(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, nil)
-		return
+		return echo.ErrNotFound
 	}
 
 	data, err := srv.ExportConfigFilesToZip()
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.Writer.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=\"accweb_%s_cfg.zip\"", id))
-	c.Data(http.StatusOK, "application/zip", data)
+	c.Response().Header().Set(echo.HeaderContentDisposition, fmt.Sprintf("attachment; filename=\"accweb_%s_cfg.zip\"", id))
+	return c.Blob(http.StatusOK, "application/zip", data)
 }
 
 type LiveServerInstancePayload struct {
@@ -380,17 +375,61 @@ type LiveServerInstancePayload struct {
 // @Param id path int true "Instance ID"
 // @Router /instance/{id}/live [get]
 // @Security JWT
-func (h *Handler) GetInstanceLiveState(c *gin.Context) {
+func (h *Handler) GetInstanceLiveState(c *echo.Context) error {
 	id := c.Param("id")
 
 	srv, err := h.sm.GetServerByID(id)
 	if err != nil {
-		c.JSON(http.StatusNotFound, nil)
-		return
+		return echo.ErrNotFound
 	}
 
-	c.JSON(http.StatusOK, LiveServerInstancePayload{
+	return c.JSON(http.StatusOK, LiveServerInstancePayload{
 		ListServerItem: buildListServerItem(srv),
 		Live:           srv.Live,
 	})
+}
+
+func (h *Handler) GetInstanceResultList(c *echo.Context) error {
+	id := c.Param("id")
+
+	srv, err := h.sm.GetServerByID(id)
+	if err != nil {
+		return echo.ErrNotFound
+	}
+
+	resultList, err := srv.GetResultList()
+	if err != nil {
+		var pErr *fs.PathError
+		if errors.As(err, &pErr) {
+			return c.NoContent(http.StatusNoContent)
+		}
+		return echo.ErrInternalServerError.Wrap(err)
+	}
+
+	return c.JSON(http.StatusOK, map[string]interface{}{
+		"results": resultList,
+	})
+}
+
+func (h *Handler) GetInstanceResultContent(c *echo.Context) error {
+	id := c.Param("id")
+
+	srv, err := h.sm.GetServerByID(id)
+	if err != nil {
+		return echo.ErrNotFound
+	}
+
+	resultIdxStr := c.Param("resultId")
+
+	resultIdx, err := strconv.Atoi(resultIdxStr)
+	if err != nil {
+		return echo.ErrBadRequest.Wrap(err)
+	}
+
+	content, err := srv.GetResultContent(resultIdx)
+	if err != nil {
+		return echo.ErrInternalServerError.Wrap(err)
+	}
+
+	return c.Blob(http.StatusOK, "application/json", content)
 }

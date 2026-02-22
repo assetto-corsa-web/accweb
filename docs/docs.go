@@ -23,14 +23,14 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/configure/global-ban": {
+        "/configure/global-admin": {
             "get": {
                 "security": [
                     {
                         "JWT": []
                     }
                 ],
-                "description": "List all global bans",
+                "description": "List all ACC dedicated servers",
                 "consumes": [
                     "application/json"
                 ],
@@ -40,221 +40,15 @@ const docTemplate = `{
                 "tags": [
                     "servers"
                 ],
-                "summary": "List all global bans",
+                "summary": "List all ACC dedicated servers",
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "$ref": "#/definitions/instance.AccwebGlobalBanlistJson"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/app.AccWError"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "JWT": []
-                    }
-                ],
-                "description": "Save global bans",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "servers"
-                ],
-                "summary": "Save global bans",
-                "parameters": [
-                    {
-                        "description": "Global ban entry payload",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/instance.AccwebGlobalBanEntryJson"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/app.AccWError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/app.AccWError"
-                        }
-                    }
-                }
-            }
-        },
-        "/configure/global-ban/enable-toggle": {
-            "post": {
-                "security": [
-                    {
-                        "JWT": []
-                    }
-                ],
-                "description": "Toggle global bans enabled status",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "servers"
-                ],
-                "summary": "Toggle global bans enabled status",
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/app.AccWError"
-                        }
-                    }
-                }
-            }
-        },
-        "/configure/global-ban/{id}": {
-            "delete": {
-                "security": [
-                    {
-                        "JWT": []
-                    }
-                ],
-                "description": "Remove a global ban entry by ID",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "servers"
-                ],
-                "summary": "Remove a global ban entry",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "Ban entry ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/app.AccWError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/app.AccWError"
-                        }
-                    }
-                }
-            }
-        },
-        "/configure/global-entrylist": {
-            "get": {
-                "security": [
-                    {
-                        "JWT": []
-                    }
-                ],
-                "description": "List all global admins",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "servers"
-                ],
-                "summary": "List all global admins",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/instance.AccwebGlobalEntrylistJson"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/app.AccWError"
-                        }
-                    }
-                }
-            },
-            "post": {
-                "security": [
-                    {
-                        "JWT": []
-                    }
-                ],
-                "description": "Save global admins",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "servers"
-                ],
-                "summary": "Save global admins",
-                "parameters": [
-                    {
-                        "description": "Global admins payload",
-                        "name": "payload",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/instance.AccwebGlobalEntrylistJson"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK"
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/app.AccWError"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/app.AccWError"
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/app.ListServerItem"
+                            }
                         }
                     }
                 }
@@ -1019,45 +813,6 @@ const docTemplate = `{
                 },
                 "enableGlobalEntrylist": {
                     "type": "boolean"
-                }
-            }
-        },
-        "instance.AccwebGlobalBanEntryJson": {
-            "type": "object",
-            "properties": {
-                "playerId": {
-                    "type": "string"
-                },
-                "playerName": {
-                    "type": "string"
-                }
-            }
-        },
-        "instance.AccwebGlobalBanlistJson": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                },
-                "entries": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/instance.AccwebGlobalBanEntryJson"
-                    }
-                }
-            }
-        },
-        "instance.AccwebGlobalEntrylistJson": {
-            "type": "object",
-            "properties": {
-                "enabled": {
-                    "type": "boolean"
-                },
-                "entries": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/instance.EntrySettings"
-                    }
                 }
             }
         },

@@ -140,6 +140,40 @@ func (s *Service) updateAccServerExeIfDifferent(srv *instance.Instance) error {
 }
 
 func (s *Service) Bootstrap() error {
+	if len(s.config.Auth.Users) == 0 {
+		pwd := ""
+		if s.config.Auth.AdminPassword == "" {
+			var err error
+			pwd, err = helper.GenerateRandomPassword()
+			if err != nil {
+				return err
+			}
+		} else {
+			pwd = s.config.Auth.AdminPassword
+			s.config.Auth.AdminPassword = ""
+		}
+
+		s.AddUser("admin", "admin", pwd)
+
+		println("No users found in configuration. Created default admin user:")
+		println("  Username: admin")
+		println("  Password: ", pwd)
+		println("Please change the password after first login.")
+		println("")
+
+		if s.config.Auth.ModeratorPassword != "" {
+			pwd = s.config.Auth.ModeratorPassword
+			s.config.Auth.ModeratorPassword = ""
+			s.AddUser("moderator", "moderator", pwd)
+		}
+
+		if s.config.Auth.ReadOnlyPassword != "" {
+			pwd = s.config.Auth.ReadOnlyPassword
+			s.config.Auth.ReadOnlyPassword = ""
+			s.AddUser("read_only", "readonly", pwd)
+		}
+	}
+
 	if err := s.GetAccServerExeMd5Sum(); err != nil {
 		return err
 	}
@@ -305,4 +339,66 @@ func (s *Service) LoadGlobalEntry(context GlobalListCtx, entries any) error {
 	}
 
 	return err
+}
+
+func (s *Service) SaveConfig(newCfg cfg.Config) error {
+	s.config.ACC = newCfg.ACC
+	s.config.Auth.Timeout = newCfg.Auth.Timeout
+	s.config.Callback = newCfg.Callback
+	s.config.CORS = newCfg.CORS
+	s.config.Log = newCfg.Log
+	s.config.Webserver = newCfg.Webserver
+	s.config.ConfigPath = newCfg.ConfigPath
+	// s.config.Dev = newCfg.Dev
+	// s.config.SkipWine = newCfg.SkipWine
+	// s.config.Loglevel = newCfg.Loglevel
+
+	return s.config.Save()
+}
+
+func (s *Service) GetUsers() []cfg.User {
+	return s.config.Auth.Users
+}
+
+func (s *Service) AddUser(role, username, rawPassword string) error {
+	if err := s.config.Auth.Users.Add(role, username, rawPassword); err != nil {
+		return err
+	}
+
+	return s.config.Save()
+}
+
+func (s *Service) DeleteUser(username string) error {
+	if err := s.config.Auth.Users.DeleteByUsername(username); err != nil {
+		return err
+	}
+
+	return s.config.Save()
+}
+
+func (s *Service) UpdateUser(username, role string, rawPassword *string) error {
+	if err := s.config.Auth.Users.Update(username, role, rawPassword); err != nil {
+		return err
+	}
+
+	return s.config.Save()
+}
+
+func (s *Service) ValidateUserAndPassword(username, password string) (*cfg.User, error) {
+	return s.config.Auth.Users.ValidateUserAndPassword(username, password)
+}
+
+func (s *Service) ResetPassword(username string) error {
+	newPassword, err := s.config.Auth.Users.ResetPassword(username)
+	if err != nil {
+		return err
+	}
+
+	fmt.Printf("\n\n>>> Password for user '%s' has been reset to: %s\n\n", username, newPassword)
+
+	return s.config.Save()
+}
+
+func (s *Service) GetAuthConfig() cfg.Auth {
+	return s.config.Auth
 }

@@ -1,9 +1,8 @@
 # Changelog
 
 ## 1.27.0
-* Some ui improvements. [#291](https://github.com/assetto-corsa-web/accweb/pull/291)
-* feat: global entry list and global ban list. [#291](https://github.com/assetto-corsa-web/accweb/pull/291)
-* feat: use -c/--config for a different config file. [#293](https://github.com/assetto-corsa-web/accweb/pull/293)
+* Some ui improvements
+* feat: global entry list and global ban list
 
 ## 1.26.3
 * feat: add ping spike to event system. [#290](https://github.com/assetto-corsa-web/accweb/pull/290)

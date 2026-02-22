@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+@import '@nuxt/ui';
+
+.box {
+  @apply p-3 border border-default rounded-md;
+}

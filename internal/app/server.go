@@ -1,15 +1,17 @@
 package app
 
 import (
+	"log"
 	"net/http"
-	"time"
+	"os"
 
-	jwt "github.com/appleboy/gin-jwt/v2"
+	"github.com/assetto-corsa-web/accweb/frontend"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/cfg"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
-	"github.com/assetto-corsa-web/accweb/public"
-	"github.com/gin-contrib/cors"
-	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
+	echojwt "github.com/labstack/echo-jwt/v5"
+	"github.com/labstack/echo/v5"
+	"github.com/labstack/echo/v5/middleware"
 	"github.com/sirupsen/logrus"
 )
 
@@ -33,90 +35,68 @@ import (
 
 const identityKey = "user_name"
 
-type AccWError struct {
-	Error string `json:"error"`
-}
-
-func newAccWError(msg string) AccWError {
-	return AccWError{Error: msg}
-}
-
 type Handler struct {
 	sm *server_manager.Service
 }
 
-func my(prefix string, fs http.FileSystem) *myFS {
-	return &myFS{
-		prefix: prefix,
-		fs:     fs,
-	}
-}
-
-type myFS struct {
-	prefix string
-	fs     http.FileSystem
-}
-
-func (f *myFS) Open(name string) (http.File, error) {
-	return f.fs.Open(f.prefix + name)
-}
-
 func StartServer(config *cfg.Config, sM *server_manager.Service) {
-	var r *gin.Engine
+	e := echo.New()
 
 	if !config.Dev {
-		gin.SetMode(gin.ReleaseMode)
-		r = gin.New()
-		r.Use(gin.Recovery())
-		_ = r.SetTrustedProxies(nil)
+		e.Use(middleware.Recover())
 	} else {
-		r = gin.Default()
+		e.Use(middleware.RequestLogger())
 	}
 
 	// setup CORS
-	corsConfig := cors.DefaultConfig()
-	corsConfig.AllowOrigins = []string{config.CORS.Origins}
-	r.Use(cors.New(corsConfig))
+	e.Use(middleware.CORS(config.CORS.Origins))
 
-	r.NoRoute(func(c *gin.Context) {
-		c.Redirect(http.StatusFound, "/")
+	e.RouteNotFound("/*", func(c *echo.Context) error {
+		return c.Redirect(http.StatusFound, "/")
 	})
 
 	// setup routers
-	setupRouters(r, sM, config)
+	setupRouters(e, sM, config)
 
 	// Starting HTTP Server
 	if config.Webserver.TLS {
-		if err := r.RunTLS(config.Webserver.Host, config.Webserver.Cert, config.Webserver.PrivateKey); err != nil {
+		if err := http.ListenAndServeTLS(config.Webserver.Host, config.Webserver.Cert, config.Webserver.PrivateKey, e); err != nil {
 			logrus.WithError(err).Fatal("failed to start http server with TLS")
 		}
 	} else {
-		if err := r.Run(config.Webserver.Host); err != nil {
+		if err := e.Start(config.Webserver.Host); err != nil {
 			logrus.WithError(err).Fatal("failed to start http server")
 		}
 	}
 }
 
-func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config) {
+func setupRouters(e *echo.Echo, sM *server_manager.Service, config *cfg.Config) {
 	h := Handler{sm: sM}
 
 	if config.Dev {
-		basedir := "public"
-		r.StaticFile("/", basedir+"/xindex.html")
-		r.Static("/static", basedir+"/static")
-		r.Static("/dist", basedir+"/dist")
+		basedir := "frontend/dist"
+		e.File("/", basedir+"/index.html")
+		e.Static("/assets", basedir+"/assets")
+		e.Static("/public", basedir+"/public")
 	} else {
-		r.GET("/", func(c *gin.Context) {
-			c.FileFromFS("xindex.html", http.FS(public.Content))
-		})
-		r.StaticFS("/static", my("static", http.FS(public.Content)))
-		r.StaticFS("/dist", my("dist", http.FS(public.Content)))
+		e.StaticFS("/", echo.MustSubFS(frontend.Content, "dist"))
+		e.StaticFS("/assets", echo.MustSubFS(frontend.Content, "dist/assets"))
+		e.StaticFS("/public", echo.MustSubFS(frontend.Content, "dist/public"))
 	}
 
-	authMW := setupAuthRouters(r, config)
+	authMW := setupAuthRouters(config)
 
-	api := r.Group("/api")
-	api.Use(authMW.MiddlewareFunc())
+	e.POST("/api/login", h.LoginHandler)
+
+	api := e.Group("/api")
+	api.Use(authMW)
+
+	api.GET("/logout", func(c *echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]any{})
+	})
+	api.GET("/token", func(c *echo.Context) error {
+		return c.JSON(http.StatusOK, map[string]any{})
+	})
 
 	api.GET("/servers", h.ListServers)
 	api.GET("/metadata", h.Metadata)
@@ -124,20 +104,20 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 	api.GET("/instance/:id/logs", h.GetInstanceLogs)
 	api.GET("/instance/:id/live", h.GetInstanceLiveState)
 	api.GET("/instance/:id/export", h.ExportInstance)
+	api.GET("/instance/:id/results", h.GetInstanceResultList)
+	api.GET("/instance/:id/results/:resultId", h.GetInstanceResultContent)
 
 	// moderator level
-	mod := api.Group("")
+	mod := api.Group("", ACCWebAuthMiddleware(ACCWebAuthLevel_Mod))
 	{
-		mod.Use(ACCWebAuthMiddleware(ACCWebAuthLevel_Mod))
 		mod.POST("/servers/stop-all", h.StopAllServers)
 		mod.POST("/instance/:id/start", h.StartInstance)
 		mod.POST("/instance/:id/stop", h.StopInstance)
 	}
 
-	// admin level
-	adm := api.Group("")
+	// // admin level
+	adm := api.Group("", ACCWebAuthMiddleware(ACCWebAuthLevel_Adm))
 	{
-		adm.Use(ACCWebAuthMiddleware(ACCWebAuthLevel_Adm))
 		adm.POST("/instance", h.NewInstance)
 		adm.POST("/instance/:id", h.SaveInstance)
 		adm.DELETE("/instance/:id", h.DeleteInstance)
@@ -150,141 +130,45 @@ func setupRouters(r *gin.Engine, sM *server_manager.Service, config *cfg.Config)
 		adm.POST("/configure/global-ban", h.SaveGlobalBans)
 		adm.POST("/configure/global-ban/enable-toggle", h.EnableToggleGlobalBans)
 		adm.DELETE("/configure/global-ban/:id", h.RemoveGlobalBans)
+
+		adm.GET("/configure/user", h.ListUsers)
+		adm.POST("/configure/user", h.AddUser)
+		adm.PUT("/configure/user/:username", h.UpdateUser)
+		adm.DELETE("/configure/user/:username", h.DeleteUser)
 	}
 
-}
-
-type LoginPayload struct {
-	Password string `json:"password"`
 }
 
 type User struct {
 	UserName string `json:"user_name"`
+	Role     string `json:"role"`
 	Admin    bool   `json:"admin"`
 	Mod      bool   `json:"mod"`
 	ReadOnly bool   `json:"read_only"`
+
+	jwt.RegisteredClaims
 }
 
-func setupAuthRouters(r *gin.Engine, config *cfg.Config) *jwt.GinJWTMiddleware {
-	// the jwt middleware
-	authMiddleware, err := jwt.New(&jwt.GinJWTMiddleware{
-		TokenLookup:      "header:Authorization,query:token",
-		Realm:            "test zone",
-		SigningAlgorithm: "RS256",
-		PrivKeyFile:      config.Auth.PrivateKeyPath,
-		PubKeyFile:       config.Auth.PublicKeyPath,
-		Timeout:          *config.Auth.Timeout,
-		MaxRefresh:       time.Hour,
-		IdentityKey:      identityKey,
-		PayloadFunc: func(data interface{}) jwt.MapClaims {
-			if v, ok := data.(*User); ok {
-				return jwt.MapClaims{
-					identityKey: v.UserName,
-					"admin":     v.Admin,
-					"mod":       v.Mod,
-					"read_only": v.ReadOnly,
-				}
-			}
-			return jwt.MapClaims{}
-		},
-		IdentityHandler: func(c *gin.Context) interface{} {
-			claims := jwt.ExtractClaims(c)
-			return &User{
-				UserName: claims[identityKey].(string),
-				Admin:    claims["admin"].(bool),
-				Mod:      claims["mod"].(bool),
-				ReadOnly: claims["read_only"].(bool),
-			}
-		},
-		Authenticator: func(c *gin.Context) (interface{}, error) {
-			var loginVals LoginPayload
-			if err := c.ShouldBind(&loginVals); err != nil {
-				return "", jwt.ErrMissingLoginValues
-			}
-
-			password := loginVals.Password
-
-			var u *User
-
-			isAdmin := password == config.Auth.AdminPassword
-			isMod := password == config.Auth.ModeratorPassword || isAdmin
-			isRO := password == config.Auth.ReadOnlyPassword || isMod
-
-			if !isAdmin && !isMod && !isRO {
-				return nil, jwt.ErrFailedAuthentication
-			}
-
-			u = &User{
-				UserName: "username",
-				Admin:    isAdmin,
-				Mod:      isMod,
-				ReadOnly: isRO,
-			}
-			c.Set(identityKey, u)
-
-			return u, nil
-		},
-		Authorizator: func(data interface{}, c *gin.Context) bool {
-			if v, ok := data.(*User); ok && (v.Admin || v.Mod || v.ReadOnly) {
-				return true
-			}
-
-			return false
-		},
-		Unauthorized: func(c *gin.Context, code int, message string) {
-			c.JSON(code, gin.H{
-				"code":    code,
-				"message": message,
-			})
-		},
-		LoginResponse: func(c *gin.Context, code int, token string, expire time.Time) {
-			x, _ := c.Get(identityKey)
-			u := x.(*User)
-
-			c.JSON(http.StatusOK, gin.H{
-				"code":      http.StatusOK,
-				"token":     token,
-				"expire":    expire.Format(time.RFC3339),
-				"user_name": u.UserName,
-				"admin":     u.Admin,
-				"mod":       u.Mod,
-				"read_only": u.ReadOnly,
-			})
-		},
-	})
-
+func setupAuthRouters(config *cfg.Config) echo.MiddlewareFunc {
+	publicKey, err := os.ReadFile(config.Auth.PublicKeyPath)
 	if err != nil {
-		logrus.Fatal("JWT Error:" + err.Error())
+		log.Fatal("Could not read public key:", err)
 	}
 
-	// When you use jwt.New(), the function is already automatically called for checking,
-	// which means you don't need to call it again.
-	errInit := authMiddleware.MiddlewareInit()
-
-	if errInit != nil {
-		logrus.Fatal("authMiddleware.MiddlewareInit() Error:" + errInit.Error())
+	pubKey, err := jwt.ParseRSAPublicKeyFromPEM(publicKey)
+	if err != nil {
+		log.Fatal("Could not parse public key:", err)
 	}
 
-	r.POST("/api/login", authMiddleware.LoginHandler)
-	r.GET("/api/refresh_token", authMiddleware.RefreshHandler)
-	r.GET("/api/logout", authMiddleware.MiddlewareFunc(), authMiddleware.LogoutHandler)
-	r.GET("/api/token", authMiddleware.MiddlewareFunc(), func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{})
+	mdw := echojwt.WithConfig(echojwt.Config{
+		ContextKey:    identityKey,
+		SigningKey:    pubKey,
+		SigningMethod: "RS256",
+		TokenLookup:   "header:Authorization:Bearer ,query:token",
+		NewClaimsFunc: func(c *echo.Context) jwt.Claims {
+			return new(User)
+		},
 	})
 
-	return authMiddleware
-}
-
-func GetUserFromClaims(c *gin.Context) *User {
-	if user, ok := c.Get(identityKey); ok {
-		return user.(*User)
-	} else {
-		claims := jwt.ExtractClaims(c)
-		return &User{
-			UserName: claims[identityKey].(string),
-			Admin:    claims["admin"].(bool),
-			Mod:      claims["mod"].(bool),
-			ReadOnly: claims["read_only"].(bool),
-		}
-	}
+	return mdw
 }

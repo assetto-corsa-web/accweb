@@ -6,7 +6,7 @@ import (
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager"
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo/v5"
 )
 
 // ListGlobalAdmins List all global admins
@@ -20,14 +20,13 @@ import (
 // @Failure 500 {object} AccWError
 // @Router /configure/global-entrylist [get]
 // @Security JWT
-func (h *Handler) ListGlobalAdmins(c *gin.Context) {
+func (h *Handler) ListGlobalAdmins(c *echo.Context) error {
 	var data instance.AccwebGlobalEntrylistJson
 	if err := h.sm.LoadGlobalEntry(server_manager.GlobalListCtxEntry, &data); err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.JSON(http.StatusOK, data)
+	return c.JSON(http.StatusOK, data)
 }
 
 // SaveGlobalAdmins Save global admins
@@ -43,19 +42,17 @@ func (h *Handler) ListGlobalAdmins(c *gin.Context) {
 // @Failure 500 {object} AccWError
 // @Router /configure/global-entrylist [post]
 // @Security JWT
-func (h *Handler) SaveGlobalAdmins(c *gin.Context) {
+func (h *Handler) SaveGlobalAdmins(c *echo.Context) error {
 	var payload instance.AccwebGlobalEntrylistJson
-	if err := c.BindJSON(&payload); err != nil {
-		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
-		return
+	if err := c.Bind(&payload); err != nil {
+		return echo.ErrBadRequest.Wrap(err)
 	}
 
 	if err := h.sm.SaveGlobalEntry(server_manager.GlobalListCtxEntry, payload); err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 // ListGlobalBans List all global bans
@@ -69,15 +66,14 @@ func (h *Handler) SaveGlobalAdmins(c *gin.Context) {
 // @Failure 500 {object} AccWError
 // @Router /configure/global-ban [get]
 // @Security JWT
-func (h *Handler) ListGlobalBans(c *gin.Context) {
+func (h *Handler) ListGlobalBans(c *echo.Context) error {
 	var data instance.AccwebGlobalBanlistJson
 	err := h.sm.LoadGlobalEntry(server_manager.GlobalEntryCtxBan, &data)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.JSON(http.StatusOK, data)
+	return c.JSON(http.StatusOK, data)
 }
 
 // SaveGlobalBans Save global bans
@@ -93,35 +89,31 @@ func (h *Handler) ListGlobalBans(c *gin.Context) {
 // @Failure 500 {object} AccWError
 // @Router /configure/global-ban [post]
 // @Security JWT
-func (h *Handler) SaveGlobalBans(c *gin.Context) {
+func (h *Handler) SaveGlobalBans(c *echo.Context) error {
 	var entry instance.AccwebGlobalBanEntryJson
-	if err := c.BindJSON(&entry); err != nil {
-		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
-		return
+	if err := c.Bind(&entry); err != nil {
+		return echo.ErrBadRequest.Wrap(err)
 	}
 
 	var data instance.AccwebGlobalBanlistJson
 	err := h.sm.LoadGlobalEntry(server_manager.GlobalEntryCtxBan, &data)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
 	for _, e := range data.Entries {
 		if e.PlayerId == entry.PlayerId {
-			c.JSON(http.StatusBadRequest, newAccWError("player already exist"))
-			return
+			return echo.ErrBadRequest.Wrap(err)
 		}
 	}
 
 	data.Entries = append(data.Entries, entry)
 
 	if err := h.sm.SaveGlobalEntry(server_manager.GlobalEntryCtxBan, data); err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 // EnableToggleGlobalBans Toggle global bans enabled status
@@ -135,22 +127,20 @@ func (h *Handler) SaveGlobalBans(c *gin.Context) {
 // @Failure 500 {object} AccWError
 // @Router /configure/global-ban/enable-toggle [post]
 // @Security JWT
-func (h *Handler) EnableToggleGlobalBans(c *gin.Context) {
+func (h *Handler) EnableToggleGlobalBans(c *echo.Context) error {
 	var data instance.AccwebGlobalBanlistJson
 	err := h.sm.LoadGlobalEntry(server_manager.GlobalEntryCtxBan, &data)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
 	data.Enabled = !data.Enabled
 
 	if err := h.sm.SaveGlobalEntry(server_manager.GlobalEntryCtxBan, data); err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 // RemoveGlobalBans Remove a global ban entry
@@ -166,31 +156,27 @@ func (h *Handler) EnableToggleGlobalBans(c *gin.Context) {
 // @Failure 500 {object} AccWError
 // @Router /configure/global-ban/{id} [delete]
 // @Security JWT
-func (h *Handler) RemoveGlobalBans(c *gin.Context) {
+func (h *Handler) RemoveGlobalBans(c *echo.Context) error {
 	idS := c.Param("id")
 	id, err := strconv.Atoi(idS)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, newAccWError(err.Error()))
-		return
+		return echo.ErrBadRequest.Wrap(err)
 	}
 
 	var data instance.AccwebGlobalBanlistJson
 	if err := h.sm.LoadGlobalEntry(server_manager.GlobalEntryCtxBan, &data); err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
 	if id >= len(data.Entries) {
-		c.JSON(http.StatusBadRequest, newAccWError("invalid id"))
-		return
+		return echo.ErrBadRequest.Wrap(err)
 	}
 
 	data.Entries = append(data.Entries[:id], data.Entries[id+1:]...)
 
 	if err := h.sm.SaveGlobalEntry(server_manager.GlobalEntryCtxBan, data); err != nil {
-		c.JSON(http.StatusInternalServerError, newAccWError(err.Error()))
-		return
+		return echo.ErrInternalServerError.Wrap(err)
 	}
 
-	c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, nil)
 }

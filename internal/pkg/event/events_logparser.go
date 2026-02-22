@@ -120,6 +120,7 @@ func EmmitEventInstanceLiveNewLap(
 }
 
 type EventInstanceLiveSessionPhaseChanged struct {
+	EventBase
 	Session   string `json:"session"`
 	Phase     string `json:"phase"`
 	Remaining int    `json:"remaining"`
@@ -185,6 +186,7 @@ func EmmitEventInstanceLiveResetingRaceWeekend(eib EventInstanceBase, live map[i
 }
 
 type EventInstanceLiveSessionChanged struct {
+	EventBase
 	OldSession string                `json:"oldSession"`
 	Session    string                `json:"session"`
 	Live       map[int]EventCarState `json:"live"`

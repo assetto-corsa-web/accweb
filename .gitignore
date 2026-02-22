@@ -6,7 +6,8 @@ accweb_*/
 releases/
 accweb
 accweb.exe
-config.yml
+config.yml*
 frontend/node_modules/
 frontend/dist/
 __debug_bin*
+.pnpm-store

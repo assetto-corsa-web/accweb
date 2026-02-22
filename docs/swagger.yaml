@@ -142,31 +142,6 @@ definitions:
       enableGlobalEntrylist:
         type: boolean
     type: object
-  instance.AccwebGlobalBanEntryJson:
-    properties:
-      playerId:
-        type: string
-      playerName:
-        type: string
-    type: object
-  instance.AccwebGlobalBanlistJson:
-    properties:
-      enabled:
-        type: boolean
-      entries:
-        items:
-          $ref: '#/definitions/instance.AccwebGlobalBanEntryJson'
-        type: array
-    type: object
-  instance.AccwebGlobalEntrylistJson:
-    properties:
-      enabled:
-        type: boolean
-      entries:
-        items:
-          $ref: '#/definitions/instance.EntrySettings'
-        type: array
-    type: object
   instance.AssistRulesJson:
     properties:
       configVersion:
@@ -548,152 +523,23 @@ info:
   title: ACCWeb API documentation
   version: "1.19"
 paths:
-  /configure/global-ban:
+  /configure/global-admin:
     get:
       consumes:
       - application/json
-      description: List all global bans
+      description: List all ACC dedicated servers
       produces:
       - application/json
       responses:
         "200":
           description: OK
           schema:
-            $ref: '#/definitions/instance.AccwebGlobalBanlistJson'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.AccWError'
+            items:
+              $ref: '#/definitions/app.ListServerItem'
+            type: array
       security:
       - JWT: []
-      summary: List all global bans
-      tags:
-      - servers
-    post:
-      consumes:
-      - application/json
-      description: Save global bans
-      parameters:
-      - description: Global ban entry payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/instance.AccwebGlobalBanEntryJson'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/app.AccWError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.AccWError'
-      security:
-      - JWT: []
-      summary: Save global bans
-      tags:
-      - servers
-  /configure/global-ban/{id}:
-    delete:
-      consumes:
-      - application/json
-      description: Remove a global ban entry by ID
-      parameters:
-      - description: Ban entry ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/app.AccWError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.AccWError'
-      security:
-      - JWT: []
-      summary: Remove a global ban entry
-      tags:
-      - servers
-  /configure/global-ban/enable-toggle:
-    post:
-      consumes:
-      - application/json
-      description: Toggle global bans enabled status
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.AccWError'
-      security:
-      - JWT: []
-      summary: Toggle global bans enabled status
-      tags:
-      - servers
-  /configure/global-entrylist:
-    get:
-      consumes:
-      - application/json
-      description: List all global admins
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/instance.AccwebGlobalEntrylistJson'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.AccWError'
-      security:
-      - JWT: []
-      summary: List all global admins
-      tags:
-      - servers
-    post:
-      consumes:
-      - application/json
-      description: Save global admins
-      parameters:
-      - description: Global admins payload
-        in: body
-        name: payload
-        required: true
-        schema:
-          $ref: '#/definitions/instance.AccwebGlobalEntrylistJson'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/app.AccWError'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/app.AccWError'
-      security:
-      - JWT: []
-      summary: Save global admins
+      summary: List all ACC dedicated servers
       tags:
       - servers
   /instance:

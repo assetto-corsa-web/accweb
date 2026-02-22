@@ -1,14 +1,22 @@
 {
-    "build": { "dockerfile": "Dockerfile" },
-    "customizations": {
-        "vscode": {
-            "extensions": [
-                "golang.go",
-                "Vue.volar",
-                "github.vscode-pull-request-github",
-                "ms-vscode.makefile-tools"
-            ]
-        }
-      },
-    "forwardPorts": [3000]
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "golang.go",
+        "github.vscode-pull-request-github",
+        "ms-vscode.makefile-tools",
+        "loiane.ts-extension-pack",
+        "Vue.volar",
+        "dbaeumer.vscode-eslint",
+        "EditorConfig.EditorConfig",
+        "bradlc.vscode-tailwindcss",
+        "alfredbirk.tailwind-documentation",
+        "loiane.ts-extension-pack"
+      ]
+    }
+  },
+  "forwardPorts": [3000, 5173, 8081]
 }

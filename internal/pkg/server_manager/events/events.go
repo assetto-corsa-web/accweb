@@ -6,6 +6,7 @@ import (
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager/events/globalentrylist"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager/events/logparser"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager/events/logwriter"
+	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager/events/stopafterweekend"
 	"github.com/assetto-corsa-web/accweb/internal/pkg/server_manager/events/windowsadv"
 )
 
@@ -15,4 +16,5 @@ func InitializeAll(sm *server_manager.Service) {
 	windowsadv.Register(sm)
 	callback.Register(sm)
 	globalentrylist.Register(sm)
+	stopafterweekend.Register(sm)
 }

@@ -5,8 +5,8 @@ import (
 	"path"
 	"time"
 
+	"github.com/goccy/go-yaml"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/yaml.v3"
 )
 
 var logLevel = map[string]logrus.Level{
@@ -19,32 +19,42 @@ var logLevel = map[string]logrus.Level{
 var skipWine bool
 
 type Config struct {
-	Dev        bool      `yaml:"dev"`
-	SkipWine   bool      `yaml:"skip_wine"`
-	Loglevel   string    `yaml:"loglevel"`
-	ConfigPath string    `yaml:"config_path"`
-	Webserver  Webserver `yaml:"webserver"`
-	CORS       CORS      `yaml:"cors"`
-	Auth       Auth      `yaml:"auth"`
-	ACC        ACC       `yaml:"acc"`
-	Log        Log       `yaml:"log"`
-	Callback   Callback  `yaml:"callback"`
+	file       string
+	Dev        bool      `yaml:"dev" json:"dev"`
+	SkipWine   bool      `yaml:"skip_wine" json:"skip_wine"`
+	Loglevel   string    `yaml:"loglevel" json:"loglevel"`
+	ConfigPath string    `yaml:"config_path" json:"config_path"`
+	Webserver  Webserver `yaml:"webserver" json:"webserver"`
+	CORS       CORS      `yaml:"cors" json:"cors"`
+	Auth       Auth      `yaml:"auth" json:"auth"`
+	ACC        ACC       `yaml:"acc" json:"acc"`
+	Log        Log       `yaml:"log" json:"log"`
+	Callback   Callback  `yaml:"callback" json:"callback"`
 }
 
 func (c Config) AccServerFullPath() string {
 	return path.Join(c.ACC.ServerPath, c.ACC.ServerExe)
 }
 
+func (c Config) Save() error {
+	data, err := yaml.Marshal(&c)
+	if err != nil {
+		return err
+	}
+
+	return os.WriteFile(c.file, data, 0644)
+}
+
 type Webserver struct {
-	Host       string `yaml:"host"`
-	TLS        bool   `yaml:"tls"`
-	Cert       string `yaml:"cert"`
-	PrivateKey string `yaml:"private_key"`
+	Host       string `yaml:"host" json:"host"`
+	TLS        bool   `yaml:"tls" json:"tls"`
+	Cert       string `yaml:"cert" json:"cert"`
+	PrivateKey string `yaml:"private_key" json:"private_key"`
 }
 
 type CORS struct {
-	Origins  string `yaml:"origins"`
-	Loglevel string `yaml:"loglevel"`
+	Origins  string `yaml:"origins" json:"origins"`
+	Loglevel string `yaml:"loglevel" json:"loglevel"`
 }
 
 type Auth struct {
@@ -53,6 +63,7 @@ type Auth struct {
 	AdminPassword     string         `yaml:"admin_password"`
 	ModeratorPassword string         `yaml:"moderator_password"`
 	ReadOnlyPassword  string         `yaml:"read_only_password"`
+	Users             Users          `yaml:"users"`
 	Timeout           *time.Duration `yaml:"timeout"`
 }
 
@@ -89,6 +100,8 @@ func Load(file string) *Config {
 	if err := yaml.Unmarshal(data, &config); err != nil {
 		logrus.WithError(err).Fatal("Error loading parsing configuration file")
 	}
+
+	config.file = file
 
 	if l, ok := logLevel[config.Loglevel]; ok {
 		logrus.SetLevel(l)

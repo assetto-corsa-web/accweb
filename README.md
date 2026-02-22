@@ -19,24 +19,34 @@ The successor of [acweb](https://github.com/assetto-corsa-web/acweb)! accweb let
 9. [License](#license)
 10. [ACCWeb Discord Server](#accweb-discord-server)
 
+## Support the project
+
+Send some bitcoins to support the ACCWeb project
+
+<a href="bitcoin:bc1q2xmugt40pwqj4erwtkqfh3fmfql3wrzchy85vcysdthf8ax9dnnsztq543?message=ACCWeb%20project%20support">
+<img src="bitcoinwallet.png" alt="Send some bitcoins to support the ACCWeb project" width="250">
+</a>
+
+Address: <a href="bitcoin:bc1q2xmugt40pwqj4erwtkqfh3fmfql3wrzchy85vcysdthf8ax9dnnsztq543?message=ACCWeb%20project%20support">bc1q2xmugt40pwqj4erwtkqfh3fmfql3wrzchy85vcysdthf8ax9dnnsztq543</a>
 
 ## Features
 
-* create and manage as many server instances as you like
-* configure your instances in browser
-* start/stop instances and monitor their status
-* view server logs
-* copy server configurations
-* import/export server configuration files
-* delete server configurations
-* three different permissions: admin, mod and read only (using three different passwords)
-* instance live view
-* http callback for many instance events
-* easy setup
-    * no database required
-    * simple configuration using environment variables
-    
+- create and manage as many server instances as you like
+- configure your instances in browser
+- start/stop instances and monitor their status
+- view server logs
+- copy server configurations
+- import/export server configuration files
+- delete server configurations
+- three different permissions: admin, mod and read only (using three different passwords)
+- instance live view
+- http callback for many instance events
+- easy setup
+  - no database required
+  - simple configuration using environment variables
+
 ## Changelog
+
 <a name="changelog" />
 
 See [CHANGELOG.md](CHANGELOG.md).
@@ -53,15 +63,14 @@ accweb is installed by extracting the zip on your server, modifing the YAML conf
 4. open a terminal
 5. change directory to the accweb installation location
 6. start accweb using `./accweb` on Linux and `accweb.exe` on Windows
-   - By using --config (-c) you can point to an alternative `config.yml` file, e.g. `./accweb --config server1.yml`
-8. leave the terminal open (or start in background using screens on Linux for example)
-9. visit the server IP/domain and port you've configured, for example: http://example.com:8080
+7. leave the terminal open (or start in background using screens on Linux for example)
+8. visit the server IP/domain and port you've configured, for example: http://example.com:8080
 
 I recommend to setup an SSL certificate, but that's out of scope for this instructions. You can enable a certificate inside the `config.yml`.
 
 **Note that you have to install [wine](https://www.winehq.org/) if you're on Linux.**
 
-## Docker 
+## Docker
 
 Please visite our [Docker Hub repository](https://hub.docker.com/r/accweb/accweb) for more information.
 
@@ -88,6 +97,7 @@ To run the watcher use the following command.
 ```shell
 make run-dev-frontend
 ```
+
 Then when you edit any js file, the watcher will detect and rebuild the js package.
 
 ### Backend development environment
@@ -99,7 +109,8 @@ Use the following command to run the backend on your terminal.
 ```shell
 make run-dev-backend
 ```
-Keep in mind that you need to restart the command for see the changes that you made in the code working (or not :zany_face:) 
+
+Keep in mind that you need to restart the command for see the changes that you made in the code working (or not :zany_face:)
 
 ### Visual Studio Code - Remote container
 
@@ -118,8 +129,8 @@ This will create a directory `releases/accweb_1.2.3` containing the release buil
 
 ## Links
 
-* [Docker Hub](https://cloud.docker.com/repository/docker/kugel/accweb/general)
-* [Assetto Corsa Forums](https://www.assettocorsa.net/forum/index.php?threads/release-accweb-assetto-corsa-competizione-server-management-tool-via-web-interface.57572/)
+- [Docker Hub](https://cloud.docker.com/repository/docker/kugel/accweb/general)
+- [Assetto Corsa Forums](https://www.assettocorsa.net/forum/index.php?threads/release-accweb-assetto-corsa-competizione-server-management-tool-via-web-interface.57572/)
 
 ## License
 

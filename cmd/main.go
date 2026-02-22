@@ -18,14 +18,26 @@ const configFileDefault = "config.yml"
 
 func main() {
 	var configFile string
+	var resetPassword string
 
 	flag.StringVar(&configFile, "config", configFileDefault, "override configuration file")
 	flag.StringVar(&configFile, "c", configFileDefault, "override configuration file (shorthand)")
+	flag.StringVar(&resetPassword, "reset-password", "", "reset password for a user")
 	flag.Parse()
 
 	c := cfg.Load(configFile)
 
 	sM := server_manager.New(c)
+
+	if resetPassword != "" {
+		if err := sM.ResetPassword(resetPassword); err != nil {
+			logrus.WithError(err).Fatal("failed to reset password for user")
+		}
+
+		logrus.Info("Please, restart the server for changes to take effect.")
+
+		return
+	}
 
 	logrus.Info("accweb: checking for secrets...")
 	helper.GenerateTokenKeysIfNotPresent(c.Auth.PublicKeyPath, c.Auth.PrivateKeyPath)

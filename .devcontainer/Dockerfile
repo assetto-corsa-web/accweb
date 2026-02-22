@@ -1,15 +1,17 @@
-FROM golang:1.24-bullseye
+FROM golang:1.25-bookworm
 
-RUN curl -fsSL https://deb.nodesource.com/setup_16.x | bash -
+RUN apt-get update && export DEBIAN_FRONTEND=noninteractive
 
-RUN apt-get update && export DEBIAN_FRONTEND=noninteractive \
-    && apt-get install -y git build-essential nodejs="16.*" zip
+RUN apt-get install -y git build-essential zip curl apt-transport-https ca-certificates gnupg2
+RUN curl -fsSL https://deb.nodesource.com/setup_22.x | bash -
+RUN apt-get install -y nodejs
+RUN npm install -g pnpm
 
 RUN go install golang.org/x/tools/gopls@latest \
     && go install github.com/go-delve/delve/cmd/dlv@latest \
     && go install honnef.co/go/tools/cmd/staticcheck@latest \
     && go install github.com/swaggo/swag/cmd/swag@latest \
-    && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.46.2
+    && curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/HEAD/install.sh | sh -s -- -b $(go env GOPATH)/bin v2.7.2
 
 RUN mkdir -p /app && cd /app && git clone https://github.com/assetto-corsa-web/fake-accserver.git
 

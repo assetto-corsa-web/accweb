@@ -101,7 +101,7 @@ func (s *Instance) Stop() error {
 		return nil
 	}
 
-	s.Live.SetServerState(ServerStateStoping)
+	s.Live.SetServerState(ServerStateStopping)
 
 	event.EmmitEventInstanceBeforeStop(s.ToEIB())
 
@@ -112,6 +112,20 @@ func (s *Instance) Stop() error {
 	}
 
 	s.Live.ServerOffline()
+
+	logrus.WithField("server_id", s.GetID()).Info("acc server stopped")
+
+	return nil
+}
+
+func (s *Instance) StopAfterWeekend() error {
+	if !s.IsRunning() {
+		return nil
+	}
+
+	s.Live.SetServerState(ServerStateStopping)
+
+	s.Cfg.StopAfterWeekend = true
 
 	logrus.WithField("server_id", s.GetID()).Info("acc server stopped")
 

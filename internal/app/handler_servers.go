@@ -5,8 +5,8 @@ import (
 	"runtime"
 
 	"github.com/assetto-corsa-web/accweb/internal/pkg/instance"
+	"github.com/labstack/echo/v5"
 
-	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 )
 
@@ -53,14 +53,14 @@ func buildListServerItem(srv *instance.Instance) ListServerItem {
 // @Success 200 {object} []ListServerItem{}
 // @Router /servers [get]
 // @Security JWT
-func (h *Handler) ListServers(c *gin.Context) {
+func (h *Handler) ListServers(c *echo.Context) error {
 	list := h.sm.GetServers()
 	res := []ListServerItem{}
 	for _, srv := range list {
 		res = append(res, buildListServerItem(srv))
 	}
 
-	c.JSON(http.StatusOK, res)
+	return c.JSON(http.StatusOK, res)
 }
 
 // StopAllServers Stops all running ACC dedicated servers
@@ -73,12 +73,12 @@ func (h *Handler) ListServers(c *gin.Context) {
 // @Success 200
 // @Router /servers/stop-all [post]
 // @Security JWT
-func (h *Handler) StopAllServers(c *gin.Context) {
+func (h *Handler) StopAllServers(c *echo.Context) error {
 	if err := h.sm.StopAll(); err != nil {
 		logrus.WithError(err).Error("failed during stoping all servers")
 	}
 
-	c.JSON(http.StatusOK, nil)
+	return c.JSON(http.StatusOK, nil)
 }
 
 // Metadata Returns server OS informations
@@ -90,8 +90,8 @@ func (h *Handler) StopAllServers(c *gin.Context) {
 // @Success 200
 // @Router /metadata [get]
 // @Security JWT
-func (h *Handler) Metadata(c *gin.Context) {
-	c.JSON(http.StatusOK, &InstanceOS{
+func (h *Handler) Metadata(c *echo.Context) error {
+	return c.JSON(http.StatusOK, &InstanceOS{
 		Name:   runtime.GOOS,
 		NumCPU: runtime.NumCPU(),
 	})

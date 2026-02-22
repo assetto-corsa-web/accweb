@@ -2,9 +2,9 @@ package app
 
 import (
 	"errors"
-	"net/http"
 
-	"github.com/gin-gonic/gin"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/labstack/echo/v5"
 )
 
 var ErrForbidden = errors.New("access denied")
@@ -16,22 +16,28 @@ const (
 	ACCWebAuthLevel_Adm
 )
 
-func ACCWebAuthMiddleware(lvl ACCWebAuthLevel) gin.HandlerFunc {
-	return func(c *gin.Context) {
-		u := GetUserFromClaims(c)
+func ACCWebAuthMiddleware(lvl ACCWebAuthLevel) echo.MiddlewareFunc {
+	return func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c *echo.Context) error {
+			user, err := echo.ContextGet[*jwt.Token](c, identityKey)
+			if err != nil {
+				return echo.ErrUnauthorized.Wrap(err)
+			}
 
-		if lvl == ACCWebAuthLevel_Mod && (!u.Mod && !u.Admin) {
-			c.JSON(http.StatusForbidden, gin.H{"msg": ErrForbidden})
-			c.Abort()
-			return
+			u, ok := user.Claims.(*User)
+			if !ok {
+				return echo.ErrForbidden
+			}
+
+			if lvl == ACCWebAuthLevel_Mod && (!u.Mod && !u.Admin) {
+				return echo.ErrForbidden
+			}
+
+			if lvl == ACCWebAuthLevel_Adm && !u.Admin {
+				return echo.ErrForbidden
+			}
+
+			return next(c)
 		}
-
-		if lvl == ACCWebAuthLevel_Adm && !u.Admin {
-			c.JSON(http.StatusForbidden, gin.H{"msg": ErrForbidden})
-			c.Abort()
-			return
-		}
-
-		c.Next()
 	}
 }

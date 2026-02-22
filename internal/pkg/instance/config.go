@@ -64,6 +64,8 @@ type AccWebConfigJson struct {
 	Settings  AccWebSettingsJson `json:"settings"`
 	CreatedAt time.Time          `json:"createdAt"`
 	UpdatedAt time.Time          `json:"updatedAt"`
+
+	StopAfterWeekend bool `json:"-"`
 }
 
 type AccWebSettingsJson struct {
